@@ -1,0 +1,6 @@
+#include <MaderFakier>
+using namespace MF;
+int main() {
+std::cout << "MaderFakier";
+return 0;
+}
