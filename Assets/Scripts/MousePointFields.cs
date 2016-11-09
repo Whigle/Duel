@@ -7,7 +7,11 @@ using System.Collections;
 /// Klasa odpowiedzialna za przetwarzanie interakcji gracza z HUD'em.
 /// </summary>
 public class MousePointFields : MonoBehaviour {
-	
+
+
+	public static GameObject pierwszezaznaczone;
+	public static GameObject drugiezaznaczone;
+
 	/// <summary>
 	/// Przechowuje kolor danego pola.
 	/// </summary>
@@ -87,6 +91,8 @@ public class MousePointFields : MonoBehaviour {
 			//jeśli gracz puścił któryś z przycisków myszy, to wyłącz możliwość zaznaczania pól
 			if(Input.GetMouseButtonUp(0)||Input.GetMouseButtonUp(1)) {
 				check=false;	
+				pierwszezaznaczone = null;
+				drugiezaznaczone = null;
 			}
 			//jeśli nie zostaly zaznaczone żadne pola, to przywróć tło do normalnego koloru
 			else if (countMarkedFields()==0){
@@ -134,8 +140,41 @@ public class MousePointFields : MonoBehaviour {
 		if(check){
 			//jeśli jest wciśnięty LPM
 			if (Input.GetMouseButton(0)){
-				target = Color.white;	//ustaw kolor pola na biały
-				if (countMarkedFields()<3) hitbox[idx,idy] = true;	//przestaw flagę pola na zaznaczone (prawda)
+				target=Color.white;	//ustaw kolor pola na biały
+				if (countMarkedFields()<3){ //hitbox[idx,idy] = true;	//przestaw flagę pola na zaznaczone (prawda)
+					if (pierwszezaznaczone==null){
+						pierwszezaznaczone=this.gameObject;
+						hitbox[idx,idy]=true;
+					} 
+					else if ((pierwszezaznaczone!=this.gameObject)&&(drugiezaznaczone==null)){
+						if ((Mathf.Abs(pierwszezaznaczone.GetComponent<MousePointFields>().idx-idx)<=1)&&(Mathf.Abs(pierwszezaznaczone.GetComponent<MousePointFields>().idy-idy)<=1)){
+							drugiezaznaczone=this.gameObject;
+							hitbox[idx,idy]=true;
+						}
+					} 
+					else if ((pierwszezaznaczone!=null)&&(pierwszezaznaczone!=this.gameObject)&&(drugiezaznaczone!=null)&&(drugiezaznaczone!=this.gameObject)){
+						int p1x=pierwszezaznaczone.GetComponent<MousePointFields>().idx;
+						int p1y=pierwszezaznaczone.GetComponent<MousePointFields>().idy;
+						int p2x=drugiezaznaczone.GetComponent<MousePointFields>().idx;
+						int p2y=drugiezaznaczone.GetComponent<MousePointFields>().idy;
+						if ((p1x!=p2x)&&(p1y!=p2y)){
+							if ((Mathf.Abs(p2x-idx)<=1)&&(Mathf.Abs(p2y-idy)<=1)&&(p1x!=idx)&&(p1y!=idy)){
+								hitbox[idx,idy]=true;
+							} 
+						} 
+						else if (((p1x==p2x)&&(p1y!=p2y))||((p1x!=p2x)&&(p1y==p2y))){
+							if ((Mathf.Abs(p2x-idx)<=1)&&(Mathf.Abs(p2y-idy)<=1)&&((Mathf.Abs(p1x-idx)>1)||(Mathf.Abs(p1y-idy)>1))){
+								hitbox[idx,idy]=true;
+							}
+						} 
+						if (((p1x!=1)||(p1y!=1))&&((p2x!=1)||(p2y!=1))){
+							if(((idx!=1)||(idy!=1))&&(Mathf.Abs(p2x-idx)<=1)&&(Mathf.Abs(p2y-idy)<=1)){
+								hitbox[idx,idy]=true;
+							}
+						}
+					}
+				}
+			
 			}
 			//jeśli jest wciśnięty PPM
 			else if (Input.GetMouseButton(1)){

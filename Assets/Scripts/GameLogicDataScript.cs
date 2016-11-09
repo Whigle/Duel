@@ -535,6 +535,34 @@ public abstract class Czynnosc {
 	/// Metoda abstrakcyjna odpowiadająca za wykonanie akcji.
 	/// </summary>
 	public abstract void wykonaj();
+
+
+	protected int porownajHitbox(Czynnosc c){
+		int ile=0;
+		for (int i=0;i<3;i++){
+			for (int j=0;j<3;j++){
+				if (c.getHitbox()[i,j]==this.hitbox[i,j]) ile++;
+			}
+		}
+		return ile;
+	}
+
+	protected bool getGracz(){
+		return gracz;
+	}
+
+	protected bool [,] getHitbox(){
+		return hitbox;
+	}
+
+	protected int getKoszt(){
+		return koszt;
+	}
+
+	protected int getIloscPol(){
+		return iloscPol;
+	}
+
 	/// <summary>
 	/// Returns a <see cref="System.String"/> that represents the current <see cref="Czynnosc"/>.
 	/// </summary>
@@ -556,6 +584,11 @@ public class Atak : Czynnosc {
 	/// Zadane obrażenia.
 	/// </summary>
 	int obrazenia;
+	//first index x / last index y - indeksy pierwszego i ostatniego pola zaznaczonego w hitboxie - do kombosów
+	int fIndX;
+	int fIndY;
+	int lIndX;
+	int lIndY;
 	/// <summary>
 	/// Inicjalizuje instancję klasy <see cref="Atak"/>.
 	/// </summary>
@@ -576,11 +609,67 @@ public class Atak : Czynnosc {
 	/// <summary>
 	/// Metoda odpowiadająca za wykonanie ataku.
 	/// </summary>
-	public override void wykonaj(){
+	public override void wykonaj(){	//TA METODA ZOSTANIE SKASOWANA CAŁA LOGKA ROZGRYWKI BĘDZIE W KLASIE SKRYPTU
 		if (gracz) GameLogicDataScript.decreaseZycieNPC(obrazenia*moc);	//jeśli to gracz wykonuje akcję, to zmniejsz życie NPC
 		else GameLogicDataScript.decreaseZycieGracza(obrazenia*moc);	//jeśli to NPC wykonuje akcję, to zmniejsz życie gracza
 		GameLogicDataScript.aktualizujZycie();	//aktualizuj wyświetlane życie
 	}
+
+	public int getMoc(){
+		return moc;
+	}
+
+	public int getObrazenia(){
+		return obrazenia;
+	}
+
+	public void setFirst(int x, int y){
+		this.fIndX=x;
+		this.fIndY=y;
+	}
+
+	public void setLast(int x, int y){
+		this.lIndX=x;
+		this.lIndY=y;
+	}
+
+	//zwraca inta 1-9 oznaczającego pole, 1-[0,0] 5-[1,1] 9-[2,2]
+	public int getFirst(){
+		if (this.fIndX==0){
+			if (this.fIndY==0) return 1;
+			else if (this.fIndY==1) return 2;
+			else return 3;
+		}
+		else if (this.fIndX==1){
+			if (this.fIndY==0) return 4;
+			else if (this.fIndY==1) return 5;
+			else return 6;
+		}
+		else {
+			if (this.fIndY==0) return 7;
+			else if (this.fIndY==1) return 8;
+			else return 9;
+		}
+	}
+
+	public int getLast(){
+		if (this.lIndX==0){
+			if (this.lIndY==0) return 1;
+			else if (this.lIndY==1) return 2;
+			else return 3;
+		}
+		else if (this.lIndX==1){
+			if (this.lIndY==0) return 4;
+			else if (this.lIndY==1) return 5;
+			else return 6;
+		}
+		else {
+			if (this.lIndY==0) return 7;
+			else if (this.lIndY==1) return 8;
+			else return 9;
+		}
+	}
+
 	/// <summary>
 	/// Returns a <see cref="System.String"/> that represents the current <see cref="Atak"/>.
 	/// </summary>
@@ -606,7 +695,7 @@ public class Obrona : Czynnosc {
 	/// <summary>
 	/// Metoda odpowiadająca za wykonanie obrony.
 	/// </summary>
-	public override void wykonaj(){
+	public override void wykonaj(){//TA METODA ZOSTANIE SKASOWANA CAŁA LOGKA ROZGRYWKI BĘDZIE W KLASIE SKRYPTU
 		//jeśli to gracz się broni
 		if (gracz) {
 			//BRONIĘ SIĘ!
