@@ -11,6 +11,7 @@ public class MousePointFields : MonoBehaviour {
 
 	public static GameObject pierwszezaznaczone;
 	public static GameObject drugiezaznaczone;
+	public static GameObject ostatniezaznaczone;
 
 	/// <summary>
 	/// Przechowuje kolor danego pola.
@@ -159,6 +160,7 @@ public class MousePointFields : MonoBehaviour {
 						int p2y=drugiezaznaczone.GetComponent<MousePointFields>().idy;
 						if ((p1x!=p2x)&&(p1y!=p2y)){
 							if ((Mathf.Abs(p2x-idx)<=1)&&(Mathf.Abs(p2y-idy)<=1)&&(p1x!=idx)&&(p1y!=idy)){
+								ostatniezaznaczone=this.gameObject;
 								hitbox[idx,idy]=true;
 							} 
 						} 
@@ -275,6 +277,14 @@ public class MousePointFields : MonoBehaviour {
 	/// <param name="e"><c>true</c>, aktywny, <c>false</c> nieaktywny.</param>
 	public static void setEnable(bool e){
 		enable=e;
+	}
+
+	public int getIndX(){
+		return this.idx;
+	}
+
+	public int getIndY(){
+		return this.idy;
 	}
 
 	/// <summary>
