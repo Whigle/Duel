@@ -28,7 +28,7 @@ public class MousePointFields : MonoBehaviour {
 	/// <summary>
 	/// Obiekt klasy GameObject reprezentujący tło
 	/// </summary>
-	public GameObject HUDCombatField;
+	public GameObject HUDCombatField; /*tekst*/
 	/// <summary>
 	/// Indeksy danego pola w hitboxie.
 	/// </summary>
