@@ -96,6 +96,14 @@ public class GameLogicDataScript : MonoBehaviour {
 	/// Przechowuje informację o trybie walki NPC. Prawda - atak, fałsz - obrona.
 	/// </summary>
 	bool modeNPC;
+	//// <summary>
+	/// Przechowuje informację o rodzaju ataku (do wyświetlania)
+	/// </summary>
+	string rodzajAtaku;
+	//// <summary>
+	/// Czas wyświetlania informacji o rodzaju ataku
+	/// </summary>
+	static double czasWyswietlania;
 
 	/// <summary>
 	/// Metoda uruchamiana podczas inicjalizacji klasy w momencie startu skryptu.
@@ -136,9 +144,9 @@ public class GameLogicDataScript : MonoBehaviour {
 
 				//wyliczanie kosztu akcji
 				if(modeGracza){
-					if(iloscPolGracza==1) kosztAkcjiGracza=4;		//pchniecie
-					else if(iloscPolGracza==2) kosztAkcjiGracza=2;	//szybki
-					else if(iloscPolGracza==3) kosztAkcjiGracza=3;	//mocny
+					if(iloscPolGracza==1) { kosztAkcjiGracza=4;	rodzajAtaku = "Pchnięcie!"; }			//pchniecie
+					else if(iloscPolGracza==2) { kosztAkcjiGracza=2; rodzajAtaku="Szybki atak!"; }	//szybki
+					else if(iloscPolGracza==3) { kosztAkcjiGracza=3; rodzajAtaku="Mocny atak!"; }	//mocny
 				}
 				else kosztAkcjiGracza=iloscPolGracza;	//ile bronisz tyle placisz
 
@@ -147,6 +155,8 @@ public class GameLogicDataScript : MonoBehaviour {
 					punktyAkcjiGracza-=kosztAkcjiGracza;	//odejmuje punkty akcji
 					if (modeGracza) {
 						akcjeGracza.Add(new Atak(true, hitboxGracza, kosztAkcjiGracza, iloscPolGracza, mocGracza));
+						czasWyswietlania = Time.time;
+						GameObject.Find ("RodzajAtakuHUDText").GetComponent<Text> ().text = rodzajAtaku; //wyświetl informacje o rodzaju ataku
 					}
 					else {
 						akcjeGracza.Add(new Obrona(true, hitboxGracza, kosztAkcjiGracza, iloscPolGracza));
@@ -222,6 +232,10 @@ public class GameLogicDataScript : MonoBehaviour {
 				MousePointFields.clearHitbox(); //czyszczę hitbox na HUD'zie
 				MousePointFields.setEnable(false);	//dezaktywuję HUD
 				turaTrwa=false;	//przestawiam flagę trwania tury na fałsz
+			}
+			if (Time.time-czasWyswietlania > 1) { // czas wyświetlania informacji o rodzaju wykonanego ataku
+				GameObject.Find ("RodzajAtakuHUDText").GetComponent<Text> ().text = "";
+				czasWyswietlania = 0;
 			}
 		}
 	}
