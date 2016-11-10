@@ -21,7 +21,7 @@ public class GameLogicDataScript : MonoBehaviour {
 	/// <summary>
 	/// Długość fazy wizualizacji walki.
 	/// </summary>
-	static double interwalWalka=6.0;
+	static double interwalWalka=4.0;
 	/// <summary>
 	/// Przechowuje informację o liczbie aktualnej tury.
 	/// </summary>
@@ -235,7 +235,7 @@ public class GameLogicDataScript : MonoBehaviour {
 								akcjeGracza[i].setIloscPol(akcjeGracza[i].getIloscPol()-pokryte);
 								((Atak)akcjeGracza[i]).aktualizujObrazenia();
 
-								print("NpcB GraczA "+(((Atak)akcjeGracza[i]).getObrazenia()).ToString());
+								//print("NpcB GraczA "+(((Atak)akcjeGracza[i]).getObrazenia()).ToString()+" pokryte: "+pokryte);
 
 								decreaseZycieNPC(((Atak)akcjeGracza[i]).getObrazenia()*((Atak)akcjeGracza[i]).getMoc());
 								ii++; jj++;	
@@ -251,7 +251,7 @@ public class GameLogicDataScript : MonoBehaviour {
 								akcjeNPC[j].setIloscPol(akcjeNPC[j].getIloscPol()-pokryte);
 								((Atak)akcjeNPC[j]).aktualizujObrazenia();
 
-								print("NpcA GraczB "+(((Atak)akcjeNPC[j]).getObrazenia()).ToString()); 
+								//print("NpcA GraczB "+(((Atak)akcjeNPC[j]).getObrazenia()).ToString()+" pokryte: "+pokryte); 
 
 								decreaseZycieGracza(((Atak)akcjeNPC[j]).getObrazenia()*((Atak)akcjeNPC[j]).getMoc());
 								ii++; jj++;							
@@ -263,7 +263,7 @@ public class GameLogicDataScript : MonoBehaviour {
 
 									pozostalePAGracza-=aktKosztPAGracza;
 
-									print("GraczA "+(((Atak)akcjeGracza[i]).getObrazenia()).ToString()); 
+									//print("GraczA "+(((Atak)akcjeGracza[i]).getObrazenia()).ToString()); 
 
 									decreaseZycieNPC(((Atak)akcjeGracza[i]).getObrazenia()*((Atak)akcjeGracza[i]).getMoc());
 									ii++;
@@ -273,7 +273,7 @@ public class GameLogicDataScript : MonoBehaviour {
 
 									pozostalePANPC-=aktKosztPANPC;
 
-									print("NpcA "+(((Atak)akcjeNPC[j]).getObrazenia()).ToString()); 
+									//print("NpcA "+(((Atak)akcjeNPC[j]).getObrazenia()).ToString()); 
 
 									decreaseZycieGracza(((Atak)akcjeNPC[j]).getObrazenia()*((Atak)akcjeNPC[j]).getMoc());
 									jj++;
@@ -285,8 +285,8 @@ public class GameLogicDataScript : MonoBehaviour {
 									pozostalePAGracza-=aktKosztPAGracza;
 									pozostalePANPC-=aktKosztPANPC;
 
-									print("GraczA "+(((Atak)akcjeGracza[i]).getObrazenia()).ToString()); 
-									print("NpcA "+(((Atak)akcjeNPC[j]).getObrazenia()).ToString()); 
+									//print("GraczA "+(((Atak)akcjeGracza[i]).getObrazenia()).ToString()); 
+									//print("NpcA "+(((Atak)akcjeNPC[j]).getObrazenia()).ToString()); 
 
 									decreaseZycieNPC(((Atak)akcjeGracza[i]).getObrazenia()*((Atak)akcjeGracza[i]).getMoc());
 									decreaseZycieGracza(((Atak)akcjeNPC[j]).getObrazenia()*((Atak)akcjeNPC[j]).getMoc());
@@ -303,12 +303,14 @@ public class GameLogicDataScript : MonoBehaviour {
 									((Atak)akcjeGracza[i]).aktualizujObrazenia();
 									akcjeNPC[j].setIloscPol(akcjeNPC[j].getIloscPol()-pokryte);
 									((Atak)akcjeNPC[j]).aktualizujObrazenia();*/
+									int obrazeniaG = ((Atak)akcjeGracza[i]).getObrazenia()-pokryte;
+									int obrazeniaN = ((Atak)akcjeNPC[j]).getObrazenia()-pokryte;
 
-									print("GraczA "+((((Atak)akcjeGracza[i]).getObrazenia())).ToString()); 
-									print("NpcA "+((((Atak)akcjeNPC[j]).getObrazenia())).ToString()); 
+									//print("GraczA "+(obrazeniaG).ToString()); 
+									//print("NpcA "+(obrazeniaN).ToString()); 
 
-									decreaseZycieNPC((((Atak)akcjeGracza[i]).getObrazenia())*((Atak)akcjeGracza[i]).getMoc());
-									decreaseZycieGracza((((Atak)akcjeNPC[j]).getObrazenia())*((Atak)akcjeNPC[j]).getMoc());
+									decreaseZycieNPC(obrazeniaG*((Atak)akcjeGracza[i]).getMoc());
+									decreaseZycieGracza(obrazeniaN*((Atak)akcjeNPC[j]).getMoc());
 									ii++; jj++;	
 								}
 							}
@@ -343,7 +345,7 @@ public class GameLogicDataScript : MonoBehaviour {
 							if (akcjeGracza[i].getTypAkcji()){
 								pozostalePAGracza-=aktKosztPAGracza;
 
-								print("Npc0 GraczA "+(((Atak)akcjeGracza[i]).getObrazenia()).ToString()); 
+								//print("Npc0 GraczA "+(((Atak)akcjeGracza[i]).getObrazenia()).ToString()); 
 
 								decreaseZycieNPC(((Atak)akcjeGracza[i]).getObrazenia()*((Atak)akcjeGracza[i]).getMoc());
 							}
@@ -358,7 +360,7 @@ public class GameLogicDataScript : MonoBehaviour {
 							if (akcjeNPC[j].getTypAkcji()){
 								pozostalePANPC-=aktKosztPANPC;
 
-								print("NpcA Gracz0 "+(((Atak)akcjeNPC[j]).getObrazenia()).ToString()); 
+								//print("NpcA Gracz0 "+(((Atak)akcjeNPC[j]).getObrazenia()).ToString()); 
 
 								decreaseZycieGracza(((Atak)akcjeNPC[j]).getObrazenia()*((Atak)akcjeNPC[j]).getMoc());
 							}
@@ -379,12 +381,12 @@ public class GameLogicDataScript : MonoBehaviour {
 
 					wykonane=true;
 				}
-				else{
+				/*else{
 					if(Input.GetKey(KeyCode.Space)) {
 						nastepnaTura=true;
 						wykonane=false;
 					}
-				}
+				}*/
 			}
 			//jeśli to już koniec rozgrywki
 			else{
@@ -431,8 +433,13 @@ public class GameLogicDataScript : MonoBehaviour {
 			}
 		}
 		else {
+			GameObject.Find ("RodzajAtakuHUDText").GetComponent<Text> ().text = "";
 			//czas=Time.time;
 			if(Time.time-czas>interwalWalka){
+				if(Input.GetKey(KeyCode.Space)) {
+					nastepnaTura=true;
+					wykonane=false;
+				}
 				if (!koniecRozgrywki) {
 					GameObject.Find("NastepnaTuraHUDText").GetComponent<Text>().text="Wciśnij [spację], aby przejść do kolejnej tury.";
 					wykonane=true;
@@ -780,7 +787,7 @@ public abstract class Czynnosc {
 		int ile=0;
 		for (int i=0;i<3;i++){
 			for (int j=0;j<3;j++){
-				if (c.getHitbox()[i,j]==this.hitbox[i,j]) ile++;
+				if ((c.getHitbox()[i,j])&&(this.hitbox[i,j])) ile++;
 			}
 		}
 		return ile;
