@@ -238,7 +238,11 @@ public class GameLogicDataScript : MonoBehaviour {
 								//print("NpcB GraczA "+(((Atak)akcjeGracza[i]).getObrazenia()).ToString()+" pokryte: "+pokryte);
 
 								decreaseZycieNPC(((Atak)akcjeGracza[i]).getObrazenia()*((Atak)akcjeGracza[i]).getMoc());
-								ii++; jj++;	
+								ii++; 
+								if (Math.Abs(pozostalePAGracza-pozostalePANPC)>=aktKosztPANPC){
+									pozostalePANPC-=aktKosztPANPC;
+									jj++;
+								}
 
 							}
 							//gracz broni NPC atakuje
@@ -246,7 +250,6 @@ public class GameLogicDataScript : MonoBehaviour {
 								akcjeGracza[i].animuj();
 								akcjeNPC[j].animuj();
 
-								pozostalePAGracza-=aktKosztPAGracza;
 								pozostalePANPC-=aktKosztPANPC;
 								akcjeNPC[j].setIloscPol(akcjeNPC[j].getIloscPol()-pokryte);
 								((Atak)akcjeNPC[j]).aktualizujObrazenia();
@@ -254,7 +257,11 @@ public class GameLogicDataScript : MonoBehaviour {
 								//print("NpcA GraczB "+(((Atak)akcjeNPC[j]).getObrazenia()).ToString()+" pokryte: "+pokryte); 
 
 								decreaseZycieGracza(((Atak)akcjeNPC[j]).getObrazenia()*((Atak)akcjeNPC[j]).getMoc());
-								ii++; jj++;							
+								jj++;	
+								if (Math.Abs(pozostalePAGracza-pozostalePANPC)>=aktKosztPAGracza){
+									pozostalePAGracza-=aktKosztPAGracza;
+										ii++;
+								}						
 							}
 							//obaj atakują
 							else if((akcjeNPC[j].getTypAkcji())&&(akcjeGracza[i].getTypAkcji())){
