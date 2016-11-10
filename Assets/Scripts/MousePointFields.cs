@@ -312,6 +312,7 @@ public class MousePointFields : MonoBehaviour {
 				if (p1x != p2x && p1y != p2y) {
 					if (Mathf.Abs (p2x - idx) <= 1 && Mathf.Abs (p2y - idy) <= 1 && p1x != idx && p1y != idy) {
 						hitbox [idx, idy] = true;
+						ostatniezaznaczone = this.gameObject;
 					} 
 				} 
 				if ((p1x == p2x && p1y != p2y) || (p1x != p2x && p1y == p2y)) {
@@ -319,14 +320,17 @@ public class MousePointFields : MonoBehaviour {
 					} else if (p2x == 1 && p2y == 1) {
 						if ((Mathf.Abs (p2x - idx) <= 1 && Mathf.Abs (p2y - idy) <= 1) && (Mathf.Abs (p1x - idx) > 1 || Mathf.Abs (p1y - idy) > 1)) {
 							hitbox [idx, idy] = true;
+							ostatniezaznaczone = this.gameObject;
 						}
 					} else if ((p1x == 1 || p1y == 1) && (p2x != 1 && p2y != 1)) {
 						if((Mathf.Abs (p2x - idx) <= 1 && p2y == idy) || (Mathf.Abs (p2y - idy) <= 1 && p2x == idx)) {
 							hitbox [idx, idy] = true;
+							ostatniezaznaczone = this.gameObject;
 						}
 					} else {
 						if (((Mathf.Abs (p2x - idx) <= 1 && p2y == idy) || (Mathf.Abs (p2y - idy) <= 1 && p2x == idx)) && this.gameObject != pierwszezaznaczone && (idx!=1&&idy!=1)) {
 							hitbox [idx, idy] = true;
+							ostatniezaznaczone = this.gameObject;
 						}
 					}
 				}
@@ -348,7 +352,7 @@ public class MousePointFields : MonoBehaviour {
 					gameObject.GetComponent<Renderer> ().material.color = Color.yellow;
 				}
 			}
-		} else if (pierwszezaznaczone != null && pierwszezaznaczone != this.gameObject && drugiezaznaczone != null && drugiezaznaczone != this.gameObject) {
+		} else if (pierwszezaznaczone != null && pierwszezaznaczone != this.gameObject && drugiezaznaczone != null && drugiezaznaczone != this.gameObject && ostatniezaznaczone==null) {
 			visibility = false;	//zrób niewidocznym
 			target = Color.white;
 			int p1x = pierwszezaznaczone.GetComponent<MousePointFields> ().idx;
@@ -380,6 +384,13 @@ public class MousePointFields : MonoBehaviour {
 						gameObject.GetComponent<Renderer> ().material.color = Color.yellow;
 					}
 				}
+			}
+		} else if (pierwszezaznaczone!=null && drugiezaznaczone !=null && ostatniezaznaczone !=null) {
+			if (this.gameObject == pierwszezaznaczone || this.gameObject == drugiezaznaczone || this.gameObject == ostatniezaznaczone) {
+				visibility = true;
+				this.gameObject.GetComponent<Renderer> ().material.color = Color.white;
+			} else {
+				visibility = false;
 			}
 		} else gameObject.GetComponent<Renderer>().material.color=target;
 	}
