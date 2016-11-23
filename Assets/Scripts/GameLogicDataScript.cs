@@ -159,7 +159,14 @@ public class GameLogicDataScript : MonoBehaviour {
 		if(turaTrwa){
 			//przetworzenie jednej akcji gracza i dodanie jej do kolejki
 			if (!MousePointFields.getCheck()){
-				hitboxGracza=MousePointFields.getHitbox(); 	//pobieram hitbox z HUD'a
+				//hitboxGracza=MousePointFields.getHitbox(); 	//pobieram hitbox z HUD'a
+				bool [,] temp = new bool[3,3];
+				for (int i = 0; i < 3; i++) {
+					for (int j = 0; j < 3; j++) {
+						hitboxGracza [i, j] = MousePointFields.getHitbox () [i, j];
+						temp[i,j] = MousePointFields.getHitbox () [i, j];
+					}
+				}
 				modeGracza=MousePointFields.getMode();	//pobieram tryb walki
 				iloscPolGracza=countMarkedFields();	//wyliczam ilość zaznaczonych w hitboxie punktów
 				GameObject pierwsze=MousePointFields.pierwszezaznaczone;
@@ -176,7 +183,7 @@ public class GameLogicDataScript : MonoBehaviour {
 				if (kosztAkcjiGracza<=punktyAkcjiGracza){
 					punktyAkcjiGracza-=kosztAkcjiGracza;	//odejmuje punkty akcji
 					if (modeGracza) {
-						akcjeGracza.Add(new Atak(true, hitboxGracza, kosztAkcjiGracza, iloscPolGracza, mocGracza));
+						akcjeGracza.Add(new Atak(true, temp, kosztAkcjiGracza, iloscPolGracza, mocGracza));
 						czasWyswietlania = Time.time;
 						GameObject.Find ("RodzajAtakuHUDText").GetComponent<Text> ().text = rodzajAtaku; //wyświetl informacje o rodzaju ataku			
 						if (pierwsze!=null)
@@ -185,7 +192,7 @@ public class GameLogicDataScript : MonoBehaviour {
 							((Atak)akcjeGracza[akcjeGracza.Count-1]).setLast(ostatnie.GetComponent<MousePointFields>().getIndX(),ostatnie.GetComponent<MousePointFields>().getIndY());
 					}
 					else {
-						akcjeGracza.Add(new Obrona(true, hitboxGracza, kosztAkcjiGracza, iloscPolGracza));
+						akcjeGracza.Add(new Obrona(true, temp, kosztAkcjiGracza, iloscPolGracza));
 					}
 
 					//jeśli graczowi po tej akcji nie zostaną już punkty
@@ -383,8 +390,8 @@ public class GameLogicDataScript : MonoBehaviour {
 						if ((zycieNPC<=0)||(zycieGracza<=0)) koniecRozgrywki=true;
 						aktualizujZycie();
 					}
-					akcjeGracza.Clear(); //czyszczenie kolejki akcji gracza
-					akcjeNPC.Clear();	//czyszczenie kolejki akcji NPC
+					//akcjeGracza.Clear(); //czyszczenie kolejki akcji gracza
+					//akcjeNPC.Clear();	//czyszczenie kolejki akcji NPC
 
 					wykonane=true;
 				}
@@ -449,9 +456,13 @@ public class GameLogicDataScript : MonoBehaviour {
 				}
 				if (!koniecRozgrywki) {
 					GameObject.Find("NastepnaTuraHUDText").GetComponent<Text>().text="Wciśnij [spację], aby przejść do kolejnej tury.";
+					pokazTabelke();
 					wykonane=true;
 					//jeśli jeszcze żyją przygotuj następną turę
 					if (nastepnaTura) {
+						ukryjTabelke();
+						akcjeGracza.Clear ();
+						akcjeNPC.Clear ();
 						GameObject.Find("NastepnaTuraHUDText").GetComponent<Text>().text="";
 						nastepnaTura=false;
 						GameObject.Find("Main Camera").GetComponent<Animation>().Stop();
@@ -598,6 +609,7 @@ public class GameLogicDataScript : MonoBehaviour {
 				}
 			}
 			//jeśli to był atak, to dodaj nowy atak do kolejki
+			printHitboxNPC();
 			if (modeNPC) {
 				akcjeNPC.Add(new Atak(false,hitboxNPC,kosztAkcjiNPC,iloscPolNPC,mocNPC));
 			}
@@ -607,6 +619,61 @@ public class GameLogicDataScript : MonoBehaviour {
 			}
 			punktyAkcjiNPC-=kosztAkcjiNPC;	//zabiera punkty wykonanej akcji z puli punktów akcji NPC
 		}
+	}
+
+	float drawpositionx=Screen.width*0.2f;
+	float drawpositiony=Screen.height*0.2f;
+	bool GUI1 = false;
+	public Texture2D miecz;
+	public Texture2D tarcza;
+	GUIStyle style = new GUIStyle ();
+
+	void jakRysowac(List<Czynnosc> akcje) {
+		foreach (Czynnosc i in akcje) {
+			int temp = i.getKoszt ();
+			Texture2D tempM;
+			if (i.getTypAkcji())
+				tempM = miecz;
+			else
+				tempM = tarcza;
+
+			string str="HITBOX:\n";
+			for(int i1=0;i1<3;i1++){
+				for(int j=0;j<3;j++){
+					if(i.getHitbox()[i1,j]==true) str+="1";
+					else str+="0";
+					str+=" ";
+				}
+				str+="\n";
+			}
+
+			//str = i.getIloscPol ().ToString();
+			//print(str);
+
+			GUIContent GUI11= new GUIContent (str, tempM, "You Know Nothing");
+			//GUI.Box (new Rect (drawpositionx, drawpositiony, Screen.width * 0.3f, Screen.height * 0.06f * temp), tempM);
+			//GUI.Box (new Rect (drawpositionx, drawpositiony, Screen.width * 0.3f, Screen.height * 0.06f * temp), temp.ToString ());
+			GUI.Box (new Rect (drawpositionx, drawpositiony, Screen.width * 0.3f, Screen.height * 0.06f * temp), GUI11);
+			drawpositiony += Screen.height * 0.06f * temp;
+		}
+		drawpositiony = Screen.height * 0.2f;
+	}
+
+	void OnGUI() {
+		if (GUI1 == true) {
+			jakRysowac (akcjeGracza);
+			drawpositionx = drawpositionx + Screen.width * 0.3f;
+			jakRysowac (akcjeNPC);
+			drawpositionx = drawpositionx - Screen.width * 0.3f;
+		}
+	}
+
+	void pokazTabelke() {
+		GUI1 = true;
+	}
+
+	void ukryjTabelke() {
+		GUI1 = false;
 	}
 
 
@@ -780,7 +847,13 @@ public abstract class Czynnosc {
 	/// <param name="iloscPol">Ilosc zaznaczonych pól w tej akcji.</param>
 	public Czynnosc(bool gracz, bool [,] hitbox, int koszt, int iloscPol){
 		this.gracz=gracz;
-		this.hitbox=hitbox;
+		//this.hitbox=hitbox;
+		this.hitbox=new bool[3,3];
+		for (int i = 0; i < 3; i++) {
+			for(int j=0;j<3;j++) {
+				this.hitbox [i, j] = hitbox [i, j];
+			}
+		}
 		this.koszt=koszt;
 		this.iloscPol=iloscPol;
 	}
