@@ -110,7 +110,7 @@ public class GameLogicDataScript : MonoBehaviour {
 	/// <summary>
 	/// Przechowuje informację o rodzaju ataku (do wyświetlania)
 	/// </summary>
-	string rodzajAtaku;
+	string rodzajAtaku = "Runda 1";
 	/// <summary>
 	/// Czas wyświetlania informacji o rodzaju ataku
 	/// </summary>
@@ -144,6 +144,8 @@ public class GameLogicDataScript : MonoBehaviour {
 		mocNPC=1;
 		zycieNPC=100;
 
+		GameObject.Find("RodzajAtakuHUDText").GetComponent<Text>().text=rodzajAtaku;
+		GameObject.Find("RodzajAtakuHUDText").GetComponent<Text> ().fontSize = 15;
 		GameObject.Find("RundaHUDText").GetComponent<Text>().text="Runda 1";
 		aktualizujPA();
 		aktualizujZycie();
@@ -157,6 +159,7 @@ public class GameLogicDataScript : MonoBehaviour {
 	/// </summary>
 	void Update () {
 		if(turaTrwa){
+			GameObject.Find ("RodzajAtakuHUDText").GetComponent<Text> ().text = rodzajAtaku; //wyświetl informacje o rodzaju ataku			
 			//przetworzenie jednej akcji gracza i dodanie jej do kolejki
 			if (!MousePointFields.getCheck()){
 				//hitboxGracza=MousePointFields.getHitbox(); 	//pobieram hitbox z HUD'a
@@ -173,9 +176,9 @@ public class GameLogicDataScript : MonoBehaviour {
 				GameObject ostatnie=MousePointFields.ostatniezaznaczone;
 				//wyliczanie kosztu akcji
 				if(modeGracza){
-					if(iloscPolGracza==1) { kosztAkcjiGracza=4;	rodzajAtaku = "Pchnięcie!"; }			//pchniecie
-					else if(iloscPolGracza==2) { kosztAkcjiGracza=2; rodzajAtaku="Szybki atak!"; }	//szybki
-					else if(iloscPolGracza==3) { kosztAkcjiGracza=3; rodzajAtaku="Mocny atak!"; }	//mocny
+					if(iloscPolGracza==1) { kosztAkcjiGracza=4; }
+					else if(iloscPolGracza==2) { kosztAkcjiGracza=2; }
+					else if(iloscPolGracza==3) { kosztAkcjiGracza=3; }
 				}
 				else kosztAkcjiGracza=iloscPolGracza;	//ile bronisz tyle placisz
 
@@ -184,7 +187,14 @@ public class GameLogicDataScript : MonoBehaviour {
 					punktyAkcjiGracza-=kosztAkcjiGracza;	//odejmuje punkty akcji
 					if (modeGracza) {
 						akcjeGracza.Add(new Atak(true, temp, kosztAkcjiGracza, iloscPolGracza, mocGracza));
-						czasWyswietlania = Time.time;
+						if (kosztAkcjiGracza == 4) {
+							rodzajAtaku += "\nPchnięcie!";
+						} else if (kosztAkcjiGracza == 2) {
+							rodzajAtaku += "\nSzybki atak!";
+						} else {
+							rodzajAtaku += "\nMocny atak!";
+						}
+						//czasWyswietlania = Time.time;
 						GameObject.Find ("RodzajAtakuHUDText").GetComponent<Text> ().text = rodzajAtaku; //wyświetl informacje o rodzaju ataku			
 						if (pierwsze!=null)
 							((Atak)akcjeGracza[akcjeGracza.Count-1]).setFirst(pierwsze.GetComponent<MousePointFields>().getIndX(),pierwsze.GetComponent<MousePointFields>().getIndY());
@@ -208,6 +218,7 @@ public class GameLogicDataScript : MonoBehaviour {
 		}
 		//jeśli czas tury się skończył przechodzimy do wykonywania czynności z kolejki
 		else {
+			GameObject.Find ("RodzajAtakuHUDText").GetComponent<Text> ().text = ""; //resetuj info o atakach na czas animacji
 			GameObject.Find("Main Camera").GetComponent<Animation>().Play("Kamera");
 			if(!koniecRozgrywki){
 				if(!wykonane){
@@ -392,8 +403,10 @@ public class GameLogicDataScript : MonoBehaviour {
 				//jeśli to obaj stracili życie pokaż tekst remisu na HUD'zie
 				else GameObject.Find("WynikHUDText").GetComponent<Text>().text="Remis\n"+tura.ToString()+" rund";
 			}
+
 		}
 		//aktualizujCzas();
+
 	}
 
 	/// <summary>
@@ -422,13 +435,13 @@ public class GameLogicDataScript : MonoBehaviour {
 				GameObject.Find("PAGraczaHUDText").GetComponent<Text>().text="";	//ukrywam (czyszczę tekst) punkty akcji wyświetlane na HUD'zie
 
 			}
-			if (Time.time-czasWyswietlania > 1) { // czas wyświetlania informacji o rodzaju wykonanego ataku
+			/*if (Time.time-czasWyswietlania > 1) { // czas wyświetlania informacji o rodzaju wykonanego ataku
 				GameObject.Find ("RodzajAtakuHUDText").GetComponent<Text> ().text = "";
 				czasWyswietlania = 0;
-			}
+			}*/
 		}
 		else {
-			GameObject.Find ("RodzajAtakuHUDText").GetComponent<Text> ().text = "";
+			//GameObject.Find ("RodzajAtakuHUDText").GetComponent<Text> ().text = "";
 			//czas=Time.time;
 			if(Time.time-czas>interwalWalka){
 				if(Input.GetKey(KeyCode.Space)) {
@@ -439,8 +452,10 @@ public class GameLogicDataScript : MonoBehaviour {
 					GameObject.Find("NastepnaTuraHUDText").GetComponent<Text>().text="Wciśnij [spację], aby przejść do kolejnej tury.";
 					pokazTabelke();
 					wykonane=true;
+
 					//jeśli jeszcze żyją przygotuj następną turę
 					if (nastepnaTura) {
+						rodzajAtaku += "\n\nRunda " + (tura+1);
 						ukryjTabelke();
 						akcjeGracza.Clear ();
 						akcjeNPC.Clear ();
