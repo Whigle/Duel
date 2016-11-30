@@ -128,6 +128,7 @@ public class MousePointFields : MonoBehaviour {
 		}
 		//jeśli HUD jest nieaktywny
 		else{
+			visibility = false;
 			gameObject.GetComponent<Renderer>().enabled=false; //wyłącz wyświetlanie pola
 			HUDCombatField.GetComponent<SpriteRenderer>().color=areacolor=new Color(1,1,1,0.5f); //ustaw kolor tła na normalny
 		}
@@ -264,6 +265,10 @@ public class MousePointFields : MonoBehaviour {
 		return this.idy;
 	}
 
+	public bool getVisibility() {
+		return this.visibility;
+	}
+
 	/// <summary>
 	/// DEBUG
 	/// Wyświetla hitbox i ilość pól na konsolę
@@ -344,12 +349,14 @@ public class MousePointFields : MonoBehaviour {
 				if (Mathf.Abs (pierwszezaznaczone.GetComponent<MousePointFields> ().idx - idx) <= 1 && Mathf.Abs (pierwszezaznaczone.GetComponent<MousePointFields> ().idy - idy) <= 1) {
 					visibility = true;
 					gameObject.GetComponent<Renderer> ().material.color = Color.yellow;
+					target=Color.yellow;
 				}
 			} 
 			if (!(pierwszezaznaczone.GetComponent<MousePointFields> ().idx != 1 && pierwszezaznaczone.GetComponent<MousePointFields> ().idy != 1) || !(pierwszezaznaczone.GetComponent<MousePointFields> ().idx == 1 && pierwszezaznaczone.GetComponent<MousePointFields> ().idy == 1)) {
 				if ((Mathf.Abs (pierwszezaznaczone.GetComponent<MousePointFields> ().idx - idx) <= 1 && pierwszezaznaczone.GetComponent<MousePointFields> ().idy == idy) || (Mathf.Abs (pierwszezaznaczone.GetComponent<MousePointFields> ().idy - idy) <= 1 && pierwszezaznaczone.GetComponent<MousePointFields> ().idx == idx)) {
 					visibility = true;
 					gameObject.GetComponent<Renderer> ().material.color = Color.yellow;
+					target=Color.yellow;
 				}
 			}
 		} else if (pierwszezaznaczone != null && pierwszezaznaczone != this.gameObject && drugiezaznaczone != null && drugiezaznaczone != this.gameObject && ostatniezaznaczone==null) {
@@ -364,6 +371,7 @@ public class MousePointFields : MonoBehaviour {
 				if (Mathf.Abs (p2x - idx) <= 1 && Mathf.Abs (p2y - idy) <= 1 && p1x != idx && p1y != idy) {
 					visibility = true;
 					gameObject.GetComponent<Renderer> ().material.color = Color.yellow;
+					target=Color.yellow;
 				} 
 			} 
 			if ((p1x == p2x && p1y != p2y) || (p1x != p2x && p1y == p2y)) {
@@ -372,23 +380,27 @@ public class MousePointFields : MonoBehaviour {
 					if ((Mathf.Abs (p2x - idx) <= 1 && Mathf.Abs (p2y - idy) <= 1) && (Mathf.Abs (p1x - idx) > 1 || Mathf.Abs (p1y - idy) > 1)) {
 						visibility = true;
 						gameObject.GetComponent<Renderer> ().material.color = Color.yellow;
+						target=Color.yellow;
 					}
 				} else if ((p1x == 1 || p1y == 1) && (p2x != 1 && p2y != 1)) {
 					if ((Mathf.Abs (p2x - idx) <= 1 && p2y == idy) || (Mathf.Abs (p2y - idy) <= 1 && p2x == idx)) {
 						visibility = true;
 						gameObject.GetComponent<Renderer> ().material.color = Color.yellow;
+						target=Color.yellow;
 					}
 				} else {
 					if (((Mathf.Abs (p2x - idx) <= 1 && p2y == idy) || (Mathf.Abs (p2y - idy) <= 1 && p2x == idx)) && this.gameObject != pierwszezaznaczone && (idx != 1 && idy != 1)) {
 						visibility = true;
 						gameObject.GetComponent<Renderer> ().material.color = Color.yellow;
+						target=Color.yellow;
 					}
 				}
 			}
 		} else if (pierwszezaznaczone!=null && drugiezaznaczone !=null && ostatniezaznaczone !=null) {
 			if (this.gameObject == pierwszezaznaczone || this.gameObject == drugiezaznaczone || this.gameObject == ostatniezaznaczone) {
 				visibility = true;
-				this.gameObject.GetComponent<Renderer> ().material.color = Color.white;
+				//this.gameObject.GetComponent<Renderer> ().material.color = Color.white;
+				target = Color.white;
 			} else {
 				visibility = false;
 			}

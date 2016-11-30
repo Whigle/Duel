@@ -805,6 +805,10 @@ public class GameLogicDataScript : MonoBehaviour {
 		}
 		print(str);
 	}
+
+	public bool getTuraTrwa() {
+		return this.turaTrwa;
+	}
 }	
 
 // KLASY ODPOWIEDZIALNE ZA REPREZENTACJE AKCJI
@@ -1080,4 +1084,6 @@ public class Obrona : Czynnosc {
 	public override string ToString(){
 		return "Jestem obrona "+iloscPol;
 	}
+
+
 }
