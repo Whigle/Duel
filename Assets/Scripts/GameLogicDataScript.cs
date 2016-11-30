@@ -13,15 +13,38 @@ public class GameLogicDataScript : MonoBehaviour {
 	/// <summary>
 	/// Długość jednej rundy.
 	/// </summary>
-	static double interwal=6.0;
+	static double interwal=12.0;//6.0;
 	/// <summary>
 	/// Zmienna przechowująca czas jaki upłynął od początku rundy.
 	/// </summary>
 	double czas=0;
-	/// <summary>
+	/*/// <summary>
 	/// Długość fazy wizualizacji walki.
 	/// </summary>
-	static double interwalWalka=4.0;
+	static double interwalWalka=4.0;*/
+	/// <summary>
+	/// Długość zmiany miedzy fazą turową a wizualizacji walki.
+	/// </summary>
+	static double interwalPrzejscie=1.0;
+///////////////////////
+	/// <summary>
+	/// Zmienna przechowująca czas jaki upłynął od początku akcji.
+	/// </summary>
+	double czasAkcjiGracza=0;
+	/// <summary>
+	/// Zmienna przechowująca czas jaki upłynął od początku akcji.
+	/// </summary>
+	double czasAkcjiNPC=0;
+	/// <summary>
+	/// Długość akcji NPC.
+	/// </summary>
+	public static double interwalAkcjaNPC=0.0;
+	/// <summary>
+	/// Długość akcji Gracza.
+	/// </summary>
+	public static double interwalAkcjaGracza=0.0;
+
+
 	/// <summary>
 	/// Przechowuje informację o liczbie aktualnej tury.
 	/// </summary>
@@ -116,9 +139,17 @@ public class GameLogicDataScript : MonoBehaviour {
 	/// </summary>
 	static double czasWyswietlania;
 
+	
+	bool akcjaGraczaSkonczona=false;
+	bool akcjaNPCSkonczona=false;
+	bool animacjaGraczaSkonczona=false;
+	bool animacjaNPCSkonczona=false;
+	bool jest=true;
+	bool przejscieSkonczone=false;
+	
 	static int pozostalePAGracza=10;
 	static int pozostalePANPC=10;
-	static int i=0, j=0, ii=0, jj=0;
+	static int i=0, j=0, ii=0, jj=0, iAnim=0, jAnim=0;
 	static int aktKosztPAGracza;
 	static int aktKosztPANPC;
 	static int pokryte;
@@ -128,8 +159,6 @@ public class GameLogicDataScript : MonoBehaviour {
 	/// Inicjalizuje pola graczy, czas i teksty wyświetlane na HUD'zie
 	/// </summary>
 	void Start () {
-		/*Vector3 tmp = new Vector3(0.0f,-300.0f,0.0f);
-		GameObject.Find("NextButton").GetComponent<Transform>().position=tmp;*/
 		player=GameObject.Find("Player");
 		opponent=GameObject.Find("Opponent");
 		punktyAkcjiGracza=10;
@@ -218,195 +247,325 @@ public class GameLogicDataScript : MonoBehaviour {
 		}
 		//jeśli czas tury się skończył przechodzimy do wykonywania czynności z kolejki
 		else {
-			GameObject.Find ("RodzajAtakuHUDText").GetComponent<Text> ().text = ""; //resetuj info o atakach na czas animacji
-			GameObject.Find("Main Camera").GetComponent<Animation>().Play("Kamera");
-			if(!koniecRozgrywki){
-				if(!wykonane){
-					print("AkcjiGracza: "+(akcjeGracza.Count-i).ToString()+" AkcjeNPC: "+(akcjeNPC.Count-j).ToString());
-					if (((pozostalePAGracza>0)||(pozostalePANPC>0))&&(koniecRozgrywki==false)){
-						if((akcjeGracza.Count<=0)||(i>=akcjeGracza.Count)) pozostalePAGracza=0;
-						if((akcjeNPC.Count<=0)||(j>=akcjeNPC.Count)) pozostalePANPC=0;
-						aktKosztPAGracza=0;
-						aktKosztPANPC=0;
-						pokryte=0;
-						ii=0; jj=0;
-						/*if((player.GetComponent<Animation>().isPlaying)||(opponent.GetComponent<Animation>().isPlaying)){
-							player.GetComponent<Animation>().Stop();
-							opponent.GetComponent<Animation>().Stop();
-						}*/
-						if ((pozostalePAGracza>0)&&(pozostalePANPC>0)){
-							aktKosztPAGracza=akcjeGracza[i].getKoszt();
-							aktKosztPANPC=akcjeNPC[j].getKoszt();
+			if(!przejscieSkonczone) GameObject.Find("Main Camera").GetComponent<Animation>().Play("Kamera");
+			else{
+				if(!koniecRozgrywki){
+					if(!wykonane){
+						print("AkcjiGracza: "+(akcjeGracza.Count-i).ToString()+" AkcjeNPC: "+(akcjeNPC.Count-j).ToString());
+						if (((pozostalePAGracza>=0)||(pozostalePANPC>=0))&&(koniecRozgrywki==false)){
+							print("------------------------------------------------------------i="+i+" j="+j);
+							if((akcjeGracza.Count<=0)||(i>=akcjeGracza.Count)) pozostalePAGracza=0;
+							if((akcjeNPC.Count<=0)||(j>=akcjeNPC.Count)) pozostalePANPC=0;
+							aktKosztPAGracza=0;
+							aktKosztPANPC=0;
+							pokryte=0;
+							ii=0; jj=0;
 
-							pokryte=akcjeGracza[i].porownajHitbox(akcjeNPC[j]);
-							//jeśli npc broni, a gracz atakuje
-							if ((akcjeNPC[j].getTypAkcji()==false)&&(akcjeGracza[i].getTypAkcji())){
-								akcjeGracza[i].animuj();
-								akcjeNPC[j].animuj();
+							if(!animacjaGraczaSkonczona) akcjeGracza[iAnim].animuj();
+							if(!animacjaNPCSkonczona) akcjeNPC[jAnim].animuj();
 
-								pozostalePAGracza-=aktKosztPAGracza;
-								akcjeGracza[i].setIloscPol(akcjeGracza[i].getIloscPol()-pokryte);
-								((Atak)akcjeGracza[i]).aktualizujObrazenia();
+							if ((pozostalePAGracza>0)&&(pozostalePANPC>0)){
+								aktKosztPAGracza=akcjeGracza[i].getKoszt();
+								aktKosztPANPC=akcjeNPC[j].getKoszt();
 
-								decreaseZycieNPC(((Atak)akcjeGracza[i]).getObrazenia()*((Atak)akcjeGracza[i]).getMoc());
-								ii++; 
-								if (Math.Abs(pozostalePAGracza-pozostalePANPC)>=aktKosztPANPC){
-									pozostalePANPC-=aktKosztPANPC;
-									jj++;
+
+
+								pokryte=akcjeGracza[i].porownajHitbox(akcjeNPC[j]);
+								//jeśli npc broni, a gracz atakuje
+								if ((akcjeNPC[j].getTypAkcji()==false)&&(akcjeGracza[i].getTypAkcji())){
+									if ((akcjaNPCSkonczona)&&(akcjaGraczaSkonczona)){
+										jAnim=j; iAnim=i;
+										print("------------------------------------------------------------AKCJA! n:D g:A");
+										print(akcjeGracza[i]);
+										print(akcjeGracza[iAnim].getAnimacja());
+										print(akcjeNPC[j]);
+										print(akcjeNPC[jAnim].getAnimacja());
+										akcjaNPCSkonczona=false; akcjaGraczaSkonczona=false;
+										animacjaNPCSkonczona=false; animacjaGraczaSkonczona=false;
+										czasAkcjiGracza=Time.time; czasAkcjiNPC=Time.time;
+										interwalAkcjaGracza=System.Convert.ToDouble(aktKosztPAGracza);
+										interwalAkcjaNPC=System.Convert.ToDouble(aktKosztPANPC);				
+
+										pozostalePAGracza-=aktKosztPAGracza;
+										akcjeGracza[i].setIloscPol(akcjeGracza[i].getIloscPol()-pokryte);
+										((Atak)akcjeGracza[i]).aktualizujObrazenia();
+
+										decreaseZycieNPC(((Atak)akcjeGracza[i]).getObrazenia()*((Atak)akcjeGracza[i]).getMoc());
+										ii=1; 
+										if (Math.Abs(pozostalePAGracza-pozostalePANPC)>=aktKosztPANPC){
+											pozostalePANPC-=aktKosztPANPC;
+											jj=1;
+										}
+									}
+								}
+								//gracz broni NPC atakuje
+								else if((akcjeNPC[j].getTypAkcji())&&(akcjeGracza[i].getTypAkcji()==false)){
+									if((akcjaGraczaSkonczona)&&(akcjaNPCSkonczona)){
+										jAnim=j; iAnim=i;
+										print("------------------------------------------------------------AKCJA! n:A g:D");
+										print(akcjeGracza[i]);
+										print(akcjeGracza[iAnim].getAnimacja());
+										print(akcjeNPC[j]);
+										print(akcjeNPC[jAnim].getAnimacja());
+										akcjaNPCSkonczona=false; akcjaGraczaSkonczona=false;
+										animacjaNPCSkonczona=false; animacjaGraczaSkonczona=false;
+										czasAkcjiGracza=Time.time; czasAkcjiNPC=Time.time;
+										interwalAkcjaGracza=System.Convert.ToDouble(aktKosztPAGracza);
+										interwalAkcjaNPC=System.Convert.ToDouble(aktKosztPANPC);
+
+										pozostalePANPC-=aktKosztPANPC;
+										akcjeNPC[j].setIloscPol(akcjeNPC[j].getIloscPol()-pokryte);
+										((Atak)akcjeNPC[j]).aktualizujObrazenia();
+
+										decreaseZycieGracza(((Atak)akcjeNPC[j]).getObrazenia()*((Atak)akcjeNPC[j]).getMoc());
+										jj=1;	
+										if (Math.Abs(pozostalePAGracza-pozostalePANPC)>=aktKosztPAGracza){
+											pozostalePAGracza-=aktKosztPAGracza;
+											ii=1;
+										}						
+									}
+								}
+								//obaj atakują
+								else if((akcjeNPC[j].getTypAkcji())&&(akcjeGracza[i].getTypAkcji())){
+									if ((pozostalePAGracza-aktKosztPAGracza>pozostalePANPC-aktKosztPANPC)&&(pokryte==0)){
+										if(akcjaGraczaSkonczona){
+											iAnim=i;
+											print("------------------------------------------------------------AKCJA! ng:A g szybszy");
+											print(akcjeGracza[i]);
+											print(akcjeGracza[iAnim].getAnimacja());
+											akcjaGraczaSkonczona=false;
+											animacjaGraczaSkonczona=false;
+											czasAkcjiGracza=Time.time;
+											interwalAkcjaGracza=System.Convert.ToDouble(aktKosztPAGracza);
+
+											pozostalePAGracza-=aktKosztPAGracza;
+
+											decreaseZycieNPC(((Atak)akcjeGracza[i]).getObrazenia()*((Atak)akcjeGracza[i]).getMoc());
+											ii=1;
+										}
+									}
+									else if ((pozostalePAGracza-aktKosztPAGracza<pozostalePANPC-aktKosztPANPC)&&(pokryte==0)){
+										if(akcjaNPCSkonczona){
+											jAnim=j;
+											print("------------------------------------------------------------AKCJA! ng:A n szybszy");
+											print(akcjeNPC[j]);
+											print(akcjeNPC[jAnim].getAnimacja());
+											akcjaNPCSkonczona=false;
+											animacjaNPCSkonczona=false;
+											czasAkcjiNPC=Time.time;
+											interwalAkcjaNPC=System.Convert.ToDouble(aktKosztPANPC);
+
+											pozostalePANPC-=aktKosztPANPC;
+
+											decreaseZycieGracza(((Atak)akcjeNPC[j]).getObrazenia()*((Atak)akcjeNPC[j]).getMoc());
+											jj=1;
+										}
+									}
+									else if ((pozostalePAGracza-aktKosztPAGracza==pozostalePANPC-aktKosztPANPC)&&(pokryte==0)){
+										if((akcjaGraczaSkonczona)&&(akcjaNPCSkonczona)){
+											jAnim=j; iAnim=i;
+											print("------------------------------------------------------------AKCJA! ng:A n rowny g");
+											print(akcjeGracza[i]);
+											print(akcjeGracza[iAnim].getAnimacja());
+											print(akcjeNPC[j]);
+											print(akcjeNPC[jAnim].getAnimacja());
+											akcjaNPCSkonczona=false; akcjaGraczaSkonczona=false;
+											animacjaNPCSkonczona=false; animacjaGraczaSkonczona=false;
+											czasAkcjiGracza=Time.time; czasAkcjiNPC=Time.time;
+											interwalAkcjaGracza=System.Convert.ToDouble(aktKosztPAGracza);
+											interwalAkcjaNPC=System.Convert.ToDouble(aktKosztPANPC);
+
+											pozostalePAGracza-=aktKosztPAGracza;
+											pozostalePANPC-=aktKosztPANPC; 
+
+											decreaseZycieNPC(((Atak)akcjeGracza[i]).getObrazenia()*((Atak)akcjeGracza[i]).getMoc());
+											decreaseZycieGracza(((Atak)akcjeNPC[j]).getObrazenia()*((Atak)akcjeNPC[j]).getMoc());
+											ii=1; jj=1;	
+										}
+									}
+									else if(pokryte>0){
+										if((akcjaGraczaSkonczona)&&(akcjaNPCSkonczona)){
+											jAnim=j; iAnim=i;
+											print("------------------------------------------------------------AKCJA! ng:A ataki sie nie pokrywaja");
+											print(akcjeGracza[i]);
+											print(akcjeGracza[iAnim].getAnimacja());
+											print(akcjeNPC[j]);
+											print(akcjeNPC[jAnim].getAnimacja());
+											akcjaNPCSkonczona=false; akcjaGraczaSkonczona=false;
+											animacjaNPCSkonczona=false; animacjaGraczaSkonczona=false;
+											czasAkcjiGracza=Time.time; czasAkcjiNPC=Time.time;
+											interwalAkcjaGracza=System.Convert.ToDouble(aktKosztPAGracza);
+											interwalAkcjaNPC=System.Convert.ToDouble(aktKosztPANPC);
+
+											pozostalePAGracza-=aktKosztPAGracza;
+											pozostalePANPC-=aktKosztPANPC;
+											int obrazeniaG = ((Atak)akcjeGracza[i]).getObrazenia()-pokryte;
+											int obrazeniaN = ((Atak)akcjeNPC[j]).getObrazenia()-pokryte;
+
+											decreaseZycieNPC(obrazeniaG*((Atak)akcjeGracza[i]).getMoc());
+											decreaseZycieGracza(obrazeniaN*((Atak)akcjeNPC[j]).getMoc());
+											ii=1; jj=1;	
+										}
+									}
+								}
+								//obaj bronią
+								else{
+									if ((pozostalePAGracza-aktKosztPAGracza)>(pozostalePANPC-aktKosztPANPC)){
+										if(akcjaGraczaSkonczona){
+											iAnim=i;
+											print("------------------------------------------------------------AKCJA! ng:D g szybszy");
+											print(akcjeGracza[i]);
+											print(akcjeGracza[iAnim].getAnimacja());
+											akcjaGraczaSkonczona=false;
+											animacjaGraczaSkonczona=false;
+											czasAkcjiGracza=Time.time;
+											interwalAkcjaGracza=System.Convert.ToDouble(aktKosztPAGracza);
+
+											pozostalePAGracza-=aktKosztPAGracza;
+											ii=1;
+										}
+									}
+									else if ((pozostalePAGracza-aktKosztPAGracza)<(pozostalePANPC-aktKosztPANPC)){
+										if(akcjaNPCSkonczona){
+											jAnim=j;
+											print("------------------------------------------------------------AKCJA! ng:D n szybszy");
+											print(akcjeNPC[j]);
+											print(akcjeNPC[jAnim].getAnimacja());
+											akcjaNPCSkonczona=false;
+											animacjaNPCSkonczona=false;
+											czasAkcjiNPC=Time.time;
+											interwalAkcjaNPC=System.Convert.ToDouble(aktKosztPANPC);
+
+											pozostalePANPC-=aktKosztPANPC;
+											jj=1;
+										}
+									}
+									else {
+										if((akcjaGraczaSkonczona)&&(akcjaNPCSkonczona)){
+											jAnim=j; iAnim=i;
+											print("------------------------------------------------------------AKCJA!  ng:D rownoczesnie");
+											print(akcjeGracza[i]);
+											print(akcjeGracza[iAnim].getAnimacja());
+											print(akcjeNPC[j]);
+											print(akcjeNPC[jAnim].getAnimacja());
+											akcjaNPCSkonczona=false; akcjaGraczaSkonczona=false;
+											animacjaNPCSkonczona=false; animacjaGraczaSkonczona=false;
+											czasAkcjiGracza=Time.time; czasAkcjiNPC=Time.time;
+											interwalAkcjaGracza=System.Convert.ToDouble(aktKosztPAGracza);
+											interwalAkcjaNPC=System.Convert.ToDouble(aktKosztPANPC);
+
+											pozostalePAGracza-=aktKosztPAGracza;
+											pozostalePANPC-=aktKosztPANPC;
+											ii=1; jj=1;
+										}
+									}
 								}
 
 							}
-							//gracz broni NPC atakuje
-							else if((akcjeNPC[j].getTypAkcji())&&(akcjeGracza[i].getTypAkcji()==false)){
-								akcjeGracza[i].animuj();
-								akcjeNPC[j].animuj();
+							else if((pozostalePAGracza>0)&&(pozostalePANPC<=0)){
+								aktKosztPAGracza=akcjeGracza[i].getKoszt();
+								if(akcjaGraczaSkonczona){
+									iAnim=i;
+									print("------------------------------------------------------------AKCJA! ostatnia akcja g");
+									print(akcjeGracza[i]);
+									print(akcjeGracza[iAnim].getAnimacja());
+									akcjaGraczaSkonczona=false;
+									animacjaGraczaSkonczona=false;
+									czasAkcjiGracza=Time.time;
+									interwalAkcjaGracza=System.Convert.ToDouble(aktKosztPAGracza);
 
-								pozostalePANPC-=aktKosztPANPC;
-								akcjeNPC[j].setIloscPol(akcjeNPC[j].getIloscPol()-pokryte);
-								((Atak)akcjeNPC[j]).aktualizujObrazenia();
+									if (akcjeGracza[i].getTypAkcji()){
+										pozostalePAGracza-=aktKosztPAGracza;
 
-								decreaseZycieGracza(((Atak)akcjeNPC[j]).getObrazenia()*((Atak)akcjeNPC[j]).getMoc());
-								jj++;	
-								if (Math.Abs(pozostalePAGracza-pozostalePANPC)>=aktKosztPAGracza){
-									pozostalePAGracza-=aktKosztPAGracza;
-									ii++;
-								}						
-							}
-							//obaj atakują
-							else if((akcjeNPC[j].getTypAkcji())&&(akcjeGracza[i].getTypAkcji())){
-								if ((pozostalePAGracza-aktKosztPAGracza>pozostalePANPC-aktKosztPANPC)&&(pokryte==0)){
-									akcjeGracza[i].animuj();
-
-									pozostalePAGracza-=aktKosztPAGracza;
-
-									decreaseZycieNPC(((Atak)akcjeGracza[i]).getObrazenia()*((Atak)akcjeGracza[i]).getMoc());
-									ii++;
-								}
-								else if ((pozostalePAGracza-aktKosztPAGracza<pozostalePANPC-aktKosztPANPC)&&(pokryte==0)){
-									akcjeNPC[j].animuj();
-
-									pozostalePANPC-=aktKosztPANPC;
-
-									decreaseZycieGracza(((Atak)akcjeNPC[j]).getObrazenia()*((Atak)akcjeNPC[j]).getMoc());
-									jj++;
-								}
-								else if ((pozostalePAGracza-aktKosztPAGracza==pozostalePANPC-aktKosztPANPC)&&(pokryte==0)){
-									akcjeGracza[i].animuj();
-									akcjeNPC[j].animuj();
-
-									pozostalePAGracza-=aktKosztPAGracza;
-									pozostalePANPC-=aktKosztPANPC; 
-
-									decreaseZycieNPC(((Atak)akcjeGracza[i]).getObrazenia()*((Atak)akcjeGracza[i]).getMoc());
-									decreaseZycieGracza(((Atak)akcjeNPC[j]).getObrazenia()*((Atak)akcjeNPC[j]).getMoc());
-									ii++; jj++;	
-								}
-								else if(pokryte>0){
-									akcjeGracza[i].animuj();
-									akcjeNPC[j].animuj();
-
-									pozostalePAGracza-=aktKosztPAGracza;
-									pozostalePANPC-=aktKosztPANPC;
-									int obrazeniaG = ((Atak)akcjeGracza[i]).getObrazenia()-pokryte;
-									int obrazeniaN = ((Atak)akcjeNPC[j]).getObrazenia()-pokryte;
-
-									decreaseZycieNPC(obrazeniaG*((Atak)akcjeGracza[i]).getMoc());
-									decreaseZycieGracza(obrazeniaN*((Atak)akcjeNPC[j]).getMoc());
-									ii++; jj++;	
+										decreaseZycieNPC(((Atak)akcjeGracza[i]).getObrazenia()*((Atak)akcjeGracza[i]).getMoc());
+									}
+									else{
+										pozostalePAGracza-=aktKosztPAGracza;
+									}
+									ii=1;
 								}
 							}
-							//obaj bronią
+							else if((pozostalePANPC>0)&&(pozostalePAGracza<=0)){
+								aktKosztPANPC=akcjeNPC[j].getKoszt();
+								if(akcjaNPCSkonczona){
+									jAnim=j;
+									print("------------------------------------------------------------AKCJA! ostatnia akcja n");
+									print(akcjeNPC[j]);
+									print(akcjeNPC[jAnim].getAnimacja());
+									akcjaNPCSkonczona=false;
+									animacjaNPCSkonczona=false;
+									czasAkcjiNPC=Time.time;
+									interwalAkcjaNPC=System.Convert.ToDouble(aktKosztPANPC);
+
+									if (akcjeNPC[j].getTypAkcji()){
+										pozostalePANPC-=aktKosztPANPC;
+
+										decreaseZycieGracza(((Atak)akcjeNPC[j]).getObrazenia()*((Atak)akcjeNPC[j]).getMoc());
+									}
+									else{
+										pozostalePANPC-=aktKosztPANPC;
+									}
+									jj=1;
+								}
+							}
 							else{
-								if (pozostalePAGracza-aktKosztPAGracza>pozostalePANPC-aktKosztPANPC){
-									akcjeGracza[i].animuj();
+								print("Koniec kolejki");
+								//j--; i--; animacjaGraczaSkonczona=false; animacjaNPCSkonczona=false;
+								j=akcjeNPC.Count-1;
+								i=akcjeGracza.Count-1;
+								przejscieSkonczone=false;
+								wykonane=true;
+								print(akcjeGracza[i]);
+								print(akcjeGracza[iAnim].getAnimacja());
+								print(akcjeNPC[j]);
+								print(akcjeNPC[jAnim].getAnimacja());
+        					}
 
-									pozostalePAGracza-=aktKosztPAGracza;
-									ii++;
-								}
-								else if (pozostalePAGracza-aktKosztPAGracza<pozostalePANPC-aktKosztPANPC){
-									akcjeNPC[j].animuj();
-
-									pozostalePANPC-=aktKosztPANPC;
-									jj++;
-								}
-								else {
-									akcjeGracza[i].animuj();
-									akcjeNPC[j].animuj();
-
-									pozostalePAGracza-=aktKosztPAGracza;
-									pozostalePANPC-=aktKosztPANPC;
-									ii++; jj++;
-								}
-							}
-
+							//jeśli, któryś z graczy umarł, zakończ rozgrywkę
+							if ((zycieNPC<=0)||(zycieGracza<=0)) koniecRozgrywki=true;
+							aktualizujZycie();
 						}
-						else if((pozostalePAGracza>0)&&(pozostalePANPC<=0)){
-							aktKosztPAGracza=akcjeGracza[i].getKoszt();
-							akcjeGracza[i].animuj();
-							if (akcjeGracza[i].getTypAkcji()){
-								pozostalePAGracza-=aktKosztPAGracza;
 
-								decreaseZycieNPC(((Atak)akcjeGracza[i]).getObrazenia()*((Atak)akcjeGracza[i]).getMoc());
-							}
-							else{
-								pozostalePAGracza-=aktKosztPAGracza;
-							}
-							ii++;
+						if (!wykonane){
+							i+=ii; 
+							j+=jj;
 						}
-						else if((pozostalePANPC>0)&&(pozostalePAGracza<=0)){
-							aktKosztPANPC=akcjeNPC[j].getKoszt();
-							akcjeNPC[j].animuj();
-							if (akcjeNPC[j].getTypAkcji()){
-								pozostalePANPC-=aktKosztPANPC;
-
-								decreaseZycieGracza(((Atak)akcjeNPC[j]).getObrazenia()*((Atak)akcjeNPC[j]).getMoc());
-							}
-							else{
-								pozostalePANPC-=aktKosztPANPC;
-							}
-							jj++;
-						}
-						else{
-							print("Koniec kolejki");
-							//akcjeGracza.Clear(); //czyszczenie kolejki akcji gracza
-							//akcjeNPC.Clear();	//czyszczenie kolejki akcji NPC
-
-							wykonane=true;
-						}
-						i+=ii; 
-						j+=jj;
-						//jeśli, któryś z graczy umarł, zakończ rozgrywkę
-						if ((zycieNPC<=0)||(zycieGracza<=0)) koniecRozgrywki=true;
-						aktualizujZycie();
 					}
-
-					if(((akcjeGracza.Count-i)+(akcjeNPC.Count-j))<=0){
-						print("Koniec kolejki");
-						//akcjeGracza.Clear(); //czyszczenie kolejki akcji gracza
-						//akcjeNPC.Clear();	//czyszczenie kolejki akcji NPC
-
-						wykonane=true;
+					else{
+						if(jest){
+							print("JEEEEEEEEEEEEEEEEEEEEEEST!!!!!!!");
+							print(akcjeGracza[i]);
+							print(akcjeGracza[iAnim].getAnimacja());
+							print(akcjeNPC[j]);
+							print(akcjeNPC[jAnim].getAnimacja());
+							/*animacjaGraczaSkonczona=false;
+							animacjaNPCSkonczona=false;
+							akcjeGracza[jAnim].animuj();
+							akcjeNPC[jAnim].animuj();*/
+							jest=false;
+						}
+						/*if(player.GetComponent<Animation>().isPlaying) akcjeGracza[jAnim].animuj();
+						else animacjaGraczaSkonczona=true;
+						if(opponent.GetComponent<Animation>().isPlaying) akcjeNPC[jAnim].animuj();
+						else animacjaNPCSkonczona=true;*/
 					}
 				}
+				//jeśli to już koniec rozgrywki
+				else{
+					GameObject.Find("RundaHUDText").GetComponent<Text>().text="";	//ukrywam (czyszczę tekst) rundy wyświetlane na HUD'zie
+					GameObject.Find("CzasHUDText").GetComponent<Text>().text="";	//ukrywam (czyszczę tekst) czas wyświetlany na HUD'zie
+					GameObject.Find("ZycieGraczaHUDText").GetComponent<Text>().text="";	//ukrywam (czyszczę tekst) życie gracza wyświetlane na HUD'zie
+					GameObject.Find("ZycieNPCHUDText").GetComponent<Text>().text="";	//ukrywam (czyszczę tekst) życie NPC wyświetlane na HUD'zie
+					GameObject.Find("PAGraczaHUDText").GetComponent<Text>().text="";	//ukrywam (czyszczę tekst) punkty akcji wyświetlane na HUD'zie
+					//jeśli to gracz stracił życie pokaż tekst przegranej na HUD'zie
+					if((zycieGracza<=0)&&(zycieNPC>0)) GameObject.Find("WynikHUDText").GetComponent<Text>().text="Przegrana\n"+tura.ToString()+" rund";
+					//jeśli to NPC stracił życie pokaż tekst wygranej na HUD'zie
+					else if((zycieGracza>0)&&(zycieNPC<=0)) GameObject.Find("WynikHUDText").GetComponent<Text>().text="Zwycięstwo\n"+tura.ToString()+" rund";
+					//jeśli to obaj stracili życie pokaż tekst remisu na HUD'zie
+					else GameObject.Find("WynikHUDText").GetComponent<Text>().text="Remis\n"+tura.ToString()+" rund";
+				}
 			}
-			//jeśli to już koniec rozgrywki
-			else{
-				GameObject.Find("RundaHUDText").GetComponent<Text>().text="";	//ukrywam (czyszczę tekst) rundy wyświetlane na HUD'zie
-				GameObject.Find("CzasHUDText").GetComponent<Text>().text="";	//ukrywam (czyszczę tekst) czas wyświetlany na HUD'zie
-				GameObject.Find("ZycieGraczaHUDText").GetComponent<Text>().text="";	//ukrywam (czyszczę tekst) życie gracza wyświetlane na HUD'zie
-				GameObject.Find("ZycieNPCHUDText").GetComponent<Text>().text="";	//ukrywam (czyszczę tekst) życie NPC wyświetlane na HUD'zie
-				GameObject.Find("PAGraczaHUDText").GetComponent<Text>().text="";	//ukrywam (czyszczę tekst) punkty akcji wyświetlane na HUD'zie
-				//jeśli to gracz stracił życie pokaż tekst przegranej na HUD'zie
-				if((zycieGracza<=0)&&(zycieNPC>0)) GameObject.Find("WynikHUDText").GetComponent<Text>().text="Przegrana\n"+tura.ToString()+" rund";
-				//jeśli to NPC stracił życie pokaż tekst wygranej na HUD'zie
-				else if((zycieGracza>0)&&(zycieNPC<=0)) GameObject.Find("WynikHUDText").GetComponent<Text>().text="Zwycięstwo\n"+tura.ToString()+" rund";
-				//jeśli to obaj stracili życie pokaż tekst remisu na HUD'zie
-				else GameObject.Find("WynikHUDText").GetComponent<Text>().text="Remis\n"+tura.ToString()+" rund";
-			}
-
 		}
-		//aktualizujCzas();
-
 	}
 
 	/// <summary>
@@ -415,6 +574,12 @@ public class GameLogicDataScript : MonoBehaviour {
 	void LateUpdate () {
 		//jeśli nie skończył się czas tury
 		if(turaTrwa){
+			if(Input.GetKeyDown(KeyCode.Plus)||Input.GetKeyDown(KeyCode.KeypadPlus)) {
+				interwal+=2;
+			}
+			if(Input.GetKeyDown(KeyCode.Minus)||Input.GetKeyDown(KeyCode.KeypadMinus)) {
+				interwal-=1;
+			}
 			aktualizujCzas();
 			aktualizujPA();
 			//jeśli czas, który upłynał od początku tury jest większy od założonej długości tury
@@ -423,11 +588,6 @@ public class GameLogicDataScript : MonoBehaviour {
 				MousePointFields.clearHitbox(); //czyszczę hitbox na HUD'zie
 				MousePointFields.setEnable(false);	//dezaktywuję HUD
 				turaTrwa=false;	//przestawiam flagę trwania tury na fałsz
-
-				zaplanujAkcjeNPC();
-				pozostalePANPC=10; pozostalePAGracza=10;
-				aktKosztPAGracza=0; aktKosztPANPC=0;
-				pokryte=0; ii=0; jj=0; i=0; j=0;
 
 				GameObject.Find("HUDCombatArea").GetComponent<Renderer>().enabled=false;
 				GameObject.Find("RundaHUDText").GetComponent<Text>().text="";	//ukrywam (czyszczę tekst) rundy wyświetlane na HUD'zie
@@ -443,39 +603,101 @@ public class GameLogicDataScript : MonoBehaviour {
 		else {
 			//GameObject.Find ("RodzajAtakuHUDText").GetComponent<Text> ().text = "";
 			//czas=Time.time;
-			if(Time.time-czas>interwalWalka){
-				if(Input.GetKey(KeyCode.Space)) {
-					nastepnaTura=true;
-					wykonane=false;
+			if((!przejscieSkonczone)&&(!wykonane)){
+				if((Time.time-czas)>interwalPrzejscie) {
+					print("Zmieniam flage przejscia");
+					przejscieSkonczone=true;
+					czas=Time.time;
+					animacjaGraczaSkonczona=true;
+					animacjaNPCSkonczona=true;
+					akcjaGraczaSkonczona=false;
+					akcjaNPCSkonczona=false;
+					zaplanujAkcjeNPC();
+					pozostalePANPC=10; pozostalePAGracza=10;
+					aktKosztPAGracza=0; aktKosztPANPC=0;
+					pokryte=0; ii=0; jj=0; i=0; j=0; 
+					iAnim=0; jAnim=0; jest=true;
+					interwalAkcjaGracza=1; interwalAkcjaNPC=1;
+					czasAkcjiGracza=Time.time;
+					czasAkcjiNPC=Time.time;
 				}
-				if (!koniecRozgrywki) {
-					GameObject.Find("NastepnaTuraHUDText").GetComponent<Text>().text="Wciśnij [spację], aby przejść do kolejnej tury.";
-					pokazTabelke();
-					wykonane=true;
+			}
+			else{
+				if((i<(akcjeGracza.Count+1))&&(!animacjaGraczaSkonczona)){
+					if((Time.time-czasAkcjiGracza)>akcjeGracza[iAnim].getCzasAnimacji()){
+						animacjaGraczaSkonczona=true;
+						print("Animacja Gracza Skonczona");
+						player.GetComponent<Animation>().Stop();
+					}
+				}
+				if((j<(akcjeNPC.Count+1))&&(!animacjaNPCSkonczona)){
+					if((Time.time-czasAkcjiNPC)>akcjeNPC[jAnim].getCzasAnimacji()){
+						animacjaNPCSkonczona=true;
+						print("Animacja Gracza Skonczona");
+						opponent.GetComponent<Animation>().Stop();
+					}
+				}
+				//if(!wykonane) print("InterGracz: "+interwalAkcjaGracza.ToString()+"/"+(Time.time-czasAkcjiGracza).ToString());
+				if(!akcjaGraczaSkonczona){
+					if((Time.time-czasAkcjiGracza)>interwalAkcjaGracza) {
+						akcjaGraczaSkonczona=true;
+						player.GetComponent<Animation>().Stop();
+						animacjaGraczaSkonczona=true;
+						czasAkcjiGracza=Time.time;
+						print("Akcja Gracza Skonczona");
+					}
+				}
+				//if(!wykonane) print("InterNPC: "+interwalAkcjaNPC.ToString()+"/"+(Time.time-czasAkcjiNPC).ToString());
+				if(!akcjaNPCSkonczona){
+					if((Time.time-czasAkcjiNPC)>interwalAkcjaNPC) {
+						akcjaNPCSkonczona=true;
+						opponent.GetComponent<Animation>().Stop();
+						animacjaNPCSkonczona=true;
+						czasAkcjiNPC=Time.time;
+						print("Akcja NPC Skonczona");
+					}
+				}
 
-					//jeśli jeszcze żyją przygotuj następną turę
-					if (nastepnaTura) {
-						rodzajAtaku += "\n\nRunda " + (tura+1);
-						ukryjTabelke();
-						akcjeGracza.Clear ();
-						akcjeNPC.Clear ();
-						GameObject.Find("NastepnaTuraHUDText").GetComponent<Text>().text="";
-						nastepnaTura=false;
-						GameObject.Find("Main Camera").GetComponent<Animation>().Stop();
-						GameObject.Find("Main Camera").GetComponent<Animation>().PlayQueued("KameraReturn");
-						punktyAkcjiGracza=10;	//przywracam punkty akcji graczowi
-						punktyAkcjiNPC=10;	//przywracam punkty akcji NPC
-						MousePointFields.reset();	//resetuje HUD
-						MousePointFields.setEnable(true);	//ponownie aktywuje HUD
-						turaTrwa=true;	//wznawiam ture
-						tura++;	//kolejna tura
-						GameObject.Find("RundaHUDText").GetComponent<Text>().text="Runda "+tura.ToString();	//aktualizuję rundę wyświetlaną na HUD'zie
-						czas=Time.time; //resetuje czas
-						aktualizujCzas();
-						aktualizujPA();
-
-						GameObject.Find("HUDCombatArea").GetComponent<Renderer>().enabled=true;
+				if(/*(Time.time-czas>interwalWalka)||*/(wykonane&&akcjaGraczaSkonczona&&akcjaNPCSkonczona&&animacjaGraczaSkonczona&&animacjaGraczaSkonczona)){
+					if(Input.GetKey(KeyCode.Space)) {
+						nastepnaTura=true;
 						wykonane=false;
+					}
+					if (!koniecRozgrywki) {
+						GameObject.Find("NastepnaTuraHUDText").GetComponent<Text>().text="Wciśnij [spację], aby przejść do kolejnej tury.";
+						pokazTabelke();
+						wykonane=true;
+						//jeśli jeszcze żyją przygotuj następną turę
+						if (nastepnaTura) {
+							rodzajAtaku += "\n\nRunda " + (tura+1);
+							pozostalePANPC=10; pozostalePAGracza=10;
+							aktKosztPAGracza=0; aktKosztPANPC=0;
+							pokryte=0; ii=0; jj=0; i=0; j=0; 
+							iAnim=0; jAnim=0; jest=true;
+							interwalAkcjaGracza=1; interwalAkcjaNPC=1;
+							czasAkcjiGracza=99; czasAkcjiNPC=99;
+							ukryjTabelke();
+							akcjeGracza.Clear ();
+							akcjeNPC.Clear ();
+							GameObject.Find("NastepnaTuraHUDText").GetComponent<Text>().text="";
+							nastepnaTura=false;
+							GameObject.Find("Main Camera").GetComponent<Animation>().Stop();
+							GameObject.Find("Main Camera").GetComponent<Animation>().PlayQueued("KameraReturn");
+							punktyAkcjiGracza=10;	//przywracam punkty akcji graczowi
+							punktyAkcjiNPC=10;	//przywracam punkty akcji NPC
+							MousePointFields.reset();	//resetuje HUD
+							MousePointFields.setEnable(true);	//ponownie aktywuje HUD
+							turaTrwa=true;	//wznawiam ture
+							tura++;	//kolejna tura
+							GameObject.Find("RundaHUDText").GetComponent<Text>().text="Runda "+tura.ToString();	//aktualizuję rundę wyświetlaną na HUD'zie
+							czas=Time.time; //resetuje czas
+							aktualizujCzas();
+							aktualizujPA();
+
+							GameObject.Find("HUDCombatArea").GetComponent<Renderer>().enabled=true;
+							wykonane=false;
+							przejscieSkonczone=false;
+						}
 					}
 				}
 			}
@@ -874,13 +1096,23 @@ public abstract class Czynnosc {
 	}
 
 	public void animuj(){
+		GameObject.Find(this.dzwiek+"Sound").GetComponent<AudioSource>().Play();
 		if (gracz){
-			GameObject.Find("Player").GetComponent<Animation>().PlayQueued(this.animacja);
-			GameObject.Find("Player").GetComponent<AudioSource>().Play();
+			//GameObject.Find("Player").GetComponent<Animation>().clip.SampleAnimation(GameObject.Find("Player"),System.Convert.ToSingle(GameLogicDataScript.interwalAkcjaGracza));
+			GameObject.Find("Player").GetComponent<Animation>().Play(this.animacja);
 		}
 		if (!gracz){
-			GameObject.Find("Opponent").GetComponent<Animation>().PlayQueued(this.animacja);
-			GameObject.Find("Opponent").GetComponent<AudioSource>().Play();
+			//GameObject.Find("Opponent").GetComponent<Animation>().clip.SampleAnimation(GameObject.Find("Opponent"),System.Convert.ToSingle(GameLogicDataScript.interwalAkcjaNPC));
+			GameObject.Find("Opponent").GetComponent<Animation>().Play(this.animacja);
+		}
+	}
+	
+	public double getCzasAnimacji(){
+		if (gracz){
+			return System.Convert.ToDouble(GameObject.Find("Player").GetComponent<Animation>().GetClip(this.animacja).length);
+		}
+		else {
+			return System.Convert.ToDouble(GameObject.Find("Opponent").GetComponent<Animation>().GetClip(this.animacja).length);
 		}
 	}
 
@@ -952,14 +1184,12 @@ public class Atak : Czynnosc {
 	/// <param name="moc">Moc ataku.</param>
 	public Atak(bool gracz, bool [,] hitbox, int koszt, int iloscPol, int moc) : base(gracz, hitbox, koszt, iloscPol) {
 		this.typAkcji=true;
-		this.animacja="Attack";
-		this.dzwiek="SlashAttack";
 		this.moc=moc;
 		//w zależności od ilości pól stwierdzamy jaki to atak i przypisujemy mu obrażenia
 		switch(iloscPol){
-		case 1: this.obrazenia=4; break;
-		case 2: this.obrazenia=2; break;
-		case 3: this.obrazenia=3; break;
+		case 1: this.obrazenia=4; this.animacja="ThrustAttack"; this.dzwiek="ThrustAttack"; break;
+		case 2: this.obrazenia=2; this.animacja="FastAttack"; this.dzwiek="SlashAttack"; break;
+		case 3: this.obrazenia=3; this.animacja="Attack"; this.dzwiek="SlashAttack"; break;
 		}
 	}
 	/// <summary>
@@ -1044,7 +1274,7 @@ public class Atak : Czynnosc {
 	/// </summary>
 	/// <returns>A <see cref="System.String"/> that represents the current <see cref="Atak"/>.</returns>
 	public override string ToString(){
-		return "Jestem atakiem "+obrazenia;
+		return "Jestem "+this.dzwiek+" obr:"+obrazenia+" Gracz: "+gracz;
 	}
 }
 
@@ -1082,7 +1312,7 @@ public class Obrona : Czynnosc {
 	/// </summary>
 	/// <returns>A <see cref="System.String"/> that represents the current <see cref="Obrona"/>.</returns>
 	public override string ToString(){
-		return "Jestem obrona "+iloscPol;
+		return "Jestem obrona ilosc pol"+iloscPol+" Gracz: "+gracz;
 	}
 
 
