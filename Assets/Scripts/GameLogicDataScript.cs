@@ -146,7 +146,9 @@ public class GameLogicDataScript : MonoBehaviour {
 	bool animacjaNPCSkonczona=false;
 	bool jest=true;
 	bool przejscieSkonczone=false;
-	
+
+	double mnoznikCzasu=0.5; //mnożnik czasu akcji czas akcji=PA*mnoznik
+
 	static int pozostalePAGracza=10;
 	static int pozostalePANPC=10;
 	static int i=0, j=0, ii=0, jj=0, iAnim=0, jAnim=0;
@@ -283,8 +285,8 @@ public class GameLogicDataScript : MonoBehaviour {
 										akcjaNPCSkonczona=false; akcjaGraczaSkonczona=false;
 										animacjaNPCSkonczona=false; animacjaGraczaSkonczona=false;
 										czasAkcjiGracza=Time.time; czasAkcjiNPC=Time.time;
-										interwalAkcjaGracza=System.Convert.ToDouble(aktKosztPAGracza);
-										interwalAkcjaNPC=System.Convert.ToDouble(aktKosztPANPC);				
+										interwalAkcjaGracza=System.Convert.ToDouble(aktKosztPAGracza)*mnoznikCzasu;
+										interwalAkcjaNPC=System.Convert.ToDouble(aktKosztPANPC)*mnoznikCzasu;				
 
 										pozostalePAGracza-=aktKosztPAGracza;
 										akcjeGracza[i].setIloscPol(akcjeGracza[i].getIloscPol()-pokryte);
@@ -310,8 +312,8 @@ public class GameLogicDataScript : MonoBehaviour {
 										akcjaNPCSkonczona=false; akcjaGraczaSkonczona=false;
 										animacjaNPCSkonczona=false; animacjaGraczaSkonczona=false;
 										czasAkcjiGracza=Time.time; czasAkcjiNPC=Time.time;
-										interwalAkcjaGracza=System.Convert.ToDouble(aktKosztPAGracza);
-										interwalAkcjaNPC=System.Convert.ToDouble(aktKosztPANPC);
+										interwalAkcjaGracza=System.Convert.ToDouble(aktKosztPAGracza)*mnoznikCzasu;
+										interwalAkcjaNPC=System.Convert.ToDouble(aktKosztPANPC)*mnoznikCzasu;
 
 										pozostalePANPC-=aktKosztPANPC;
 										akcjeNPC[j].setIloscPol(akcjeNPC[j].getIloscPol()-pokryte);
@@ -336,7 +338,7 @@ public class GameLogicDataScript : MonoBehaviour {
 											akcjaGraczaSkonczona=false;
 											animacjaGraczaSkonczona=false;
 											czasAkcjiGracza=Time.time;
-											interwalAkcjaGracza=System.Convert.ToDouble(aktKosztPAGracza);
+											interwalAkcjaGracza=System.Convert.ToDouble(aktKosztPAGracza)*mnoznikCzasu;
 
 											pozostalePAGracza-=aktKosztPAGracza;
 
@@ -353,7 +355,7 @@ public class GameLogicDataScript : MonoBehaviour {
 											akcjaNPCSkonczona=false;
 											animacjaNPCSkonczona=false;
 											czasAkcjiNPC=Time.time;
-											interwalAkcjaNPC=System.Convert.ToDouble(aktKosztPANPC);
+											interwalAkcjaNPC=System.Convert.ToDouble(aktKosztPANPC)*mnoznikCzasu;
 
 											pozostalePANPC-=aktKosztPANPC;
 
@@ -372,8 +374,8 @@ public class GameLogicDataScript : MonoBehaviour {
 											akcjaNPCSkonczona=false; akcjaGraczaSkonczona=false;
 											animacjaNPCSkonczona=false; animacjaGraczaSkonczona=false;
 											czasAkcjiGracza=Time.time; czasAkcjiNPC=Time.time;
-											interwalAkcjaGracza=System.Convert.ToDouble(aktKosztPAGracza);
-											interwalAkcjaNPC=System.Convert.ToDouble(aktKosztPANPC);
+											interwalAkcjaGracza=System.Convert.ToDouble(aktKosztPAGracza)*mnoznikCzasu;
+											interwalAkcjaNPC=System.Convert.ToDouble(aktKosztPANPC)*mnoznikCzasu;
 
 											pozostalePAGracza-=aktKosztPAGracza;
 											pozostalePANPC-=aktKosztPANPC; 
@@ -394,8 +396,8 @@ public class GameLogicDataScript : MonoBehaviour {
 											akcjaNPCSkonczona=false; akcjaGraczaSkonczona=false;
 											animacjaNPCSkonczona=false; animacjaGraczaSkonczona=false;
 											czasAkcjiGracza=Time.time; czasAkcjiNPC=Time.time;
-											interwalAkcjaGracza=System.Convert.ToDouble(aktKosztPAGracza);
-											interwalAkcjaNPC=System.Convert.ToDouble(aktKosztPANPC);
+											interwalAkcjaGracza=System.Convert.ToDouble(aktKosztPAGracza)*mnoznikCzasu;
+											interwalAkcjaNPC=System.Convert.ToDouble(aktKosztPANPC)*mnoznikCzasu;
 
 											pozostalePAGracza-=aktKosztPAGracza;
 											pozostalePANPC-=aktKosztPANPC;
@@ -419,7 +421,7 @@ public class GameLogicDataScript : MonoBehaviour {
 											akcjaGraczaSkonczona=false;
 											animacjaGraczaSkonczona=false;
 											czasAkcjiGracza=Time.time;
-											interwalAkcjaGracza=System.Convert.ToDouble(aktKosztPAGracza);
+											interwalAkcjaGracza=System.Convert.ToDouble(aktKosztPAGracza)*mnoznikCzasu;
 
 											pozostalePAGracza-=aktKosztPAGracza;
 											ii=1;
@@ -434,7 +436,7 @@ public class GameLogicDataScript : MonoBehaviour {
 											akcjaNPCSkonczona=false;
 											animacjaNPCSkonczona=false;
 											czasAkcjiNPC=Time.time;
-											interwalAkcjaNPC=System.Convert.ToDouble(aktKosztPANPC);
+											interwalAkcjaNPC=System.Convert.ToDouble(aktKosztPANPC)*mnoznikCzasu;
 
 											pozostalePANPC-=aktKosztPANPC;
 											jj=1;
@@ -451,8 +453,8 @@ public class GameLogicDataScript : MonoBehaviour {
 											akcjaNPCSkonczona=false; akcjaGraczaSkonczona=false;
 											animacjaNPCSkonczona=false; animacjaGraczaSkonczona=false;
 											czasAkcjiGracza=Time.time; czasAkcjiNPC=Time.time;
-											interwalAkcjaGracza=System.Convert.ToDouble(aktKosztPAGracza);
-											interwalAkcjaNPC=System.Convert.ToDouble(aktKosztPANPC);
+											interwalAkcjaGracza=System.Convert.ToDouble(aktKosztPAGracza)*mnoznikCzasu;
+											interwalAkcjaNPC=System.Convert.ToDouble(aktKosztPANPC)*mnoznikCzasu;
 
 											pozostalePAGracza-=aktKosztPAGracza;
 											pozostalePANPC-=aktKosztPANPC;
@@ -472,7 +474,7 @@ public class GameLogicDataScript : MonoBehaviour {
 									akcjaGraczaSkonczona=false;
 									animacjaGraczaSkonczona=false;
 									czasAkcjiGracza=Time.time;
-									interwalAkcjaGracza=System.Convert.ToDouble(aktKosztPAGracza);
+									interwalAkcjaGracza=System.Convert.ToDouble(aktKosztPAGracza)*mnoznikCzasu;
 
 									if (akcjeGracza[i].getTypAkcji()){
 										pozostalePAGracza-=aktKosztPAGracza;
@@ -495,7 +497,7 @@ public class GameLogicDataScript : MonoBehaviour {
 									akcjaNPCSkonczona=false;
 									animacjaNPCSkonczona=false;
 									czasAkcjiNPC=Time.time;
-									interwalAkcjaNPC=System.Convert.ToDouble(aktKosztPANPC);
+									interwalAkcjaNPC=System.Convert.ToDouble(aktKosztPANPC)*mnoznikCzasu;
 
 									if (akcjeNPC[j].getTypAkcji()){
 										pozostalePANPC-=aktKosztPANPC;
