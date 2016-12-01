@@ -133,7 +133,7 @@ public class GameLogicDataScript : MonoBehaviour {
 	/// <summary>
 	/// Przechowuje informację o rodzaju ataku (do wyświetlania)
 	/// </summary>
-	string rodzajAtaku = "Runda 1";
+	string rodzajAtaku;
 	/// <summary>
 	/// Czas wyświetlania informacji o rodzaju ataku
 	/// </summary>
@@ -603,7 +603,8 @@ public class GameLogicDataScript : MonoBehaviour {
 			}*/
 		}
 		else {
-			//GameObject.Find ("RodzajAtakuHUDText").GetComponent<Text> ().text = "";
+			GameObject.Find ("RodzajAtakuHUDText").GetComponent<Text> ().text = "";
+			rodzajAtaku = "";
 			//czas=Time.time;
 			if((!przejscieSkonczone)&&(!wykonane)){
 				if((Time.time-czas)>interwalPrzejscie) {
@@ -671,7 +672,7 @@ public class GameLogicDataScript : MonoBehaviour {
 						wykonane=true;
 						//jeśli jeszcze żyją przygotuj następną turę
 						if (nastepnaTura) {
-							rodzajAtaku += "\n\nRunda " + (tura+1);
+							//rodzajAtaku += "\n\nRunda " + (tura+1);
 							pozostalePANPC=10; pozostalePAGracza=10;
 							aktKosztPAGracza=0; aktKosztPANPC=0;
 							pokryte=0; ii=0; jj=0; i=0; j=0; 
