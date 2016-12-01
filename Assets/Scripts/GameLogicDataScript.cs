@@ -147,7 +147,7 @@ public class GameLogicDataScript : MonoBehaviour {
 	bool jest=true;
 	bool przejscieSkonczone=false;
 
-	double mnoznikCzasu=0.5; //mnożnik czasu akcji czas akcji=PA*mnoznik
+	static public double mnoznikCzasu=0.5; //mnożnik czasu akcji czas akcji=PA*mnoznik
 
 	static int pozostalePAGracza=10;
 	static int pozostalePANPC=10;
@@ -761,7 +761,7 @@ public class GameLogicDataScript : MonoBehaviour {
 							//przypisz indeksy kolejnych pól poprzez dodanie wartości do indeksu poprzedniego pola
 							hor2=hor+hor2;
 							vert2=vert+vert2;
-						} while((hor-hor2!=0)&&(vert-vert2!=0)&&(startx-hor2!=0)&&(starty-vert2!=0));	//jeśli nowe indeksy pokryły się z poprzednimi polami, to wylosuj od nowa
+						} while(((hor-hor2!=0)&&(vert-vert2!=0))||((startx-hor2!=0)&&(starty-vert2!=0)));	//jeśli nowe indeksy pokryły się z poprzednimi polami, to wylosuj od nowa
 						hitboxNPC[hor2,vert2]=true;	//zaznacza trzecie pole w hitboxie
 						kosztAkcjiNPC=3; iloscPolNPC++;	//dodaję 1 do kosztu akcji i do ilości zaznaczonych pól
 					}
@@ -804,7 +804,7 @@ public class GameLogicDataScript : MonoBehaviour {
 							//przypisz indeksy kolejnych pól poprzez dodanie wartości do indeksu poprzedniego pola
 							hor2=hor+hor2;
 							vert2=vert+vert2;
-						} while((hor-hor2!=0)&&(vert-vert2!=0)&&(startx-hor2!=0)&&(starty-vert2!=0));	//jeśli nowe indeksy pokryły się z poprzednimi polami, to wylosuj od nowa
+						} while(((hor-hor2!=0)&&(vert-vert2!=0))||((startx-hor2!=0)&&(starty-vert2!=0)));	//jeśli nowe indeksy pokryły się z poprzednimi polami, to wylosuj od nowa
 						hitboxNPC[hor2,vert2]=true;	//zaznacza trzecie pole w hitboxie
 						kosztAkcjiNPC=3; iloscPolNPC=3;	//ustawiam kosztu akcji i ilości zaznaczonych pól
 					}
@@ -1062,6 +1062,7 @@ public abstract class Czynnosc {
 
 	protected string animacja;
 	protected string dzwiek;
+	protected double szybkosc;
 
 	/// <summary>
 	/// Inicjalizuje instancję klasy <see cref="Czynnosc"/>.
@@ -1101,22 +1102,23 @@ public abstract class Czynnosc {
 	public void animuj(){
 		GameObject.Find(this.dzwiek+"Sound").GetComponent<AudioSource>().Play();
 		if (gracz){
-			//GameObject.Find("Player").GetComponent<Animation>().clip.SampleAnimation(GameObject.Find("Player"),System.Convert.ToSingle(GameLogicDataScript.interwalAkcjaGracza));
+			GameObject.Find("Player").GetComponent<Animation>()[this.animacja].speed=System.Convert.ToSingle(szybkosc);
 			GameObject.Find("Player").GetComponent<Animation>().Play(this.animacja);
 		}
 		if (!gracz){
-			//GameObject.Find("Opponent").GetComponent<Animation>().clip.SampleAnimation(GameObject.Find("Opponent"),System.Convert.ToSingle(GameLogicDataScript.interwalAkcjaNPC));
+			GameObject.Find("Opponent").GetComponent<Animation>()[this.animacja].speed=System.Convert.ToSingle(szybkosc);
 			GameObject.Find("Opponent").GetComponent<Animation>().Play(this.animacja);
 		}
 	}
 	
 	public double getCzasAnimacji(){
-		if (gracz){
+		/*if (gracz){
 			return System.Convert.ToDouble(GameObject.Find("Player").GetComponent<Animation>().GetClip(this.animacja).length);
 		}
 		else {
 			return System.Convert.ToDouble(GameObject.Find("Opponent").GetComponent<Animation>().GetClip(this.animacja).length);
-		}
+		}*/
+		return this.koszt*GameLogicDataScript.mnoznikCzasu;
 	}
 
 	public bool getGracz(){
@@ -1194,6 +1196,10 @@ public class Atak : Czynnosc {
 		case 2: this.obrazenia=2; this.animacja="FastAttack"; this.dzwiek="SlashAttack"; break;
 		case 3: this.obrazenia=3; this.animacja="Attack"; this.dzwiek="SlashAttack"; break;
 		}
+		if (gracz)
+			szybkosc=System.Convert.ToDouble(GameObject.Find("Player").GetComponent<Animation>().GetClip(this.animacja).length)/(this.koszt*GameLogicDataScript.mnoznikCzasu);
+		else
+			szybkosc=System.Convert.ToDouble(GameObject.Find("Opponent").GetComponent<Animation>().GetClip(this.animacja).length)/(this.koszt*GameLogicDataScript.mnoznikCzasu);
 	}
 	/// <summary>
 	/// Metoda odpowiadająca za wykonanie ataku.
@@ -1296,6 +1302,10 @@ public class Obrona : Czynnosc {
 		this.typAkcji=false;
 		this.animacja="Defense";
 		this.dzwiek="ShieldHit";
+		if (gracz)
+			szybkosc=System.Convert.ToDouble(GameObject.Find("Player").GetComponent<Animation>().GetClip(this.animacja).length)/(this.koszt*GameLogicDataScript.mnoznikCzasu);
+		else
+			szybkosc=System.Convert.ToDouble(GameObject.Find("Opponent").GetComponent<Animation>().GetClip(this.animacja).length)/(this.koszt*GameLogicDataScript.mnoznikCzasu);
 	}
 	/// <summary>
 	/// Metoda odpowiadająca za wykonanie obrony.
