@@ -134,11 +134,6 @@ public class GameLogicDataScript : MonoBehaviour {
 	/// Przechowuje informację o rodzaju ataku (do wyświetlania)
 	/// </summary>
 	string rodzajAtaku;
-	/// <summary>
-	/// Czas wyświetlania informacji o rodzaju ataku
-	/// </summary>
-	static double czasWyswietlania;
-
 	
 	bool akcjaGraczaSkonczona=false;
 	bool akcjaNPCSkonczona=false;
@@ -175,6 +170,7 @@ public class GameLogicDataScript : MonoBehaviour {
 		mocNPC=1;
 		zycieNPC=100;
 
+		GameObject.Find ("CanvasLista").GetComponent<Canvas> ().enabled = false;
 		GameObject.Find("RodzajAtakuHUDText").GetComponent<Text>().text=rodzajAtaku;
 		GameObject.Find("RodzajAtakuHUDText").GetComponent<Text> ().fontSize = 15;
 		GameObject.Find("RundaHUDText").GetComponent<Text>().text="Runda 1";
@@ -190,6 +186,7 @@ public class GameLogicDataScript : MonoBehaviour {
 	/// </summary>
 	void Update () {
 		if(turaTrwa){
+			GameObject.Find ("CanvasButton").GetComponent<Canvas> ().enabled=true;
 			GameObject.Find ("RodzajAtakuHUDText").GetComponent<Text> ().text = rodzajAtaku; //wyświetl informacje o rodzaju ataku			
 			//przetworzenie jednej akcji gracza i dodanie jej do kolejki
 			if (!MousePointFields.getCheck()){
@@ -225,7 +222,6 @@ public class GameLogicDataScript : MonoBehaviour {
 						} else {
 							rodzajAtaku += "\nMocny atak!";
 						}
-						//czasWyswietlania = Time.time;
 						GameObject.Find ("RodzajAtakuHUDText").GetComponent<Text> ().text = rodzajAtaku; //wyświetl informacje o rodzaju ataku			
 						if (pierwsze!=null)
 							((Atak)akcjeGracza[akcjeGracza.Count-1]).setFirst(pierwsze.GetComponent<MousePointFields>().getIndX(),pierwsze.GetComponent<MousePointFields>().getIndY());
@@ -565,6 +561,7 @@ public class GameLogicDataScript : MonoBehaviour {
 					else if((zycieGracza>0)&&(zycieNPC<=0)) GameObject.Find("WynikHUDText").GetComponent<Text>().text="Zwycięstwo\n"+tura.ToString()+" rund";
 					//jeśli to obaj stracili życie pokaż tekst remisu na HUD'zie
 					else GameObject.Find("WynikHUDText").GetComponent<Text>().text="Remis\n"+tura.ToString()+" rund";
+					GameObject.Find ("CanvasButton").GetComponent<Canvas> ().enabled=false;
 				}
 			}
 		}
@@ -597,12 +594,9 @@ public class GameLogicDataScript : MonoBehaviour {
 				GameObject.Find("PAGraczaHUDText").GetComponent<Text>().text="";	//ukrywam (czyszczę tekst) punkty akcji wyświetlane na HUD'zie
 
 			}
-			/*if (Time.time-czasWyswietlania > 1) { // czas wyświetlania informacji o rodzaju wykonanego ataku
-				GameObject.Find ("RodzajAtakuHUDText").GetComponent<Text> ().text = "";
-				czasWyswietlania = 0;
-			}*/
 		}
 		else {
+			GameObject.Find ("CanvasButton").GetComponent<Canvas> ().enabled=false;
 			GameObject.Find ("RodzajAtakuHUDText").GetComponent<Text> ().text = "";
 			rodzajAtaku = "";
 			//czas=Time.time;
