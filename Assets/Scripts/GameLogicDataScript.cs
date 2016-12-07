@@ -151,6 +151,16 @@ public class GameLogicDataScript : MonoBehaviour {
 	static int aktKosztPANPC;
 	static int pokryte;
 
+	List<Czynnosc> runda1P = new List<Czynnosc>();
+	List<Czynnosc> runda2P = new List<Czynnosc>();
+	List<Czynnosc> runda3P = new List<Czynnosc>();
+	List<Czynnosc> runda4P = new List<Czynnosc>();
+
+	List<Czynnosc> runda1N = new List<Czynnosc>();
+	List<Czynnosc> runda2N = new List<Czynnosc>();
+	List<Czynnosc> runda3N = new List<Czynnosc>();
+	List<Czynnosc> runda4N = new List<Czynnosc>();
+
 	/// <summary>
 	/// Metoda uruchamiana podczas inicjalizacji klasy w momencie startu skryptu.
 	/// Inicjalizuje pola graczy, czas i teksty wyświetlane na HUD'zie
@@ -567,6 +577,8 @@ public class GameLogicDataScript : MonoBehaviour {
 		}
 	}
 
+	bool zrobione=false;
+
 	/// <summary>
 	/// Metoda wykonywana po każdym wykonaniu metody Update
 	/// </summary>
@@ -662,10 +674,12 @@ public class GameLogicDataScript : MonoBehaviour {
 					}
 					if (!koniecRozgrywki) {
 						GameObject.Find("NastepnaTuraHUDText").GetComponent<Text>().text="Wciśnij [spację], aby przejść do kolejnej tury.";
+						rysujHistore ();
 						pokazTabelke();
 						wykonane=true;
 						//jeśli jeszcze żyją przygotuj następną turę
 						if (nastepnaTura) {
+							zrobione = false;
 							//rodzajAtaku += "\n\nRunda " + (tura+1);
 							pozostalePANPC=10; pozostalePAGracza=10;
 							aktKosztPAGracza=0; aktKosztPANPC=0;
@@ -674,6 +688,8 @@ public class GameLogicDataScript : MonoBehaviour {
 							interwalAkcjaGracza=1; interwalAkcjaNPC=1;
 							czasAkcjiGracza=99; czasAkcjiNPC=99;
 							ukryjTabelke();
+							//runda1P.Clear();
+							//runda1N.Clear();
 							akcjeGracza.Clear ();
 							akcjeNPC.Clear ();
 							GameObject.Find("NastepnaTuraHUDText").GetComponent<Text>().text="";
@@ -836,12 +852,90 @@ public class GameLogicDataScript : MonoBehaviour {
 		}
 	}
 
-	float drawpositionx=Screen.width*0.2f;
-	float drawpositiony=Screen.height*0.2f;
+	float drawpositionx=Screen.width*0.01f;
+	float drawpositiony=Screen.height*0.0f;
 	bool GUI1 = false;
 	public Texture2D miecz;
 	public Texture2D tarcza;
 	GUIStyle style = new GUIStyle ();
+
+	void rysujHistore() {
+		if (zrobione == false) {
+			if (tura == 1) {
+				foreach (Czynnosc c in akcjeGracza) {
+					runda1P.Add (c);
+				}
+				foreach (Czynnosc c in akcjeNPC) {
+					runda1N.Add (c);
+				}
+			}
+			if (tura == 2) {
+				foreach (Czynnosc c in akcjeGracza) {
+					runda2P.Add (c);
+				}
+				foreach (Czynnosc c in akcjeNPC) {
+					runda2N.Add (c);
+				}
+			}
+			if (tura == 3) {
+				foreach (Czynnosc c in akcjeGracza) {
+					runda3P.Add (c);
+				}
+				foreach (Czynnosc c in akcjeNPC) {
+					runda3N.Add (c);
+				}
+			}
+			if (tura == 4) {
+				foreach (Czynnosc c in akcjeGracza) {
+					runda4P.Add (c);
+				}
+				foreach (Czynnosc c in akcjeNPC) {
+					runda4N.Add (c);
+				}
+			} else if (tura > 4) {
+				runda1P.Clear ();
+				runda1N.Clear ();
+
+				foreach (Czynnosc c in runda2P) {
+					runda1P.Add (c);
+				}
+				foreach (Czynnosc c in runda2N) {
+					runda1N.Add (c);
+				}
+
+				runda2P.Clear ();
+				runda2N.Clear ();
+
+				foreach (Czynnosc c in runda3P) {
+					runda2P.Add (c);
+				}
+				foreach (Czynnosc c in runda3N) {
+					runda2N.Add (c);
+				}
+
+				runda3P.Clear ();
+				runda3N.Clear ();
+
+				foreach (Czynnosc c in runda4P) {
+					runda3P.Add (c);
+				}
+				foreach (Czynnosc c in runda4N) {
+					runda3N.Add (c);
+				}
+
+				runda4P.Clear ();
+				runda4N.Clear ();
+
+				foreach (Czynnosc c in akcjeGracza) {
+					runda4P.Add (c);
+				}
+				foreach (Czynnosc c in akcjeNPC) {
+					runda4N.Add (c);
+				}
+			}
+			zrobione = true;
+		}
+	}
 
 	void jakRysowac(List<Czynnosc> akcje) {
 		foreach (Czynnosc i in akcje) {
@@ -868,18 +962,35 @@ public class GameLogicDataScript : MonoBehaviour {
 			GUIContent GUI11= new GUIContent (str, tempM, "You Know Nothing");
 			//GUI.Box (new Rect (drawpositionx, drawpositiony, Screen.width * 0.3f, Screen.height * 0.06f * temp), tempM);
 			//GUI.Box (new Rect (drawpositionx, drawpositiony, Screen.width * 0.3f, Screen.height * 0.06f * temp), temp.ToString ());
-			GUI.Box (new Rect (drawpositionx, drawpositiony, Screen.width * 0.3f, Screen.height * 0.06f * temp), GUI11);
-			drawpositiony += Screen.height * 0.06f * temp;
+			GUI.Box (new Rect (drawpositionx, drawpositiony, Screen.width * 0.115f, Screen.height * 0.08f * temp), GUI11);
+			drawpositiony += Screen.height * 0.08f * temp;
 		}
-		drawpositiony = Screen.height * 0.2f;
+		drawpositiony = Screen.height * 0.0f;
 	}
 
 	void OnGUI() {
 		if (GUI1 == true) {
-			jakRysowac (akcjeGracza);
-			drawpositionx = drawpositionx + Screen.width * 0.3f;
-			jakRysowac (akcjeNPC);
-			drawpositionx = drawpositionx - Screen.width * 0.3f;
+			jakRysowac (runda1P);
+			drawpositionx = drawpositionx + Screen.width * 0.115f;
+			jakRysowac (runda1N);
+			drawpositionx = drawpositionx + Screen.width * 0.135f;
+			jakRysowac (runda2P);
+			drawpositionx = drawpositionx + Screen.width * 0.115f;
+			jakRysowac (runda2N);
+			drawpositionx = drawpositionx + Screen.width * 0.135f;
+			jakRysowac (runda3P);
+			drawpositionx = drawpositionx + Screen.width * 0.115f;
+			jakRysowac (runda3N);
+			drawpositionx = drawpositionx + Screen.width * 0.135f;
+			jakRysowac (runda4P);
+			drawpositionx = drawpositionx + Screen.width * 0.115f;
+			jakRysowac (runda4N);
+			drawpositionx = Screen.width * 0.01f;
+			GUI.Box (new Rect (Screen.width * 0f, Screen.height * 0f, Screen.width * 0.01f, Screen.height * 0.8f),"");
+			GUI.Box (new Rect (Screen.width * 0.24f, Screen.height * 0f, Screen.width * 0.02f, Screen.height * 0.8f),"");
+			GUI.Box (new Rect (Screen.width * 0.49f, Screen.height * 0f, Screen.width * 0.02f, Screen.height * 0.8f),"");
+			GUI.Box (new Rect (Screen.width * 0.74f, Screen.height * 0f, Screen.width * 0.02f, Screen.height * 0.8f),"");
+			GUI.Box (new Rect (Screen.width * 0.99f, Screen.height * 0f, Screen.width * 0.01f, Screen.height * 0.8f),"");
 		}
 	}
 
