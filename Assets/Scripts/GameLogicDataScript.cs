@@ -95,6 +95,10 @@ public class GameLogicDataScript : MonoBehaviour {
 	/// </summary>
 	List<Czynnosc> akcjeGracza = new List<Czynnosc>();
 	/// <summary>
+	/// Lista przechowująca historię akcji wykonanych przez gracza.
+	/// </summary>
+	List<Czynnosc> historiaAkcjiGracza = new List<Czynnosc>();
+	/// <summary>
 	/// Przechowuje informację o trybie walki gracza. Prawda - atak, fałsz - obrona.
 	/// </summary>
 	bool modeGracza;
@@ -141,6 +145,11 @@ public class GameLogicDataScript : MonoBehaviour {
 	bool animacjaNPCSkonczona=false;
 	bool jest=true;
 	bool przejscieSkonczone=false;
+
+	static string [] poziomyTrudnosci = { "Easy", "Normal", "Hard" };
+	static string [] strategie = { "Agressive", "Balanced", "Deffensive" };
+	string poziomTrudnosci=poziomyTrudnosci[1];
+	string strategia=strategie[1];
 
 	static public double mnoznikCzasu=0.5; //mnożnik czasu akcji czas akcji=PA*mnoznik
 
@@ -225,6 +234,7 @@ public class GameLogicDataScript : MonoBehaviour {
 					punktyAkcjiGracza-=kosztAkcjiGracza;	//odejmuje punkty akcji
 					if (modeGracza) {
 						akcjeGracza.Add(new Atak(true, temp, kosztAkcjiGracza, iloscPolGracza, mocGracza));
+						historiaAkcjiGracza.Add(new Atak(true, temp, kosztAkcjiGracza, iloscPolGracza, mocGracza));
 						if (kosztAkcjiGracza == 4) {
 							rodzajAtaku += "\nPchnięcie!";
 						} else if (kosztAkcjiGracza == 2) {
@@ -233,13 +243,18 @@ public class GameLogicDataScript : MonoBehaviour {
 							rodzajAtaku += "\nMocny atak!";
 						}
 						GameObject.Find ("RodzajAtakuHUDText").GetComponent<Text> ().text = rodzajAtaku; //wyświetl informacje o rodzaju ataku			
-						if (pierwsze!=null)
+						if (pierwsze!=null){
 							((Atak)akcjeGracza[akcjeGracza.Count-1]).setFirst(pierwsze.GetComponent<MousePointFields>().getIndX(),pierwsze.GetComponent<MousePointFields>().getIndY());
-						if (ostatnie!=null)
+							((Atak)historiaAkcjiGracza[historiaAkcjiGracza.Count-1]).setFirst(pierwsze.GetComponent<MousePointFields>().getIndX(),pierwsze.GetComponent<MousePointFields>().getIndY());
+						}
+						if (ostatnie!=null){
 							((Atak)akcjeGracza[akcjeGracza.Count-1]).setLast(ostatnie.GetComponent<MousePointFields>().getIndX(),ostatnie.GetComponent<MousePointFields>().getIndY());
+							((Atak)historiaAkcjiGracza[historiaAkcjiGracza.Count-1]).setLast(ostatnie.GetComponent<MousePointFields>().getIndX(),ostatnie.GetComponent<MousePointFields>().getIndY());
+						}
 					}
 					else {
 						akcjeGracza.Add(new Obrona(true, temp, kosztAkcjiGracza, iloscPolGracza));
+						historiaAkcjiGracza.Add(new Obrona(true, temp, kosztAkcjiGracza, iloscPolGracza));
 					}
 
 					//jeśli graczowi po tej akcji nie zostaną już punkty
@@ -735,14 +750,32 @@ public class GameLogicDataScript : MonoBehaviour {
 			startx=System.Convert.ToInt32(UnityEngine.Random.value*2);
 			starty=System.Convert.ToInt32(UnityEngine.Random.value*2);
 
+			double czyAtakuje;
+
+			if (zycieNPC<20) {
+				strategia=strategie[2];
+				if (zycieGracza<15) strategia=strategie[0];
+			}
+
+			if (strategia==strategie[0]) czyAtakuje=0.1;
+			else if (strategia==strategie[1]) czyAtakuje=0.3;
+			else if (strategia==strategie[2]) czyAtakuje=0.6;
+			else czyAtakuje=0.2;
 			//jeśli NPC posiada przynajmniej 2 punkty akcji, to zostanie wybrany atak z prawdopodobieństwem 80%
-			if((UnityEngine.Random.value>0.2)&&(punktyAkcjiNPC>1)) modeNPC=true;
+			if((UnityEngine.Random.value>czyAtakuje)&&(punktyAkcjiNPC>1)) modeNPC=true;
 			//jeśli NPC posiada tylko jeden punkt akcji lub mniej albo z prawdopodobieństwa nie wybrano ataku to zostanie wybrana obrona
 			else modeNPC=false;
 
 			//jeśli została wybrana obrona i NPC ma przynajmniej 1 pkt akcji
 			if ((!modeNPC) && (punktyAkcjiNPC>=1)) {
+
+				//zaznaczam pierwsze pole w najbardziej atakowanym przez gracza miejscu
+				if (historiaAkcjiGracza.Count>0){
+					startx=zwrocWybieranePola(false,true,true,1);
+					starty=zwrocWybieranePola(true,true,true,1);
+				}
 				hitboxNPC[startx,starty]=true;	//zaznacza punkt startowy w hitboxie
+
 				kosztAkcjiNPC=1; iloscPolNPC++;	//dodaję 1 do kosztu akcji i do ilości zaznaczonych pól
 				//jeśli NPC ma więcej niż 1 punkt akcji
 				if (punktyAkcjiNPC>1){
@@ -779,10 +812,18 @@ public class GameLogicDataScript : MonoBehaviour {
 			}
 			//jeśli został wybrany atak i NPC ma przynajmniej 1 pkt akcji
 			if ((modeNPC)&&(punktyAkcjiNPC>=1)){
+				//zaznaczam pierwsze pole w najmniej bronionym przez gracza miejscu
+				if (historiaAkcjiGracza.Count>0){
+					startx=zwrocWybieranePola(false,false,false,1);
+					starty=zwrocWybieranePola(true,false,false,1);
+				}
 				hitboxNPC[startx,starty]=true;	//zaznacza punkt startowy w hitboxie
 				iloscPolNPC=1; //ustawiam ilość zaznaczonych pól na 1
 				int rodzajAtaku=0;	//inicjalizuję zmienną rodzaj ataku
 				rodzajAtaku=System.Convert.ToInt32(UnityEngine.Random.value*2);	//losuję wartość z przedziału 0-2 i przypisuję do rodzajAtaku
+
+				if(strategia==strategie[0]) rodzajAtaku-=1; //tylko ciężkie lub pchnięcia
+
 				//jeśli rodzaj ataku = 0, to zakładam, że wybrano pchnięcie
 				if(rodzajAtaku<=0){
 					if(punktyAkcjiNPC>=4) kosztAkcjiNPC=4;	//ustawiam koszt akcji pchnięcia jeśli NPC ma potrzebną ilość punktów akcji
@@ -851,9 +892,61 @@ public class GameLogicDataScript : MonoBehaviour {
 			punktyAkcjiNPC-=kosztAkcjiNPC;	//zabiera punkty wykonanej akcji z puli punktów akcji NPC
 		}
 	}
+		
+
+	int zwrocWybieranePola(bool xory, bool najczesciej, bool tryb, int kolejnosc){
+		int pole=-1;
+		int aktpole=-1;
+		int ile=0;
+		int [,] ilosc = new int[3,3];
+		for(int i=0;i<historiaAkcjiGracza.Count;i++){
+			if (historiaAkcjiGracza[i].getTypAkcji()==tryb){
+				if (historiaAkcjiGracza[i].getHitbox()[0,0]) ilosc[0,0]+=1;
+				if (historiaAkcjiGracza[i].getHitbox()[0,1]) ilosc[0,1]+=1;
+				if (historiaAkcjiGracza[i].getHitbox()[0,2]) ilosc[0,2]+=1;
+				if (historiaAkcjiGracza[i].getHitbox()[1,0]) ilosc[1,0]+=1;
+				if (historiaAkcjiGracza[i].getHitbox()[1,1]) ilosc[1,1]+=1;
+				if (historiaAkcjiGracza[i].getHitbox()[1,2]) ilosc[1,2]+=1;
+				if (historiaAkcjiGracza[i].getHitbox()[2,0]) ilosc[2,0]+=1;
+				if (historiaAkcjiGracza[i].getHitbox()[2,1]) ilosc[2,1]+=1;
+				if (historiaAkcjiGracza[i].getHitbox()[2,2]) ilosc[2,2]+=1;
+			}
+		}
+		for (int o=0;o<kolejnosc;o++){
+			for(int i=0;i<3;i++){
+				for(int j=0;j<3;j++){
+					aktpole=j; 
+					if(i==1) aktpole+=3;
+					else if(i==2) aktpole+=6;
+					if(najczesciej){
+						if((ile<=ilosc[i,j])&&(pole!=aktpole)) {
+							pole=aktpole;
+							ile=ilosc[i,j];
+						}
+					}
+					else{
+						if((ile>=ilosc[i,j])&&(pole!=aktpole)) {
+							pole=aktpole;
+							ile=ilosc[i,j];
+						}
+					}
+				}
+			}
+		}
+		if(xory){
+			if (pole>5) return 2;
+			if (pole>2) return 1;
+			return 0;
+		}
+		else{
+			print(pole+" "+(pole%3));
+			return pole%3;
+		}
+	}
 
 	float drawpositionx=Screen.width*0.01f;
 	float drawpositiony=Screen.height*0.0f;
+
 	bool GUI1 = false;
 	public Texture2D miecz;
 	public Texture2D tarcza;
