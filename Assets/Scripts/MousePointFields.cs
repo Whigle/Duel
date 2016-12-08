@@ -140,16 +140,19 @@ public class MousePointFields : MonoBehaviour {
 	/// </summary>
 	public void OnMouseOver()
 	{
-		//jeśli można zaznaczać
-		if(check){
-			//jeśli jest wciśnięty LPM
-			if (Input.GetMouseButton(0)) czyMoznaZaznaczyc ();
-			//jeśli jest wciśnięty PPM
-			else if (Input.GetMouseButton(1)) czyMoznaZaznaczyc ();
-			//jeśli nie jest wciśnięty żaden przycisk
-			else {
-				visibility=true; //zrób pole widocznym
-				target = Color.green;	//zmień kolor pola na zielony
+		if (enable){
+			//jeśli można zaznaczać
+			if(check){
+				print("czek!! e:"+enable+" c:"+check);
+				//jeśli jest wciśnięty LPM
+				if (Input.GetMouseButton(0)) czyMoznaZaznaczyc ();
+				//jeśli jest wciśnięty PPM
+				else if (Input.GetMouseButton(1)) czyMoznaZaznaczyc ();
+				//jeśli nie jest wciśnięty żaden przycisk
+				else {
+					visibility=true; //zrób pole widocznym
+					target = Color.green;	//zmień kolor pola na zielony
+				}
 			}
 		}
 	}
@@ -160,10 +163,11 @@ public class MousePointFields : MonoBehaviour {
 	/// </summary>
 	public void OnMouseExit()
 	{
-		visibility=false;	//zrób niewidocznym
-		target=Color.white;	//zmień kolor na biały
+		if (enable){
+			visibility=false;	//zrób niewidocznym
+			target=Color.white;	//zmień kolor na biały
+		}
 	}
-
 	/// <summary>
 	/// Ustawia wszystkie flagi w hitboxie na fałsz.
 	/// </summary>

@@ -148,8 +148,9 @@ public class GameLogicDataScript : MonoBehaviour {
 
 	static string [] poziomyTrudnosci = { "Easy", "Normal", "Hard" };
 	static string [] strategie = { "Agressive", "Balanced", "Deffensive" };
-	string poziomTrudnosci=poziomyTrudnosci[1];
-	string strategia=strategie[1];
+	string poziomTrudnosci = poziomyTrudnosci[1];
+	string strategia = strategie[2];
+	int [,] prawdopodobienstwo = new int[3,3];
 
 	static public double mnoznikCzasu=0.5; //mnożnik czasu akcji czas akcji=PA*mnoznik
 
@@ -274,9 +275,9 @@ public class GameLogicDataScript : MonoBehaviour {
 			else{
 				if(!koniecRozgrywki){
 					if(!wykonane){
-						print("AkcjiGracza: "+(akcjeGracza.Count-i).ToString()+" AkcjeNPC: "+(akcjeNPC.Count-j).ToString());
+						//print("AkcjiGracza: "+(akcjeGracza.Count-i).ToString()+" AkcjeNPC: "+(akcjeNPC.Count-j).ToString());
 						if (((pozostalePAGracza>=0)||(pozostalePANPC>=0))&&(koniecRozgrywki==false)){
-							print("------------------------------------------------------------i="+i+" j="+j);
+							//print("------------------------------------------------------------i="+i+" j="+j);
 							if((akcjeGracza.Count<=0)||(i>=akcjeGracza.Count)) pozostalePAGracza=0;
 							if((akcjeNPC.Count<=0)||(j>=akcjeNPC.Count)) pozostalePANPC=0;
 							aktKosztPAGracza=0;
@@ -298,11 +299,11 @@ public class GameLogicDataScript : MonoBehaviour {
 								if ((akcjeNPC[j].getTypAkcji()==false)&&(akcjeGracza[i].getTypAkcji())){
 									if ((akcjaNPCSkonczona)&&(akcjaGraczaSkonczona)){
 										jAnim=j; iAnim=i;
-										print("------------------------------------------------------------AKCJA! n:D g:A");
+										/*print("------------------------------------------------------------AKCJA! n:D g:A");
 										print(akcjeGracza[i]);
 										print(akcjeGracza[iAnim].getAnimacja());
 										print(akcjeNPC[j]);
-										print(akcjeNPC[jAnim].getAnimacja());
+										print(akcjeNPC[jAnim].getAnimacja());*/
 										akcjaNPCSkonczona=false; akcjaGraczaSkonczona=false;
 										animacjaNPCSkonczona=false; animacjaGraczaSkonczona=false;
 										czasAkcjiGracza=Time.time; czasAkcjiNPC=Time.time;
@@ -325,11 +326,11 @@ public class GameLogicDataScript : MonoBehaviour {
 								else if((akcjeNPC[j].getTypAkcji())&&(akcjeGracza[i].getTypAkcji()==false)){
 									if((akcjaGraczaSkonczona)&&(akcjaNPCSkonczona)){
 										jAnim=j; iAnim=i;
-										print("------------------------------------------------------------AKCJA! n:A g:D");
+										/*print("------------------------------------------------------------AKCJA! n:A g:D");
 										print(akcjeGracza[i]);
 										print(akcjeGracza[iAnim].getAnimacja());
 										print(akcjeNPC[j]);
-										print(akcjeNPC[jAnim].getAnimacja());
+										print(akcjeNPC[jAnim].getAnimacja());*/
 										akcjaNPCSkonczona=false; akcjaGraczaSkonczona=false;
 										animacjaNPCSkonczona=false; animacjaGraczaSkonczona=false;
 										czasAkcjiGracza=Time.time; czasAkcjiNPC=Time.time;
@@ -353,9 +354,9 @@ public class GameLogicDataScript : MonoBehaviour {
 									if ((pozostalePAGracza-aktKosztPAGracza>pozostalePANPC-aktKosztPANPC)&&(pokryte==0)){
 										if(akcjaGraczaSkonczona){
 											iAnim=i;
-											print("------------------------------------------------------------AKCJA! ng:A g szybszy");
+											/*print("------------------------------------------------------------AKCJA! ng:A g szybszy");
 											print(akcjeGracza[i]);
-											print(akcjeGracza[iAnim].getAnimacja());
+											print(akcjeGracza[iAnim].getAnimacja());*/
 											akcjaGraczaSkonczona=false;
 											animacjaGraczaSkonczona=false;
 											czasAkcjiGracza=Time.time;
@@ -370,9 +371,9 @@ public class GameLogicDataScript : MonoBehaviour {
 									else if ((pozostalePAGracza-aktKosztPAGracza<pozostalePANPC-aktKosztPANPC)&&(pokryte==0)){
 										if(akcjaNPCSkonczona){
 											jAnim=j;
-											print("------------------------------------------------------------AKCJA! ng:A n szybszy");
+											/*print("------------------------------------------------------------AKCJA! ng:A n szybszy");
 											print(akcjeNPC[j]);
-											print(akcjeNPC[jAnim].getAnimacja());
+											print(akcjeNPC[jAnim].getAnimacja());*/
 											akcjaNPCSkonczona=false;
 											animacjaNPCSkonczona=false;
 											czasAkcjiNPC=Time.time;
@@ -387,11 +388,11 @@ public class GameLogicDataScript : MonoBehaviour {
 									else if ((pozostalePAGracza-aktKosztPAGracza==pozostalePANPC-aktKosztPANPC)&&(pokryte==0)){
 										if((akcjaGraczaSkonczona)&&(akcjaNPCSkonczona)){
 											jAnim=j; iAnim=i;
-											print("------------------------------------------------------------AKCJA! ng:A n rowny g");
+											/*print("------------------------------------------------------------AKCJA! ng:A n rowny g");
 											print(akcjeGracza[i]);
 											print(akcjeGracza[iAnim].getAnimacja());
 											print(akcjeNPC[j]);
-											print(akcjeNPC[jAnim].getAnimacja());
+											print(akcjeNPC[jAnim].getAnimacja());*/
 											akcjaNPCSkonczona=false; akcjaGraczaSkonczona=false;
 											animacjaNPCSkonczona=false; animacjaGraczaSkonczona=false;
 											czasAkcjiGracza=Time.time; czasAkcjiNPC=Time.time;
@@ -409,11 +410,11 @@ public class GameLogicDataScript : MonoBehaviour {
 									else if(pokryte>0){
 										if((akcjaGraczaSkonczona)&&(akcjaNPCSkonczona)){
 											jAnim=j; iAnim=i;
-											print("------------------------------------------------------------AKCJA! ng:A ataki sie nie pokrywaja");
+											/*print("------------------------------------------------------------AKCJA! ng:A ataki sie nie pokrywaja");
 											print(akcjeGracza[i]);
 											print(akcjeGracza[iAnim].getAnimacja());
 											print(akcjeNPC[j]);
-											print(akcjeNPC[jAnim].getAnimacja());
+											print(akcjeNPC[jAnim].getAnimacja());*/
 											akcjaNPCSkonczona=false; akcjaGraczaSkonczona=false;
 											animacjaNPCSkonczona=false; animacjaGraczaSkonczona=false;
 											czasAkcjiGracza=Time.time; czasAkcjiNPC=Time.time;
@@ -436,9 +437,9 @@ public class GameLogicDataScript : MonoBehaviour {
 									if ((pozostalePAGracza-aktKosztPAGracza)>(pozostalePANPC-aktKosztPANPC)){
 										if(akcjaGraczaSkonczona){
 											iAnim=i;
-											print("------------------------------------------------------------AKCJA! ng:D g szybszy");
+											/*print("------------------------------------------------------------AKCJA! ng:D g szybszy");
 											print(akcjeGracza[i]);
-											print(akcjeGracza[iAnim].getAnimacja());
+											print(akcjeGracza[iAnim].getAnimacja());*/
 											akcjaGraczaSkonczona=false;
 											animacjaGraczaSkonczona=false;
 											czasAkcjiGracza=Time.time;
@@ -451,9 +452,9 @@ public class GameLogicDataScript : MonoBehaviour {
 									else if ((pozostalePAGracza-aktKosztPAGracza)<(pozostalePANPC-aktKosztPANPC)){
 										if(akcjaNPCSkonczona){
 											jAnim=j;
-											print("------------------------------------------------------------AKCJA! ng:D n szybszy");
+											/*print("------------------------------------------------------------AKCJA! ng:D n szybszy");
 											print(akcjeNPC[j]);
-											print(akcjeNPC[jAnim].getAnimacja());
+											print(akcjeNPC[jAnim].getAnimacja());*/
 											akcjaNPCSkonczona=false;
 											animacjaNPCSkonczona=false;
 											czasAkcjiNPC=Time.time;
@@ -466,11 +467,11 @@ public class GameLogicDataScript : MonoBehaviour {
 									else {
 										if((akcjaGraczaSkonczona)&&(akcjaNPCSkonczona)){
 											jAnim=j; iAnim=i;
-											print("------------------------------------------------------------AKCJA!  ng:D rownoczesnie");
+											/*print("------------------------------------------------------------AKCJA!  ng:D rownoczesnie");
 											print(akcjeGracza[i]);
 											print(akcjeGracza[iAnim].getAnimacja());
 											print(akcjeNPC[j]);
-											print(akcjeNPC[jAnim].getAnimacja());
+											print(akcjeNPC[jAnim].getAnimacja());*/
 											akcjaNPCSkonczona=false; akcjaGraczaSkonczona=false;
 											animacjaNPCSkonczona=false; animacjaGraczaSkonczona=false;
 											czasAkcjiGracza=Time.time; czasAkcjiNPC=Time.time;
@@ -489,9 +490,9 @@ public class GameLogicDataScript : MonoBehaviour {
 								aktKosztPAGracza=akcjeGracza[i].getKoszt();
 								if(akcjaGraczaSkonczona){
 									iAnim=i;
-									print("------------------------------------------------------------AKCJA! ostatnia akcja g");
+									/*print("------------------------------------------------------------AKCJA! ostatnia akcja g");
 									print(akcjeGracza[i]);
-									print(akcjeGracza[iAnim].getAnimacja());
+									print(akcjeGracza[iAnim].getAnimacja());*/
 									akcjaGraczaSkonczona=false;
 									animacjaGraczaSkonczona=false;
 									czasAkcjiGracza=Time.time;
@@ -512,9 +513,9 @@ public class GameLogicDataScript : MonoBehaviour {
 								aktKosztPANPC=akcjeNPC[j].getKoszt();
 								if(akcjaNPCSkonczona){
 									jAnim=j;
-									print("------------------------------------------------------------AKCJA! ostatnia akcja n");
+									/*print("------------------------------------------------------------AKCJA! ostatnia akcja n");
 									print(akcjeNPC[j]);
-									print(akcjeNPC[jAnim].getAnimacja());
+									print(akcjeNPC[jAnim].getAnimacja());*/
 									akcjaNPCSkonczona=false;
 									animacjaNPCSkonczona=false;
 									czasAkcjiNPC=Time.time;
@@ -532,16 +533,16 @@ public class GameLogicDataScript : MonoBehaviour {
 								}
 							}
 							else{
-								print("Koniec kolejki");
+								//print("Koniec kolejki");
 								//j--; i--; animacjaGraczaSkonczona=false; animacjaNPCSkonczona=false;
 								j=akcjeNPC.Count-1;
 								i=akcjeGracza.Count-1;
 								przejscieSkonczone=false;
 								wykonane=true;
-								print(akcjeGracza[i]);
+								/*print(akcjeGracza[i]);
 								print(akcjeGracza[iAnim].getAnimacja());
 								print(akcjeNPC[j]);
-								print(akcjeNPC[jAnim].getAnimacja());
+								print(akcjeNPC[jAnim].getAnimacja());*/
         					}
 
 							//jeśli, któryś z graczy umarł, zakończ rozgrywkę
@@ -556,11 +557,11 @@ public class GameLogicDataScript : MonoBehaviour {
 					}
 					else{
 						if(jest){
-							print("JEEEEEEEEEEEEEEEEEEEEEEST!!!!!!!");
+							/*print("JEEEEEEEEEEEEEEEEEEEEEEST!!!!!!!");
 							print(akcjeGracza[i]);
 							print(akcjeGracza[iAnim].getAnimacja());
 							print(akcjeNPC[j]);
-							print(akcjeNPC[jAnim].getAnimacja());
+							print(akcjeNPC[jAnim].getAnimacja());*/
 							/*animacjaGraczaSkonczona=false;
 							animacjaNPCSkonczona=false;
 							akcjeGracza[jAnim].animuj();
@@ -629,7 +630,7 @@ public class GameLogicDataScript : MonoBehaviour {
 			//czas=Time.time;
 			if((!przejscieSkonczone)&&(!wykonane)){
 				if((Time.time-czas)>interwalPrzejscie) {
-					print("Zmieniam flage przejscia");
+					//print("Zmieniam flage przejscia");
 					przejscieSkonczone=true;
 					czas=Time.time;
 					animacjaGraczaSkonczona=true;
@@ -650,14 +651,14 @@ public class GameLogicDataScript : MonoBehaviour {
 				if((i<(akcjeGracza.Count+1))&&(!animacjaGraczaSkonczona)){
 					if((Time.time-czasAkcjiGracza)>akcjeGracza[iAnim].getCzasAnimacji()){
 						animacjaGraczaSkonczona=true;
-						print("Animacja Gracza Skonczona");
+						//print("Animacja Gracza Skonczona");
 						player.GetComponent<Animation>().Stop();
 					}
 				}
 				if((j<(akcjeNPC.Count+1))&&(!animacjaNPCSkonczona)){
 					if((Time.time-czasAkcjiNPC)>akcjeNPC[jAnim].getCzasAnimacji()){
 						animacjaNPCSkonczona=true;
-						print("Animacja Gracza Skonczona");
+						//print("Animacja Gracza Skonczona");
 						opponent.GetComponent<Animation>().Stop();
 					}
 				}
@@ -668,7 +669,7 @@ public class GameLogicDataScript : MonoBehaviour {
 						player.GetComponent<Animation>().Stop();
 						animacjaGraczaSkonczona=true;
 						czasAkcjiGracza=Time.time;
-						print("Akcja Gracza Skonczona");
+						//print("Akcja Gracza Skonczona");
 					}
 				}
 				//if(!wykonane) print("InterNPC: "+interwalAkcjaNPC.ToString()+"/"+(Time.time-czasAkcjiNPC).ToString());
@@ -678,7 +679,7 @@ public class GameLogicDataScript : MonoBehaviour {
 						opponent.GetComponent<Animation>().Stop();
 						animacjaNPCSkonczona=true;
 						czasAkcjiNPC=Time.time;
-						print("Akcja NPC Skonczona");
+						//print("Akcja NPC Skonczona");
 					}
 				}
 
@@ -691,9 +692,10 @@ public class GameLogicDataScript : MonoBehaviour {
 						GameObject.Find("NastepnaTuraHUDText").GetComponent<Text>().text="Wciśnij [spację], aby przejść do kolejnej tury.";
 						rysujHistore ();
 						pokazTabelke();
-						wykonane=true;
+						//wykonane=true;
 						//jeśli jeszcze żyją przygotuj następną turę
 						if (nastepnaTura) {
+							print("NASTEPNA TURA!!!!");
 							zrobione = false;
 							//rodzajAtaku += "\n\nRunda " + (tura+1);
 							pozostalePANPC=10; pozostalePAGracza=10;
@@ -770,41 +772,169 @@ public class GameLogicDataScript : MonoBehaviour {
 			if ((!modeNPC) && (punktyAkcjiNPC>=1)) {
 
 				//zaznaczam pierwsze pole w najbardziej atakowanym przez gracza miejscu
-				if (historiaAkcjiGracza.Count>0){
-					startx=zwrocWybieranePola(false,true,true,1);
-					starty=zwrocWybieranePola(true,true,true,1);
+				if (zwrocIloscAkcji(true)>0){
+					print("Będę się bronił logicznie!");
+					zwrocWybieranePola(true);
+					startx=zwrocIndeks(false,true,1);
+					starty=zwrocIndeks(true,true,1);
+					print("Najwiecej: "+prawdopodobienstwo[startx,starty]+" Indeksy: "+startx+" "+starty);
 				}
 				hitboxNPC[startx,starty]=true;	//zaznacza punkt startowy w hitboxie
 
 				kosztAkcjiNPC=1; iloscPolNPC++;	//dodaję 1 do kosztu akcji i do ilości zaznaczonych pól
 				//jeśli NPC ma więcej niż 1 punkt akcji
 				if (punktyAkcjiNPC>1){
-					do {
-						//losuję wartości całkowite od -1 do 1
-						vert=System.Convert.ToInt32(UnityEngine.Random.value*2)-1;
-						hor=System.Convert.ToInt32(UnityEngine.Random.value*2)-1;
-						//jeśli po dodaniu tych wartości do odpowiednich indeksów, wyjdzie indeks z poza tablicy, to wyzeruj wartość
-						if (((startx==0)&&(hor==-1))||((startx==2)&&(hor==1))) hor=0;
-						if (((starty==0)&&(vert==-1))||((starty==2)&&(vert==1))) vert=0;
-						//przypisz indeksy kolejnych pól poprzez dodanie wartości do indeksu poprzedniego pola
-						hor=startx+hor; 
-						vert=starty+vert;
-					} while((startx-hor!=0)&&(starty-vert!=0)); //jeśli nowe indeksy pokryły się z poprzednim polem, to wylosuj od nowa
+					int najwiecej=0;
+					if (zwrocIloscAkcji(true)>0){
+						najwiecej=0;
+						if (startx-1>=0){
+							if (prawdopodobienstwo[startx-1, starty]>najwiecej){
+								najwiecej=prawdopodobienstwo[startx-1, starty];
+								hor=startx-1; vert=starty;
+							}
+							if (starty-1>=0){
+								if (prawdopodobienstwo[startx-1, starty-1]>najwiecej){
+									najwiecej=prawdopodobienstwo[startx-1, starty-1];
+									hor=startx-1; vert=starty-1;
+								}
+							}
+							if (starty+1<=2){
+								if (prawdopodobienstwo[startx-1, starty+1]>najwiecej){
+									najwiecej=prawdopodobienstwo[startx-1, starty+1];
+									hor=startx-1; vert=starty+1;
+								}
+							}
+						}
+						if (startx+1<=2){
+							if (prawdopodobienstwo[startx+1, starty]>najwiecej){
+								najwiecej=prawdopodobienstwo[startx+1, starty];
+								hor=startx+1; vert=starty;
+							}
+							if (starty-1>=0){
+								if (prawdopodobienstwo[startx+1, starty-1]>najwiecej){
+									najwiecej=prawdopodobienstwo[startx+1, starty-1];
+									hor=startx+1; vert=starty-1;
+								}
+							}
+							if (starty+1<=2){
+								if (prawdopodobienstwo[startx+1, starty+1]>najwiecej){
+									najwiecej=prawdopodobienstwo[startx+1, starty+1];
+									hor=startx+1; vert=starty+1;
+								}
+							}
+						}
+						if (starty-1>=0){
+							if (prawdopodobienstwo[startx, starty-1]>najwiecej){
+								najwiecej=prawdopodobienstwo[startx, starty-1];
+								hor=startx; vert=starty-1;
+							}
+						}
+						if (starty+1<=2){
+							if (prawdopodobienstwo[startx, starty+1]>najwiecej){
+								najwiecej=prawdopodobienstwo[startx, starty+1];
+								hor=startx; vert=starty+1;
+							}
+						}
+						print("Najwiecej: "+najwiecej+" Indeksy: "+hor+" "+vert);
+					}
+					else{
+						do {
+							//losuję wartości całkowite od -1 do 1
+							vert=System.Convert.ToInt32(UnityEngine.Random.value*2)-1;
+							hor=System.Convert.ToInt32(UnityEngine.Random.value*2)-1;
+							//jeśli po dodaniu tych wartości do odpowiednich indeksów, wyjdzie indeks z poza tablicy, to wyzeruj wartość
+							if (((startx==0)&&(hor==-1))||((startx==2)&&(hor==1))) hor=0;
+							if (((starty==0)&&(vert==-1))||((starty==2)&&(vert==1))) vert=0;
+							//przypisz indeksy kolejnych pól poprzez dodanie wartości do indeksu poprzedniego pola
+							hor=startx+hor; 
+							vert=starty+vert;
+						} while((startx-hor!=0)&&(starty-vert!=0)); //jeśli nowe indeksy pokryły się z poprzednim polem, to wylosuj od nowa
+					}
 					hitboxNPC[hor,vert]=true;	//zaznacza drugie pole w hitboxie
 					kosztAkcjiNPC=2; iloscPolNPC++;	//dodaję 1 do kosztu akcji i do ilości zaznaczonych pól
 					//jeśli NPC ma więcej niż 2 punkt akcji
 					if (punktyAkcjiNPC>2){
-						do {
-							//losuję wartości całkowite od -1 do 1
-							vert2=System.Convert.ToInt32(UnityEngine.Random.value*2)-1;
-							hor2=System.Convert.ToInt32(UnityEngine.Random.value*2)-1;
-							//jeśli po dodaniu tych wartości do odpowiednich indeksów, wyjdzie indeks z poza tablicy, to wyzeruj wartość
-							if (((hor==0)&&(hor2==-1))||((hor==2)&&(hor2==1))) hor2=0;
-							if (((vert==0)&&(vert2==-1))||((vert==2)&&(vert2==1))) vert2=0;
-							//przypisz indeksy kolejnych pól poprzez dodanie wartości do indeksu poprzedniego pola
-							hor2=hor+hor2;
-							vert2=vert+vert2;
-						} while(((hor-hor2!=0)&&(vert-vert2!=0))||((startx-hor2!=0)&&(starty-vert2!=0)));	//jeśli nowe indeksy pokryły się z poprzednimi polami, to wylosuj od nowa
+						if (zwrocIloscAkcji(true)>0){
+							najwiecej=0;
+							if (hor-1>=0){
+								if ((hor-1!=startx)||(vert!=starty)){
+									if (prawdopodobienstwo[hor-1, vert]>najwiecej){
+										najwiecej=prawdopodobienstwo[hor-1, vert];
+										hor2=hor-1; vert2=vert;
+									}
+								}
+								if ((hor-1!=startx)||(vert-1!=starty)){
+									if (vert-1>=0){
+										if (prawdopodobienstwo[hor-1, vert-1]>najwiecej){
+											najwiecej=prawdopodobienstwo[hor-1, vert-1];
+											hor2=hor-1; vert2=vert-1;
+										}
+									}
+								}
+								if ((hor-1!=startx)||(vert+1!=starty)){
+									if (vert+1<=2){
+										if (prawdopodobienstwo[hor-1, vert+1]>najwiecej){
+											najwiecej=prawdopodobienstwo[hor-1, vert+1];
+											hor2=hor-1; vert2=vert+1;
+										}
+									}
+								}
+							}
+							if (hor+1<=2){
+								if ((hor+1!=startx)||(vert!=starty)){
+									if (prawdopodobienstwo[hor+1, vert]>najwiecej){
+										najwiecej=prawdopodobienstwo[hor+1, vert];
+										hor2=hor+1; vert2=vert;
+									}
+								}
+								if ((hor+1!=startx)||(vert-1!=starty)){
+									if (vert-1>=0){
+										if (prawdopodobienstwo[hor+1, vert-1]>najwiecej){
+											najwiecej=prawdopodobienstwo[hor+1, vert-1];
+											hor2=hor+1; vert2=vert-1;
+										}
+									}
+								}
+								if ((hor+1!=startx)||(vert+1!=starty)){
+									if (vert+1<=2){
+										if (prawdopodobienstwo[hor+1, vert+1]>najwiecej){
+											najwiecej=prawdopodobienstwo[hor+1, vert+1];
+											hor2=hor+1; vert2=vert+1;
+										}
+									}
+								}
+							}
+							if ((hor!=startx)||(vert-1!=starty)){
+								if (vert-1>=0){
+									if (prawdopodobienstwo[hor, vert-1]>najwiecej){
+										najwiecej=prawdopodobienstwo[hor, vert-1];
+										hor2=hor; vert2=vert-1;
+									}
+								}
+							}
+							if ((hor!=startx)||(vert+1!=starty)){
+								if (vert+1<=2){
+									if (prawdopodobienstwo[hor, vert+1]>najwiecej){
+										najwiecej=prawdopodobienstwo[hor, vert+1];
+										hor2=hor; vert2=vert+1;
+									}
+								}
+							}
+							print("Najwiecej: "+najwiecej+" Indeksy: "+hor2+" "+vert2);
+						}
+						else{
+							do {
+								//losuję wartości całkowite od -1 do 1
+								vert2=System.Convert.ToInt32(UnityEngine.Random.value*2)-1;
+								hor2=System.Convert.ToInt32(UnityEngine.Random.value*2)-1;
+								//jeśli po dodaniu tych wartości do odpowiednich indeksów, wyjdzie indeks z poza tablicy, to wyzeruj wartość
+								if (((hor==0)&&(hor2==-1))||((hor==2)&&(hor2==1))) hor2=0;
+								if (((vert==0)&&(vert2==-1))||((vert==2)&&(vert2==1))) vert2=0;
+								//przypisz indeksy kolejnych pól poprzez dodanie wartości do indeksu poprzedniego pola
+								hor2=hor+hor2;
+								vert2=vert+vert2;
+							} while(((hor-hor2!=0)&&(vert-vert2!=0))||((startx-hor2!=0)&&(starty-vert2!=0)));	//jeśli nowe indeksy pokryły się z poprzednimi polami, to wylosuj od nowa
+						}
 						hitboxNPC[hor2,vert2]=true;	//zaznacza trzecie pole w hitboxie
 						kosztAkcjiNPC=3; iloscPolNPC++;	//dodaję 1 do kosztu akcji i do ilości zaznaczonych pól
 					}
@@ -812,10 +942,14 @@ public class GameLogicDataScript : MonoBehaviour {
 			}
 			//jeśli został wybrany atak i NPC ma przynajmniej 1 pkt akcji
 			if ((modeNPC)&&(punktyAkcjiNPC>=1)){
+				zwrocWybieranePola(false);
 				//zaznaczam pierwsze pole w najmniej bronionym przez gracza miejscu
-				if (historiaAkcjiGracza.Count>0){
-					startx=zwrocWybieranePola(false,false,false,1);
-					starty=zwrocWybieranePola(true,false,false,1);
+				if (zwrocIloscAkcji(false)>0){
+					print("Będę atakował logicznie!");
+					zwrocWybieranePola(false);
+					startx=zwrocIndeks(false,false,1);
+					starty=zwrocIndeks(true,false,1);
+					print("Najmniej: "+prawdopodobienstwo[startx,starty]+" Indeksy: "+startx+" "+starty);
 				}
 				hitboxNPC[startx,starty]=true;	//zaznacza punkt startowy w hitboxie
 				iloscPolNPC=1; //ustawiam ilość zaznaczonych pól na 1
@@ -831,31 +965,157 @@ public class GameLogicDataScript : MonoBehaviour {
 				}
 				//jesli rodzaj ataku = 1, to zakładam, że wybrano ciężki atak
 				if(rodzajAtaku==1){
-					//jeśli NPC ma potrzebne punkty akcj
+					//jeśli NPC ma potrzebne punkty akcji
 					if(punktyAkcjiNPC>=3){
-						do {
-							//losuję wartości całkowite od -1 do 1
-							vert=System.Convert.ToInt32(UnityEngine.Random.value*2)-1;
-							hor=System.Convert.ToInt32(UnityEngine.Random.value*2)-1;
-							//jeśli po dodaniu tych wartości do odpowiednich indeksów, wyjdzie indeks z poza tablicy, to wyzeruj wartość
-							if (((startx==0)&&(hor==-1))||((startx==2)&&(hor==1))) hor=0;
-							if (((starty==0)&&(vert==-1))||((starty==2)&&(vert==1))) vert=0;
-							//przypisz indeksy kolejnych pól poprzez dodanie wartości do indeksu poprzedniego pola
-							hor=startx+hor; 
-							vert=starty+vert;
-						} while((startx-hor!=0)&&(starty-vert!=0)); //jeśli nowe indeksy pokryły się z poprzednim polem, to wylosuj od nowa
+						int najmniej=999;
+						if (zwrocIloscAkcji(false)>0){
+							najmniej=999;
+							if (startx-1>=0){
+								if (prawdopodobienstwo[startx-1, starty]<najmniej){
+									najmniej=prawdopodobienstwo[startx-1, starty];
+									hor=startx-1; vert=starty;
+								}
+								if (starty-1>=0){
+									if (prawdopodobienstwo[startx-1, starty-1]<najmniej){
+										najmniej=prawdopodobienstwo[startx-1, starty-1];
+										hor=startx-1; vert=starty-1;
+									}
+								}
+								if (starty+1<=2){
+									if (prawdopodobienstwo[startx-1, starty+1]<najmniej){
+										najmniej=prawdopodobienstwo[startx-1, starty+1];
+										hor=startx-1; vert=starty+1;
+									}
+								}
+							}
+							if (startx+1<=2){
+								if (prawdopodobienstwo[startx+1, starty]<najmniej){
+									najmniej=prawdopodobienstwo[startx+1, starty];
+									hor=startx+1; vert=starty;
+								}
+								if (starty-1>=0){
+									if (prawdopodobienstwo[startx+1, starty-1]<najmniej){
+										najmniej=prawdopodobienstwo[startx+1, starty-1];
+										hor=startx+1; vert=starty-1;
+									}
+								}
+								if (starty+1<=2){
+									if (prawdopodobienstwo[startx+1, starty+1]<najmniej){
+										najmniej=prawdopodobienstwo[startx+1, starty+1];
+										hor=startx+1; vert=starty+1;
+									}
+								}
+							}
+							if (starty-1>=0){
+								if (prawdopodobienstwo[startx, starty-1]<najmniej){
+									najmniej=prawdopodobienstwo[startx, starty-1];
+									hor=startx; vert=starty-1;
+								}
+							}
+							if (starty+1<=2){
+								if (prawdopodobienstwo[startx, starty+1]<najmniej){
+									najmniej=prawdopodobienstwo[startx, starty+1];
+									hor=startx; vert=starty+1;
+								}
+							}
+							print("Najmniej: "+najmniej+" Indeksy: "+hor+" "+vert);
+						}
+						else{
+							do {
+								//losuję wartości całkowite od -1 do 1
+								vert=System.Convert.ToInt32(UnityEngine.Random.value*2)-1;
+								hor=System.Convert.ToInt32(UnityEngine.Random.value*2)-1;
+								//jeśli po dodaniu tych wartości do odpowiednich indeksów, wyjdzie indeks z poza tablicy, to wyzeruj wartość
+								if (((startx==0)&&(hor==-1))||((startx==2)&&(hor==1))) hor=0;
+								if (((starty==0)&&(vert==-1))||((starty==2)&&(vert==1))) vert=0;
+								//przypisz indeksy kolejnych pól poprzez dodanie wartości do indeksu poprzedniego pola
+								hor=startx+hor; 
+								vert=starty+vert;
+							} while((startx-hor!=0)&&(starty-vert!=0)); //jeśli nowe indeksy pokryły się z poprzednim polem, to wylosuj od nowa
+						}
 						hitboxNPC[hor,vert]=true; //zaznacza drugie pole w hitboxie
-						do {
-							//losuję wartości całkowite od -1 do 1
-							vert2=System.Convert.ToInt32(UnityEngine.Random.value*2)-1;
-							hor2=System.Convert.ToInt32(UnityEngine.Random.value*2)-1;
-							//jeśli po dodaniu tych wartości do odpowiednich indeksów, wyjdzie indeks z poza tablicy, to wyzeruj wartość
-							if (((hor==0)&&(hor2==-1))||((hor==2)&&(hor2==1))) hor2=0;
-							if (((vert==0)&&(vert2==-1))||((vert==2)&&(vert2==1))) vert2=0;
-							//przypisz indeksy kolejnych pól poprzez dodanie wartości do indeksu poprzedniego pola
-							hor2=hor+hor2;
-							vert2=vert+vert2;
-						} while(((hor-hor2!=0)&&(vert-vert2!=0))||((startx-hor2!=0)&&(starty-vert2!=0)));	//jeśli nowe indeksy pokryły się z poprzednimi polami, to wylosuj od nowa
+
+						if (zwrocIloscAkcji(false)>0){
+							najmniej=999;
+							if (hor-1>=0){
+								if ((hor-1!=startx)||(vert!=starty)){
+									if (prawdopodobienstwo[hor-1, vert]<najmniej){
+										najmniej=prawdopodobienstwo[hor-1, vert];
+										hor2=hor-1; vert2=vert;
+									}
+								}
+								if ((hor-1!=startx)||(vert-1!=starty)){
+									if (vert-1>=0){
+										if (prawdopodobienstwo[hor-1, vert-1]<najmniej){
+											najmniej=prawdopodobienstwo[hor-1, vert-1];
+											hor2=hor-1; vert2=vert-1;
+										}
+									}
+								}
+								if ((hor-1!=startx)||(vert+1!=starty)){
+									if (vert+1<=2){
+										if (prawdopodobienstwo[hor-1, vert+1]<najmniej){
+											najmniej=prawdopodobienstwo[hor-1, vert+1];
+											hor2=hor-1; vert2=vert+1;
+										}
+									}
+								}
+							}
+							if (hor+1<=2){
+								if ((hor+1!=startx)||(vert!=starty)){
+									if (prawdopodobienstwo[hor+1, vert]<najmniej){
+										najmniej=prawdopodobienstwo[hor+1, vert];
+										hor2=hor+1; vert2=vert;
+									}
+								}
+								if ((hor+1!=startx)||(vert-1!=starty)){
+									if (vert-1>=0){
+										if (prawdopodobienstwo[hor+1, vert-1]<najmniej){
+											najmniej=prawdopodobienstwo[hor+1, vert-1];
+											hor2=hor+1; vert2=vert-1;
+										}
+									}
+								}
+								if ((hor+1!=startx)||(vert+1!=starty)){
+									if (vert+1<=2){
+										if (prawdopodobienstwo[hor+1, vert+1]<najmniej){
+											najmniej=prawdopodobienstwo[hor+1, vert+1];
+											hor2=hor+1; vert2=vert+1;
+										}
+									}
+								}
+							}
+							if ((hor!=startx)||(vert-1!=starty)){
+								if (vert-1>=0){
+									if (prawdopodobienstwo[hor, vert-1]<najmniej){
+										najmniej=prawdopodobienstwo[hor, vert-1];
+										hor2=hor; vert2=vert-1;
+									}
+								}
+							}
+							if ((hor!=startx)||(vert+1!=starty)){
+								if (vert+1<=2){
+									if (prawdopodobienstwo[hor, vert+1]<najmniej){
+										najmniej=prawdopodobienstwo[hor, vert+1];
+										hor2=hor; vert2=vert+1;
+									}
+								}
+							}
+							print("Najmniej: "+najmniej+" Indeksy: "+hor2+" "+vert2);
+						}
+						else{
+							do {
+								//losuję wartości całkowite od -1 do 1
+								vert2=System.Convert.ToInt32(UnityEngine.Random.value*2)-1;
+								hor2=System.Convert.ToInt32(UnityEngine.Random.value*2)-1;
+								//jeśli po dodaniu tych wartości do odpowiednich indeksów, wyjdzie indeks z poza tablicy, to wyzeruj wartość
+								if (((hor==0)&&(hor2==-1))||((hor==2)&&(hor2==1))) hor2=0;
+								if (((vert==0)&&(vert2==-1))||((vert==2)&&(vert2==1))) vert2=0;
+								//przypisz indeksy kolejnych pól poprzez dodanie wartości do indeksu poprzedniego pola
+								hor2=hor+hor2;
+								vert2=vert+vert2;
+							} while(((hor-hor2!=0)&&(vert-vert2!=0))||((startx-hor2!=0)&&(starty-vert2!=0)));	//jeśli nowe indeksy pokryły się z poprzednimi polami, to wylosuj od nowa
+						}
 						hitboxNPC[hor2,vert2]=true;	//zaznacza trzecie pole w hitboxie
 						kosztAkcjiNPC=3; iloscPolNPC=3;	//ustawiam kosztu akcji i ilości zaznaczonych pól
 					}
@@ -864,24 +1124,79 @@ public class GameLogicDataScript : MonoBehaviour {
 				//jesli rodzaj ataku = 2, to zakładam, że wybrano szybki atak
 				if(rodzajAtaku==2){
 					if(punktyAkcjiNPC>=2){
-						do {
-							//losuję wartości całkowite od -1 do 1
-							vert=System.Convert.ToInt32(UnityEngine.Random.value*2)-1;
-							hor=System.Convert.ToInt32(UnityEngine.Random.value*2)-1;
-							//jeśli po dodaniu tych wartości do odpowiednich indeksów, wyjdzie indeks z poza tablicy, to wyzeruj wartość
-							if (((startx==0)&&(hor==-1))||((startx==2)&&(hor==1))) hor=0;
-							if (((starty==0)&&(vert==-1))||((starty==2)&&(vert==1))) vert=0;
-							//przypisz indeksy kolejnych pól poprzez dodanie wartości do indeksu poprzedniego pola
-							hor=startx+hor; 
-							vert=starty+vert;
-						} while((startx-hor!=0)&&(starty-vert!=0));	//jeśli nowe indeksy pokryły się z poprzednim polem, to wylosuj od nowa
+						int najmniej=999;
+						if (zwrocIloscAkcji(false)>0){
+							najmniej=999;
+							if (startx-1>=0){
+								if (prawdopodobienstwo[startx-1, starty]<najmniej){
+									najmniej=prawdopodobienstwo[startx-1, starty];
+									hor=startx-1; vert=starty;
+								}
+								if (starty-1>=0){
+									if (prawdopodobienstwo[startx-1, starty-1]<najmniej){
+										najmniej=prawdopodobienstwo[startx-1, starty-1];
+										hor=startx-1; vert=starty-1;
+									}
+								}
+								if (starty+1<=2){
+									if (prawdopodobienstwo[startx-1, starty+1]<najmniej){
+										najmniej=prawdopodobienstwo[startx-1, starty+1];
+										hor=startx-1; vert=starty+1;
+									}
+								}
+							}
+							if (startx+1<=2){
+								if (prawdopodobienstwo[startx+1, starty]<najmniej){
+									najmniej=prawdopodobienstwo[startx+1, starty];
+									hor=startx+1; vert=starty;
+								}
+								if (starty-1>=0){
+									if (prawdopodobienstwo[startx+1, starty-1]<najmniej){
+										najmniej=prawdopodobienstwo[startx+1, starty-1];
+										hor=startx+1; vert=starty-1;
+									}
+								}
+								if (starty+1<=2){
+									if (prawdopodobienstwo[startx+1, starty+1]<najmniej){
+										najmniej=prawdopodobienstwo[startx+1, starty+1];
+										hor=startx+1; vert=starty+1;
+									}
+								}
+							}
+							if (starty-1>=0){
+								if (prawdopodobienstwo[startx, starty-1]<najmniej){
+									najmniej=prawdopodobienstwo[startx, starty-1];
+									hor=startx; vert=starty-1;
+								}
+							}
+							if (starty+1<=2){
+								if (prawdopodobienstwo[startx, starty+1]<najmniej){
+									najmniej=prawdopodobienstwo[startx, starty+1];
+									hor=startx; vert=starty+1;
+								}
+							}
+							print("Najmniej: "+najmniej+" Indeksy: "+hor+" "+vert);
+						}
+						else{
+							do {
+								//losuję wartości całkowite od -1 do 1
+								vert=System.Convert.ToInt32(UnityEngine.Random.value*2)-1;
+								hor=System.Convert.ToInt32(UnityEngine.Random.value*2)-1;
+								//jeśli po dodaniu tych wartości do odpowiednich indeksów, wyjdzie indeks z poza tablicy, to wyzeruj wartość
+								if (((startx==0)&&(hor==-1))||((startx==2)&&(hor==1))) hor=0;
+								if (((starty==0)&&(vert==-1))||((starty==2)&&(vert==1))) vert=0;
+								//przypisz indeksy kolejnych pól poprzez dodanie wartości do indeksu poprzedniego pola
+								hor=startx+hor; 
+								vert=starty+vert;
+							} while((startx-hor!=0)&&(starty-vert!=0));	//jeśli nowe indeksy pokryły się z poprzednim polem, to wylosuj od nowa
+						}
 						hitboxNPC[hor,vert]=true; //zaznacza drugie pole w hitboxie
 						kosztAkcjiNPC=2; iloscPolNPC=2;	//ustawiam kosztu akcji i ilości zaznaczonych pól
 					}
 				}
 			}
 			//jeśli to był atak, to dodaj nowy atak do kolejki
-			printHitboxNPC();
+			//printHitboxNPC();
 			if (modeNPC) {
 				akcjeNPC.Add(new Atak(false,hitboxNPC,kosztAkcjiNPC,iloscPolNPC,mocNPC));
 			}
@@ -894,54 +1209,76 @@ public class GameLogicDataScript : MonoBehaviour {
 	}
 		
 
-	int zwrocWybieranePola(bool xory, bool najczesciej, bool tryb, int kolejnosc){
+	void zwrocWybieranePola(bool tryb){
+
+		for(int i=0;i<3;i++){
+			for(int j=0;j<3;j++) prawdopodobienstwo[i, j]=0;
+		}
+		for(int i=0;i<historiaAkcjiGracza.Count;i++){
+			if (historiaAkcjiGracza[i].getTypAkcji()==tryb){
+				if (historiaAkcjiGracza[i].getHitbox()[0,0]) prawdopodobienstwo[0,0]+=1;
+				if (historiaAkcjiGracza[i].getHitbox()[0,1]) prawdopodobienstwo[0,1]+=1;
+				if (historiaAkcjiGracza[i].getHitbox()[0,2]) prawdopodobienstwo[0,2]+=1;
+				if (historiaAkcjiGracza[i].getHitbox()[1,0]) prawdopodobienstwo[1,0]+=1;
+				if (historiaAkcjiGracza[i].getHitbox()[1,1]) prawdopodobienstwo[1,1]+=1;
+				if (historiaAkcjiGracza[i].getHitbox()[1,2]) prawdopodobienstwo[1,2]+=1;
+				if (historiaAkcjiGracza[i].getHitbox()[2,0]) prawdopodobienstwo[2,0]+=1;
+				if (historiaAkcjiGracza[i].getHitbox()[2,1]) prawdopodobienstwo[2,1]+=1;
+				if (historiaAkcjiGracza[i].getHitbox()[2,2]) prawdopodobienstwo[2,2]+=1;
+			}
+		}
+	}
+		
+	int zwrocIndeks(bool xory, bool najczesciej, int kolejnosc){
 		int pole=-1;
 		int aktpole=-1;
 		int ile=0;
-		int [,] ilosc = new int[3,3];
-		for(int i=0;i<historiaAkcjiGracza.Count;i++){
-			if (historiaAkcjiGracza[i].getTypAkcji()==tryb){
-				if (historiaAkcjiGracza[i].getHitbox()[0,0]) ilosc[0,0]+=1;
-				if (historiaAkcjiGracza[i].getHitbox()[0,1]) ilosc[0,1]+=1;
-				if (historiaAkcjiGracza[i].getHitbox()[0,2]) ilosc[0,2]+=1;
-				if (historiaAkcjiGracza[i].getHitbox()[1,0]) ilosc[1,0]+=1;
-				if (historiaAkcjiGracza[i].getHitbox()[1,1]) ilosc[1,1]+=1;
-				if (historiaAkcjiGracza[i].getHitbox()[1,2]) ilosc[1,2]+=1;
-				if (historiaAkcjiGracza[i].getHitbox()[2,0]) ilosc[2,0]+=1;
-				if (historiaAkcjiGracza[i].getHitbox()[2,1]) ilosc[2,1]+=1;
-				if (historiaAkcjiGracza[i].getHitbox()[2,2]) ilosc[2,2]+=1;
-			}
-		}
-		for (int o=0;o<kolejnosc;o++){
+		for(int o=0;o<kolejnosc;o++){
 			for(int i=0;i<3;i++){
 				for(int j=0;j<3;j++){
 					aktpole=j; 
 					if(i==1) aktpole+=3;
 					else if(i==2) aktpole+=6;
 					if(najczesciej){
-						if((ile<=ilosc[i,j])&&(pole!=aktpole)) {
+						if((ile<=prawdopodobienstwo[i,j])&&(pole!=aktpole)) {
 							pole=aktpole;
-							ile=ilosc[i,j];
+							ile=prawdopodobienstwo[i,j];
 						}
 					}
 					else{
-						if((ile>=ilosc[i,j])&&(pole!=aktpole)) {
+						if((ile>=prawdopodobienstwo[i,j])&&(pole!=aktpole)) {
 							pole=aktpole;
-							ile=ilosc[i,j];
+							ile=prawdopodobienstwo[i,j];
 						}
 					}
 				}
 			}
 		}
-		if(xory){
-			if (pole>5) return 2;
-			if (pole>2) return 1;
-			return 0;
+		if(pole<0){
+			return -1;
 		}
 		else{
-			print(pole+" "+(pole%3));
-			return pole%3;
+			if(xory){
+				if (pole>5) return 2;
+				if (pole>2) return 1;
+				return 0;
+			}
+			else{
+				//print(pole+" "+(pole%3));
+				return pole%3;
+			}
 		}
+	}
+
+	int zwrocIloscAkcji(bool tryb){
+		int ile=0;
+		if (historiaAkcjiGracza.Count>0){
+			foreach (Czynnosc c in historiaAkcjiGracza){
+				if(c.getTypAkcji()==tryb) ile++;
+			}
+			return ile;
+		}
+		else return 0;
 	}
 
 	float drawpositionx=Screen.width*0.01f;
@@ -1261,7 +1598,7 @@ public abstract class Czynnosc {
 	protected string animacja;
 	protected string dzwiek;
 	protected double szybkosc;
-
+	protected bool odegrane=false;
 	/// <summary>
 	/// Inicjalizuje instancję klasy <see cref="Czynnosc"/>.
 	/// </summary>
@@ -1298,7 +1635,14 @@ public abstract class Czynnosc {
 	}
 
 	public void animuj(){
-		GameObject.Find(this.dzwiek+"Sound").GetComponent<AudioSource>().Play();
+		if (!odegrane){
+			if (GameObject.Find(this.dzwiek+"Sound").GetComponent<AudioSource>().isPlaying==false){
+				if (GameObject.Find("Player").GetComponent<Animation>()[this.animacja].time>=(GameObject.Find("Player").GetComponent<Animation>()[this.animacja].length/2)){
+					GameObject.Find(this.dzwiek+"Sound").GetComponent<AudioSource>().Play();
+					odegrane=true;
+				}
+			}
+		}
 		if (gracz){
 			GameObject.Find("Player").GetComponent<Animation>()[this.animacja].speed=System.Convert.ToSingle(szybkosc);
 			GameObject.Find("Player").GetComponent<Animation>().Play(this.animacja);
