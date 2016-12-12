@@ -1635,19 +1635,25 @@ public abstract class Czynnosc {
 	}
 
 	public void animuj(){
-		if (!odegrane){
-			if (GameObject.Find(this.dzwiek+"Sound").GetComponent<AudioSource>().isPlaying==false){
-				if (GameObject.Find("Player").GetComponent<Animation>()[this.animacja].time>=(GameObject.Find("Player").GetComponent<Animation>()[this.animacja].length/2)){
-					GameObject.Find(this.dzwiek+"Sound").GetComponent<AudioSource>().Play();
+		if (gracz){
+			/*if (!odegrane){
+				if (GameObject.Find("Player").GetComponent<Animation>()[this.animacja].time/GameLogicDataScript.mnoznikCzasu>=(getCzasAnimacji()/2)){
+					//GameObject.Find(this.dzwiek+"Sound").GetComponent<AudioSource>().Play();
+					GameObject.Find("SoundManager").GetComponent<SoundManager>().play(this.dzwiek, gracz);
 					odegrane=true;
 				}
-			}
-		}
-		if (gracz){
+			}*/
 			GameObject.Find("Player").GetComponent<Animation>()[this.animacja].speed=System.Convert.ToSingle(szybkosc);
 			GameObject.Find("Player").GetComponent<Animation>().Play(this.animacja);
 		}
 		if (!gracz){
+			/*if (!odegrane){
+				if (GameObject.Find("Opponent").GetComponent<Animation>()[this.animacja].time/GameLogicDataScript.mnoznikCzasu>=(getCzasAnimacji()/2)){
+					//GameObject.Find(this.dzwiek+"Sound").GetComponent<AudioSource>().Play();
+					GameObject.Find("SoundManager").GetComponent<SoundManager>().play(this.dzwiek, gracz);
+					odegrane=true;
+				}
+			}*/
 			GameObject.Find("Opponent").GetComponent<Animation>()[this.animacja].speed=System.Convert.ToSingle(szybkosc);
 			GameObject.Find("Opponent").GetComponent<Animation>().Play(this.animacja);
 		}

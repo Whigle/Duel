@@ -23,10 +23,12 @@ public class ListaAtakowScript : MonoBehaviour {
 		if (gamePaused) {
 			GameObject.Find ("CanvasLista").GetComponent<Canvas> ().enabled=false;
 			Time.timeScale = 1;
+			MousePointFields.setEnable(true);
 			gamePaused = false;
 		} else {
 			GameObject.Find ("CanvasLista").GetComponent<Canvas> ().enabled=true;
 			Time.timeScale = 0;
+			MousePointFields.setEnable(false);
 			gamePaused = true;
 		}
 	}
