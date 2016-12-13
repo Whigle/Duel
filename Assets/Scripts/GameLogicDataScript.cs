@@ -1287,7 +1287,6 @@ public class GameLogicDataScript : MonoBehaviour {
 	bool GUI1 = false;
 	public Texture2D miecz;
 	public Texture2D tarcza;
-	GUIStyle style = new GUIStyle ();
 
 	void rysujHistore() {
 		if (zrobione == false) {
@@ -1367,6 +1366,9 @@ public class GameLogicDataScript : MonoBehaviour {
 		}
 	}
 
+	public Texture2D[] draws;
+	GUIStyle style = new GUIStyle();
+
 	void jakRysowac(List<Czynnosc> akcje) {
 		foreach (Czynnosc i in akcje) {
 			int temp = i.getKoszt ();
@@ -1376,7 +1378,16 @@ public class GameLogicDataScript : MonoBehaviour {
 			else
 				tempM = tarcza;
 
-			string str="HITBOX:\n";
+			/*GUI.Box (new Rect (0, 0, Screen.width, Screen.height), draws[0],style);
+			for (int i2 = 0; i2 < 3; i2++) {
+				for (int j2 = 0; j2 < 3; j2++) {
+					if (i.getHitbox() [i2,j2] == true) {
+						GUI.Box (new Rect (drawpositionx, drawpositiony, Screen.width * 0.115f, Screen.height * 0.08f * temp), draws[i2*3+j2+1],style);
+					}
+				}
+			}
+
+			/*string str="HITBOX:\n";
 			for(int i1=0;i1<3;i1++){
 				for(int j=0;j<3;j++){
 					if(i.getHitbox()[i1,j]==true) str+="1";
@@ -1384,16 +1395,32 @@ public class GameLogicDataScript : MonoBehaviour {
 					str+=" ";
 				}
 				str+="\n";
-			}
+			}*/
 
 			//str = i.getIloscPol ().ToString();
 			//print(str);
 
-			GUIContent GUI11= new GUIContent (str, tempM, "You Know Nothing");
+			//GUIContent GUI11= new GUIContent (str, tempM, "You Know Nothing");
 			//GUI.Box (new Rect (drawpositionx, drawpositiony, Screen.width * 0.3f, Screen.height * 0.06f * temp), tempM);
 			//GUI.Box (new Rect (drawpositionx, drawpositiony, Screen.width * 0.3f, Screen.height * 0.06f * temp), temp.ToString ());
-			GUI.Box (new Rect (drawpositionx, drawpositiony, Screen.width * 0.115f, Screen.height * 0.08f * temp), GUI11);
+
+			GUI.Box (new Rect (drawpositionx, drawpositiony, Screen.width * 0.115f, Screen.height * 0.08f * temp), "");
+
+			GUI.Box (new Rect (drawpositionx, drawpositiony, Screen.width * 0.115f/2f, Screen.height * 0.08f * temp), tempM,style);
+
+			GUI.Box (new Rect (drawpositionx+Screen.width * 0.115f/2f, drawpositiony, Screen.width * 0.115f/2f, Screen.height * 0.08f * temp), draws[0],style);
+			for (int i2 = 0; i2 < 3; i2++) {
+				for (int j2 = 0; j2 < 3; j2++) {
+					if (i.getHitbox() [i2,j2] == true) {
+						GUI.Box (new Rect (drawpositionx+Screen.width * 0.115f/2f, drawpositiony, Screen.width * 0.115f/2f, Screen.height * 0.08f * temp), draws[i2*3+j2+1],style);
+					}
+				}
+			}
+
 			drawpositiony += Screen.height * 0.08f * temp;
+
+
+
 		}
 		drawpositiony = Screen.height * 0.0f;
 	}
