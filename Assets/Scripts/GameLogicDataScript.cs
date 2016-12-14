@@ -871,7 +871,7 @@ public class GameLogicDataScript : MonoBehaviour {
 							//przypisz indeksy kolejnych pól poprzez dodanie wartości do indeksu poprzedniego pola
 							hor=startx+hor; 
 							vert=starty+vert;
-						} while((startx-hor!=0)&&(starty-vert!=0)&&(((startx!=1&&starty!=1)||(startx==1&&starty==1))||((!(startx!=1&&starty!=1)||!(startx==1&&starty==1))&&((startx==hor)||(starty==vert))))); //jeśli nowe indeksy pokryły się z poprzednim polem, to wylosuj od nowa
+						} while(((startx==hor)&&(starty==vert))||!(((startx!=1&&starty!=1)||(startx==1&&starty==1))||((!(startx!=1&&starty!=1)||!(startx==1&&starty==1))&&((startx==hor)||(starty==vert))))); //jeśli nowe indeksy pokryły się z poprzednim polem, to wylosuj od nowa
 					}
 					if (hor>0&&vert>0){
 						hitboxNPC[hor,vert]=true;	//zaznacza drugie pole w hitboxie
@@ -984,7 +984,7 @@ public class GameLogicDataScript : MonoBehaviour {
 									//przypisz indeksy kolejnych pól poprzez dodanie wartości do indeksu poprzedniego pola
 									hor2=hor+hor2;
 									vert2=vert+vert2;
-								} while((((hor-hor2!=0)&&(vert-vert2!=0))||((startx-hor2!=0)&&(starty-vert2!=0)))&&czyZaznaczyc(startx,starty,hor,vert,hor2,vert2));	//jeśli nowe indeksy pokryły się z poprzednimi polami, to wylosuj od nowa
+								} while((((hor==hor2)&&(vert==vert2))||((startx==hor2)&&(starty==vert2)))||!(czyZaznaczyc(startx,starty,hor,vert,hor2,vert2)));	//jeśli nowe indeksy pokryły się z poprzednimi polami, to wylosuj od nowa
 							}
 							if (hor2>0&&vert2>0){
 								hitboxNPC[hor2,vert2]=true;	//zaznacza trzecie pole w hitboxie
@@ -1098,7 +1098,7 @@ public class GameLogicDataScript : MonoBehaviour {
 								//przypisz indeksy kolejnych pól poprzez dodanie wartości do indeksu poprzedniego pola
 								hor=startx+hor; 
 								vert=starty+vert;
-							} while((startx-hor!=0)&&(starty-vert!=0)&&(((startx!=1&&starty!=1)||(startx==1&&starty==1))||((!(startx!=1&&starty!=1)||!(startx==1&&starty==1))&&((startx==hor)||(starty==vert))))); //jeśli nowe indeksy pokryły się z poprzednim polem, to wylosuj od nowa
+							} while(((startx==hor)&&(starty==vert))||!(((startx!=1&&starty!=1)||(startx==1&&starty==1))||((!(startx!=1&&starty!=1)||!(startx==1&&starty==1))&&((startx==hor)||(starty==vert))))); //jeśli nowe indeksy pokryły się z poprzednim polem, to wylosuj od nowa
 						}
 						hitboxNPC[hor,vert]=true; //zaznacza drugie pole w hitboxie
 
@@ -1209,7 +1209,7 @@ public class GameLogicDataScript : MonoBehaviour {
 								//przypisz indeksy kolejnych pól poprzez dodanie wartości do indeksu poprzedniego pola
 								hor2=hor+hor2;
 								vert2=vert+vert2;
-							} while(((hor-hor2!=0)&&(vert-vert2!=0))||((startx-hor2!=0)&&(starty-vert2!=0)));	//jeśli nowe indeksy pokryły się z poprzednimi polami, to wylosuj od nowa
+							} while((((hor==hor2)&&(vert==vert2))||((startx==hor2)&&(starty==vert2)))||!(czyZaznaczyc(startx,starty,hor,vert,hor2,vert2)));	//jeśli nowe indeksy pokryły się z poprzednimi polami, to wylosuj od nowa
 						}
 						hitboxNPC[hor2,vert2]=true;	//zaznacza trzecie pole w hitboxie
 						kosztAkcjiNPC=3; iloscPolNPC=3;	//ustawiam kosztu akcji i ilości zaznaczonych pól
@@ -1288,7 +1288,7 @@ public class GameLogicDataScript : MonoBehaviour {
 								//przypisz indeksy kolejnych pól poprzez dodanie wartości do indeksu poprzedniego pola
 								hor=startx+hor; 
 								vert=starty+vert;
-							} while((startx-hor!=0)&&(starty-vert!=0)&&(((startx!=1&&starty!=1)||(startx==1&&starty==1))||((!(startx!=1&&starty!=1)||!(startx==1&&starty==1))&&((startx==hor)||(starty==vert))))); //jeśli nowe indeksy pokryły się z poprzednim polem, to wylosuj od nowa
+							} while(((startx==hor)&&(starty==vert))||!(((startx!=1&&starty!=1)||(startx==1&&starty==1))||((!(startx!=1&&starty!=1)||!(startx==1&&starty==1))&&((startx==hor)||(starty==vert))))); //jeśli nowe indeksy pokryły się z poprzednim polem, to wylosuj od nowa
 						}
 						hitboxNPC[hor,vert]=true; //zaznacza drugie pole w hitboxie
 						kosztAkcjiNPC=2; iloscPolNPC=2;	//ustawiam kosztu akcji i ilości zaznaczonych pól
@@ -1340,7 +1340,9 @@ public class GameLogicDataScript : MonoBehaviour {
 		
 	int zwrocIndeks(bool xory, bool najczesciej){
 		int indx=-1, indy=-1;
-		int ile=0;
+		int ile;
+		if (najczesciej) ile=0;
+		else ile=9999;
 		for(int i=0;i<3;i++){
 			for(int j=0;j<3;j++){
 				if(najczesciej){
