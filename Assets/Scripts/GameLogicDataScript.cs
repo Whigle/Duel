@@ -149,7 +149,7 @@ public class GameLogicDataScript : MonoBehaviour {
 	static string [] poziomyTrudnosci = { "Easy", "Normal", "Hard" };
 	static string [] strategie = { "Agressive", "Balanced", "Deffensive" };
 	string poziomTrudnosci = poziomyTrudnosci[1];
-	string strategia = strategie[2];
+	string strategia = strategie[1];
 	int [,] prawdopodobienstwo = new int[3,3];
 
 	static public double mnoznikCzasu=0.5; //mnożnik czasu akcji czas akcji=PA*mnoznik
@@ -564,18 +564,22 @@ public class GameLogicDataScript : MonoBehaviour {
 				}
 				//jeśli to już koniec rozgrywki
 				else{
-					GameObject.Find("RundaHUDText").GetComponent<Text>().text="";	//ukrywam (czyszczę tekst) rundy wyświetlane na HUD'zie
-					GameObject.Find("CzasHUDText").GetComponent<Text>().text="";	//ukrywam (czyszczę tekst) czas wyświetlany na HUD'zie
-					GameObject.Find("ZycieGraczaHUDText").GetComponent<Text>().text="";	//ukrywam (czyszczę tekst) życie gracza wyświetlane na HUD'zie
-					GameObject.Find("ZycieNPCHUDText").GetComponent<Text>().text="";	//ukrywam (czyszczę tekst) życie NPC wyświetlane na HUD'zie
-					GameObject.Find("PAGraczaHUDText").GetComponent<Text>().text="";	//ukrywam (czyszczę tekst) punkty akcji wyświetlane na HUD'zie
-					//jeśli to gracz stracił życie pokaż tekst przegranej na HUD'zie
-					if((zycieGracza<=0)&&(zycieNPC>0)) GameObject.Find("WynikHUDText").GetComponent<Text>().text="Przegrana\n"+tura.ToString()+" rund";
-					//jeśli to NPC stracił życie pokaż tekst wygranej na HUD'zie
-					else if((zycieGracza>0)&&(zycieNPC<=0)) GameObject.Find("WynikHUDText").GetComponent<Text>().text="Zwycięstwo\n"+tura.ToString()+" rund";
-					//jeśli to obaj stracili życie pokaż tekst remisu na HUD'zie
-					else GameObject.Find("WynikHUDText").GetComponent<Text>().text="Remis\n"+tura.ToString()+" rund";
-					GameObject.Find ("CanvasButton").GetComponent<Canvas> ().enabled=false;
+					if(!animacjaGraczaSkonczona) akcjeGracza[iAnim].animuj();
+					if(!animacjaNPCSkonczona) akcjeNPC[jAnim].animuj();
+					if (animacjaNPCSkonczona&&animacjaGraczaSkonczona&&akcjaNPCSkonczona&&akcjaGraczaSkonczona){
+						GameObject.Find("RundaHUDText").GetComponent<Text>().text="";	//ukrywam (czyszczę tekst) rundy wyświetlane na HUD'zie
+						GameObject.Find("CzasHUDText").GetComponent<Text>().text="";	//ukrywam (czyszczę tekst) czas wyświetlany na HUD'zie
+						GameObject.Find("ZycieGraczaHUDText").GetComponent<Text>().text="";	//ukrywam (czyszczę tekst) życie gracza wyświetlane na HUD'zie
+						GameObject.Find("ZycieNPCHUDText").GetComponent<Text>().text="";	//ukrywam (czyszczę tekst) życie NPC wyświetlane na HUD'zie
+						GameObject.Find("PAGraczaHUDText").GetComponent<Text>().text="";	//ukrywam (czyszczę tekst) punkty akcji wyświetlane na HUD'zie
+						//jeśli to gracz stracił życie pokaż tekst przegranej na HUD'zie
+						if((zycieGracza<=0)&&(zycieNPC>0)) GameObject.Find("WynikHUDText").GetComponent<Text>().text="Przegrana\n"+tura.ToString()+" rund";
+						//jeśli to NPC stracił życie pokaż tekst wygranej na HUD'zie
+						else if((zycieGracza>0)&&(zycieNPC<=0)) GameObject.Find("WynikHUDText").GetComponent<Text>().text="Zwycięstwo\n"+tura.ToString()+" rund";
+						//jeśli to obaj stracili życie pokaż tekst remisu na HUD'zie
+						else GameObject.Find("WynikHUDText").GetComponent<Text>().text="Remis\n"+tura.ToString()+" rund";
+						GameObject.Find ("CanvasButton").GetComponent<Canvas> ().enabled=false;
+					}
 				}
 			}
 		}
@@ -1640,8 +1644,11 @@ public class GameLogicDataScript : MonoBehaviour {
 	/// Aktualizuje zycie gracza i przeciwnika wyświetlane na HUD'zie
 	/// </summary>
 	public static void aktualizujZycie(){
-		GameObject.Find("ZycieGraczaHUDText").GetComponent<Text>().text="HP Gracza: "+zycieGracza.ToString();
-		GameObject.Find("ZycieNPCHUDText").GetComponent<Text>().text="HP Przeciwnika: "+zycieNPC.ToString();
+		double g=zycieGracza, n=zycieNPC;
+		if (g<0) g=0; 
+		if (n<0) n=0;
+		GameObject.Find("ZycieGraczaHUDText").GetComponent<Text>().text="HP Gracza: "+g.ToString();
+		GameObject.Find("ZycieNPCHUDText").GetComponent<Text>().text="HP Przeciwnika: "+n.ToString();
 	}
 
 
@@ -1725,6 +1732,8 @@ public abstract class Czynnosc {
 	/// </summary>
 	protected int iloscPol;
 
+	protected GameObject character;
+
 	protected string animacja;
 	protected string dzwiek;
 	protected double szybkosc;
@@ -1738,6 +1747,8 @@ public abstract class Czynnosc {
 	/// <param name="iloscPol">Ilosc zaznaczonych pól w tej akcji.</param>
 	public Czynnosc(bool gracz, bool [,] hitbox, int koszt, int iloscPol){
 		this.gracz=gracz;
+		if (gracz) character=GameObject.Find("Player");
+		else character=GameObject.Find("Opponent");
 		//this.hitbox=hitbox;
 		this.hitbox=new bool[3,3];
 		for (int i = 0; i < 3; i++) {
@@ -1748,12 +1759,7 @@ public abstract class Czynnosc {
 		this.koszt=koszt;
 		this.iloscPol=iloscPol;
 	}
-	/// <summary>
-	/// Metoda abstrakcyjna odpowiadająca za wykonanie akcji.
-	/// </summary>
-	public abstract void wykonaj();
-
-
+		
 	public int porownajHitbox(Czynnosc c){
 		int ile=0;
 		for (int i=0;i<3;i++){
@@ -1765,28 +1771,8 @@ public abstract class Czynnosc {
 	}
 
 	public void animuj(){
-		if (gracz){
-			/*if (!odegrane){
-				if (GameObject.Find("Player").GetComponent<Animation>()[this.animacja].time/GameLogicDataScript.mnoznikCzasu>=(getCzasAnimacji()/2)){
-					//GameObject.Find(this.dzwiek+"Sound").GetComponent<AudioSource>().Play();
-					GameObject.Find("SoundManager").GetComponent<SoundManager>().play(this.dzwiek, gracz);
-					odegrane=true;
-				}
-			}*/
-			GameObject.Find("Player").GetComponent<Animation>()[this.animacja].speed=System.Convert.ToSingle(szybkosc);
-			GameObject.Find("Player").GetComponent<Animation>().Play(this.animacja);
-		}
-		if (!gracz){
-			/*if (!odegrane){
-				if (GameObject.Find("Opponent").GetComponent<Animation>()[this.animacja].time/GameLogicDataScript.mnoznikCzasu>=(getCzasAnimacji()/2)){
-					//GameObject.Find(this.dzwiek+"Sound").GetComponent<AudioSource>().Play();
-					GameObject.Find("SoundManager").GetComponent<SoundManager>().play(this.dzwiek, gracz);
-					odegrane=true;
-				}
-			}*/
-			GameObject.Find("Opponent").GetComponent<Animation>()[this.animacja].speed=System.Convert.ToSingle(szybkosc);
-			GameObject.Find("Opponent").GetComponent<Animation>().Play(this.animacja);
-		}
+		this.character.GetComponent<Animation>()[this.animacja].speed=System.Convert.ToSingle(szybkosc);
+		this.character.GetComponent<Animation>().Play(this.animacja);
 	}
 	
 	public double getCzasAnimacji(){
@@ -1870,22 +1856,12 @@ public class Atak : Czynnosc {
 		this.moc=moc;
 		//w zależności od ilości pól stwierdzamy jaki to atak i przypisujemy mu obrażenia
 		switch(iloscPol){
-		case 1: this.obrazenia=4; this.animacja="ThrustAttack"; this.dzwiek="ThrustAttack"; break;
-		case 2: this.obrazenia=2; this.animacja="FastAttack"; this.dzwiek="SlashAttack"; break;
-		case 3: this.obrazenia=3; this.animacja="Attack"; this.dzwiek="SlashAttack"; break;
+			case 1: this.obrazenia=4; this.animacja="ThrustAttack"; this.dzwiek="ThrustAttack"; break;
+			case 2: this.obrazenia=2; this.animacja="FastAttack"; this.dzwiek="SlashAttack"; break;
+			case 3: this.obrazenia=3; this.animacja="Attack"; this.dzwiek="SlashAttack"; break;
+		default: this.animacja="Defense"; break;
 		}
-		if (gracz)
-			szybkosc=System.Convert.ToDouble(GameObject.Find("Player").GetComponent<Animation>().GetClip(this.animacja).length)/(this.koszt*GameLogicDataScript.mnoznikCzasu);
-		else
-			szybkosc=System.Convert.ToDouble(GameObject.Find("Opponent").GetComponent<Animation>().GetClip(this.animacja).length)/(this.koszt*GameLogicDataScript.mnoznikCzasu);
-	}
-	/// <summary>
-	/// Metoda odpowiadająca za wykonanie ataku.
-	/// </summary>
-	public override void wykonaj(){	//TA METODA ZOSTANIE SKASOWANA CAŁA LOGKA ROZGRYWKI BĘDZIE W KLASIE SKRYPTU
-		if (gracz) GameLogicDataScript.decreaseZycieNPC(obrazenia*moc);	//jeśli to gracz wykonuje akcję, to zmniejsz życie NPC
-		else GameLogicDataScript.decreaseZycieGracza(obrazenia*moc);	//jeśli to NPC wykonuje akcję, to zmniejsz życie gracza
-		GameLogicDataScript.aktualizujZycie();	//aktualizuj wyświetlane życie
+		szybkosc=System.Convert.ToDouble(this.character.GetComponent<Animation>().GetClip(this.animacja).length)/(this.koszt*GameLogicDataScript.mnoznikCzasu);
 	}
 
 	public int getMoc(){
@@ -1980,24 +1956,9 @@ public class Obrona : Czynnosc {
 		this.typAkcji=false;
 		this.animacja="Defense";
 		this.dzwiek="ShieldHit";
-		if (gracz)
-			szybkosc=System.Convert.ToDouble(GameObject.Find("Player").GetComponent<Animation>().GetClip(this.animacja).length)/(this.koszt*GameLogicDataScript.mnoznikCzasu);
-		else
-			szybkosc=System.Convert.ToDouble(GameObject.Find("Opponent").GetComponent<Animation>().GetClip(this.animacja).length)/(this.koszt*GameLogicDataScript.mnoznikCzasu);
+		szybkosc=System.Convert.ToDouble(this.character.GetComponent<Animation>().GetClip(this.animacja).length)/(this.koszt*GameLogicDataScript.mnoznikCzasu);
 	}
-	/// <summary>
-	/// Metoda odpowiadająca za wykonanie obrony.
-	/// </summary>
-	public override void wykonaj(){//TA METODA ZOSTANIE SKASOWANA CAŁA LOGKA ROZGRYWKI BĘDZIE W KLASIE SKRYPTU
-		//jeśli to gracz się broni
-		if (gracz) {
-			//BRONIĘ SIĘ!
-		}
-		//jeśli to NPC się broni
-		else {
-			//BRONI SIĘ!
-		}
-	}
+
 	/// <summary>
 	/// Returns a <see cref="System.String"/> that represents the current <see cref="Obrona"/>.
 	/// </summary>
