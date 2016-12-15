@@ -798,9 +798,9 @@ public class GameLogicDataScript : MonoBehaviour {
 				if (zwrocIloscAkcji(true)>0){
 					print("Będę się bronił logicznie!");
 					zwrocWybieranePola(true);
-					startx=zwrocIndeks(false,true);
-					starty=zwrocIndeks(true,true);
-					print("Najwiecej: "+prawdopodobienstwo[startx,starty]+" Indeksy: "+startx+" "+starty);
+					startx=zwrocIndeks(false,true,true);
+					starty=zwrocIndeks(true,true,true);
+					print("Najwiecej1: "+prawdopodobienstwo[startx,starty]+" Indeksy: "+startx+" "+starty);
 				}
 				hitboxNPC[startx,starty]=true;	//zaznacza punkt startowy w hitboxie
 
@@ -811,58 +811,74 @@ public class GameLogicDataScript : MonoBehaviour {
 					if (zwrocIloscAkcji(true)>0){
 						najwiecej=0;
 						if (startx-1>=0){
-							if (prawdopodobienstwo[startx-1, starty]>najwiecej){
-								najwiecej=prawdopodobienstwo[startx-1, starty];
-								hor=startx-1; vert=starty;
+							if (prawdopodobienstwo[startx-1, starty]>=najwiecej){
+								if ((prawdopodobienstwo[startx-1, starty]!=najwiecej)||(UnityEngine.Random.value<=0.5)){
+									najwiecej=prawdopodobienstwo[startx-1, starty];
+									hor=startx-1; vert=starty;
+								}
 							}
 							if (((startx!=1)&&(starty!=1))||((startx==1)&&(starty==1))){
 								if (starty-1>=0){
-									if (prawdopodobienstwo[startx-1, starty-1]>najwiecej){
-										najwiecej=prawdopodobienstwo[startx-1, starty-1];
-										hor=startx-1; vert=starty-1;
+									if (prawdopodobienstwo[startx-1, starty-1]>=najwiecej){
+										if ((prawdopodobienstwo[startx-1, starty-1]!=najwiecej)||(UnityEngine.Random.value<=0.5)){
+											najwiecej=prawdopodobienstwo[startx-1, starty-1];
+											hor=startx-1; vert=starty-1;
+										}
 									}
 								}
 								if (starty+1<=2){
-									if (prawdopodobienstwo[startx-1, starty+1]>najwiecej){
-										najwiecej=prawdopodobienstwo[startx-1, starty+1];
-										hor=startx-1; vert=starty+1;
+									if (prawdopodobienstwo[startx-1, starty+1]>=najwiecej){
+										if ((prawdopodobienstwo[startx-1, starty+1]!=najwiecej)||(UnityEngine.Random.value<=0.5)){
+											najwiecej=prawdopodobienstwo[startx-1, starty+1];
+											hor=startx-1; vert=starty+1;
+										}
 									}
 								}
 							}
 						}
 						if (startx+1<=2){
-							if (prawdopodobienstwo[startx+1, starty]>najwiecej){
-								najwiecej=prawdopodobienstwo[startx+1, starty];
-								hor=startx+1; vert=starty;
+							if (prawdopodobienstwo[startx+1, starty]>=najwiecej){
+								if ((prawdopodobienstwo[startx+1, starty]!=najwiecej)||(UnityEngine.Random.value<=0.5)){
+									najwiecej=prawdopodobienstwo[startx+1, starty];
+									hor=startx+1; vert=starty;
+								}
 							}
 							if (((startx!=1)&&(starty!=1))||((startx==1)&&(starty==1))){
 								if (starty-1>=0){
-									if (prawdopodobienstwo[startx+1, starty-1]>najwiecej){
-										najwiecej=prawdopodobienstwo[startx+1, starty-1];
-										hor=startx+1; vert=starty-1;
+									if (prawdopodobienstwo[startx+1, starty-1]>=najwiecej){
+										if ((prawdopodobienstwo[startx+1, starty-1]!=najwiecej)||(UnityEngine.Random.value<=0.5)){
+											najwiecej=prawdopodobienstwo[startx+1, starty-1];
+											hor=startx+1; vert=starty-1;
+										}
 									}
 								}
 								if (starty+1<=2){
-									if (prawdopodobienstwo[startx+1, starty+1]>najwiecej){
-										najwiecej=prawdopodobienstwo[startx+1, starty+1];
-										hor=startx+1; vert=starty+1;
+									if (prawdopodobienstwo[startx+1, starty+1]>=najwiecej){
+										if ((prawdopodobienstwo[startx+1, starty+1]!=najwiecej)||(UnityEngine.Random.value<=0.5)){
+											najwiecej=prawdopodobienstwo[startx+1, starty+1];
+											hor=startx+1; vert=starty+1;
+										}
 									}
 								}
 							}
 						}
 						if (starty-1>=0){
-							if (prawdopodobienstwo[startx, starty-1]>najwiecej){
-								najwiecej=prawdopodobienstwo[startx, starty-1];
-								hor=startx; vert=starty-1;
+							if (prawdopodobienstwo[startx, starty-1]>=najwiecej){
+								if ((prawdopodobienstwo[startx, starty-1]!=najwiecej)||(UnityEngine.Random.value<=0.5)){
+									najwiecej=prawdopodobienstwo[startx, starty-1];
+									hor=startx; vert=starty-1;
+								}
 							}
 						}
 						if (starty+1<=2){
-							if (prawdopodobienstwo[startx, starty+1]>najwiecej){
-								najwiecej=prawdopodobienstwo[startx, starty+1];
-								hor=startx; vert=starty+1;
+							if (prawdopodobienstwo[startx, starty+1]>=najwiecej){
+								if ((prawdopodobienstwo[startx, starty+1]!=najwiecej)||(UnityEngine.Random.value<=0.5)){
+									najwiecej=prawdopodobienstwo[startx, starty+1];
+									hor=startx; vert=starty+1;
+								}
 							}
 						}
-						print("Najwiecej: "+najwiecej+" Indeksy: "+hor+" "+vert);
+						print("Najwiecej2: "+najwiecej+" Indeksy: "+hor+" "+vert);
 					}
 					else{
 						do {
@@ -889,9 +905,11 @@ public class GameLogicDataScript : MonoBehaviour {
 									if ((indx!=startx)||(vert!=starty)){
 										indy=vert;
 										if (czyZaznaczyc(startx,starty,hor,vert,indx,indy)){
-											if (prawdopodobienstwo[indx, indy]>najwiecej){
-												najwiecej=prawdopodobienstwo[indx, indy];
-												hor2=indx; vert2=indy;
+											if (prawdopodobienstwo[indx, indy]>=najwiecej){
+												if ((prawdopodobienstwo[indx, indy]!=najwiecej)||(UnityEngine.Random.value<=0.5)){
+													najwiecej=prawdopodobienstwo[indx, indy];
+													hor2=indx; vert2=indy;
+												}
 											}
 										}
 									}
@@ -899,9 +917,11 @@ public class GameLogicDataScript : MonoBehaviour {
 										if (vert-1>=0){
 											indy=vert-1;
 											if (czyZaznaczyc(startx,starty,hor,vert,indx,indy)){
-												if (prawdopodobienstwo[indx, indy]>najwiecej){
-													najwiecej=prawdopodobienstwo[indx, indy];
-													hor2=indx; vert2=indy;
+												if (prawdopodobienstwo[indx, indy]>=najwiecej){
+													if ((prawdopodobienstwo[indx, indy]!=najwiecej)||(UnityEngine.Random.value<=0.5)){
+														najwiecej=prawdopodobienstwo[indx, indy];
+														hor2=indx; vert2=indy;
+													}
 												}
 											}
 										}
@@ -910,9 +930,11 @@ public class GameLogicDataScript : MonoBehaviour {
 										if (vert+1<=2){
 											indy=vert+1;
 											if (czyZaznaczyc(startx,starty,hor,vert,indx,indy)){
-												if (prawdopodobienstwo[indx, indy]>najwiecej){
-													najwiecej=prawdopodobienstwo[indx, indy];
-													hor2=indx; vert2=indy;
+												if (prawdopodobienstwo[indx, indy]>=najwiecej){
+													if ((prawdopodobienstwo[indx, indy]!=najwiecej)||(UnityEngine.Random.value<=0.5)){
+														najwiecej=prawdopodobienstwo[indx, indy];
+														hor2=indx; vert2=indy;
+													}
 												}
 											}
 										}
@@ -923,9 +945,11 @@ public class GameLogicDataScript : MonoBehaviour {
 									if ((indx!=startx)||(vert!=starty)){
 										indy=vert;
 										if (czyZaznaczyc(startx,starty,hor,vert,indx,indy)){
-											if (prawdopodobienstwo[indx, indy]>najwiecej){
-												najwiecej=prawdopodobienstwo[indx, indy];
-												hor2=indx; vert2=indy;
+											if (prawdopodobienstwo[indx, indy]>=najwiecej){
+												if ((prawdopodobienstwo[indx, indy]!=najwiecej)||(UnityEngine.Random.value<=0.5)){
+													najwiecej=prawdopodobienstwo[indx, indy];
+													hor2=indx; vert2=indy;
+												}
 											}
 										}
 									}
@@ -933,9 +957,11 @@ public class GameLogicDataScript : MonoBehaviour {
 										if (vert-1>=0){
 											indy=vert-1;
 											if (czyZaznaczyc(startx,starty,hor,vert,indx,indy)){
-												if (prawdopodobienstwo[indx, indy]>najwiecej){
-													najwiecej=prawdopodobienstwo[indx, indy];
-													hor2=indx; vert2=indy;
+												if (prawdopodobienstwo[indx, indy]>=najwiecej){
+													if ((prawdopodobienstwo[indx, indy]!=najwiecej)||(UnityEngine.Random.value<=0.5)){
+														najwiecej=prawdopodobienstwo[indx, indy];
+														hor2=indx; vert2=indy;
+													}
 												}
 											}
 										}
@@ -944,9 +970,11 @@ public class GameLogicDataScript : MonoBehaviour {
 										if (vert+1<=2){
 											indy=vert+1;
 											if (czyZaznaczyc(startx,starty,hor,vert,indx,indy)){
-												if (prawdopodobienstwo[indx, indy]>najwiecej){
-													najwiecej=prawdopodobienstwo[indx, indy];
-													hor2=indx; vert2=indy;
+												if (prawdopodobienstwo[indx, indy]>=najwiecej){
+													if ((prawdopodobienstwo[indx, indy]!=najwiecej)||(UnityEngine.Random.value<=0.5)){
+														najwiecej=prawdopodobienstwo[indx, indy];
+														hor2=indx; vert2=indy;
+													}
 												}
 											}
 										}
@@ -957,9 +985,11 @@ public class GameLogicDataScript : MonoBehaviour {
 									if (vert-1>=0){
 										indy=vert-1;
 										if (czyZaznaczyc(startx,starty,hor,vert,indx,indy)){
-											if (prawdopodobienstwo[indx, indy]>najwiecej){
-												najwiecej=prawdopodobienstwo[indx, indy];
-												hor2=indx; vert2=indy;
+											if (prawdopodobienstwo[indx, indy]>=najwiecej){
+												if ((prawdopodobienstwo[indx, indy]!=najwiecej)||(UnityEngine.Random.value<=0.5)){
+													najwiecej=prawdopodobienstwo[indx, indy];
+													hor2=indx; vert2=indy;
+												}
 											}
 										}
 									}
@@ -968,14 +998,16 @@ public class GameLogicDataScript : MonoBehaviour {
 									if (vert+1<=2){
 										indy=vert+1;
 										if (czyZaznaczyc(startx,starty,hor,vert,indx,indy)){
-											if (prawdopodobienstwo[indx, indy]>najwiecej){
-												najwiecej=prawdopodobienstwo[indx, indy];
-												hor2=indx; vert2=indy;
+											if (prawdopodobienstwo[indx, indy]>=najwiecej){
+												if ((prawdopodobienstwo[indx, indy]!=najwiecej)||(UnityEngine.Random.value<=0.5)){
+													najwiecej=prawdopodobienstwo[indx, indy];
+													hor2=indx; vert2=indy;
+												}
 											}
 										}
 									}
 								}
-								print("Najwiecej: "+najwiecej+" Indeksy: "+hor2+" "+vert2);
+								print("Najwiecej3: "+najwiecej+" Indeksy: "+hor2+" "+vert2);
 							}
 							else{
 								do {
@@ -1005,9 +1037,9 @@ public class GameLogicDataScript : MonoBehaviour {
 				if (zwrocIloscAkcji(false)>0){
 					print("Będę atakował logicznie!");
 					zwrocWybieranePola(false);
-					startx=zwrocIndeks(false,false);
-					starty=zwrocIndeks(true,false);
-					print("Najmniej: "+prawdopodobienstwo[startx,starty]+" Indeksy: "+startx+" "+starty);
+					startx=zwrocIndeks(false,false,true);
+					starty=zwrocIndeks(true,false,true);
+					print("Najmniej1: "+prawdopodobienstwo[startx,starty]+" Indeksy: "+startx+" "+starty);
 				}
 				hitboxNPC[startx,starty]=true;	//zaznacza punkt startowy w hitboxie
 				iloscPolNPC=1; //ustawiam ilość zaznaczonych pól na 1
@@ -1038,58 +1070,74 @@ public class GameLogicDataScript : MonoBehaviour {
 						if (zwrocIloscAkcji(false)>0){
 							najmniej=999;
 							if (startx-1>=0){
-								if (prawdopodobienstwo[startx-1, starty]<najmniej){
-									najmniej=prawdopodobienstwo[startx-1, starty];
-									hor=startx-1; vert=starty;
+								if (prawdopodobienstwo[startx-1, starty]<=najmniej){
+									if ((prawdopodobienstwo[startx-1, starty]!=najmniej)||(UnityEngine.Random.value<=0.5)){
+										najmniej=prawdopodobienstwo[startx-1, starty];
+										hor=startx-1; vert=starty;
+									}
 								}
 								if (((startx!=1)&&(starty!=1))||((startx==1)&&(starty==1))){
 									if (starty-1>=0){
-										if (prawdopodobienstwo[startx-1, starty-1]<najmniej){
-											najmniej=prawdopodobienstwo[startx-1, starty-1];
-											hor=startx-1; vert=starty-1;
+										if (prawdopodobienstwo[startx-1, starty-1]<=najmniej){
+											if ((prawdopodobienstwo[startx-1, starty-1]!=najmniej)||(UnityEngine.Random.value<=0.5)){
+												najmniej=prawdopodobienstwo[startx-1, starty-1];
+												hor=startx-1; vert=starty-1;
+											}
 										}
 									}
 									if (starty+1<=2){
-										if (prawdopodobienstwo[startx-1, starty+1]<najmniej){
-											najmniej=prawdopodobienstwo[startx-1, starty+1];
-											hor=startx-1; vert=starty+1;
+										if (prawdopodobienstwo[startx-1, starty+1]<=najmniej){
+											if ((prawdopodobienstwo[startx-1, starty+1]!=najmniej)||(UnityEngine.Random.value<=0.5)){
+												najmniej=prawdopodobienstwo[startx-1, starty+1];
+												hor=startx-1; vert=starty+1;
+											}
 										}
 									}
 								}
 							}
 							if (startx+1<=2){
-								if (prawdopodobienstwo[startx+1, starty]<najmniej){
-									najmniej=prawdopodobienstwo[startx+1, starty];
-									hor=startx+1; vert=starty;
+								if (prawdopodobienstwo[startx+1, starty]<=najmniej){
+									if ((prawdopodobienstwo[startx+1, starty]!=najmniej)||(UnityEngine.Random.value<=0.5)){
+										najmniej=prawdopodobienstwo[startx+1, starty];
+										hor=startx+1; vert=starty;
+									}
 								}
 								if (((startx!=1)&&(starty!=1))||((startx==1)&&(starty==1))){
 									if (starty-1>=0){
-										if (prawdopodobienstwo[startx+1, starty-1]<najmniej){
-											najmniej=prawdopodobienstwo[startx+1, starty-1];
-											hor=startx+1; vert=starty-1;
+										if (prawdopodobienstwo[startx+1, starty-1]<=najmniej){
+											if ((prawdopodobienstwo[startx+1, starty-1]!=najmniej)||(UnityEngine.Random.value<=0.5)){
+												najmniej=prawdopodobienstwo[startx+1, starty-1];
+												hor=startx+1; vert=starty-1;
+											}
 										}
 									}
 									if (starty+1<=2){
-										if (prawdopodobienstwo[startx+1, starty+1]<najmniej){
-											najmniej=prawdopodobienstwo[startx+1, starty+1];
-											hor=startx+1; vert=starty+1;
+										if (prawdopodobienstwo[startx+1, starty+1]<=najmniej){
+											if ((prawdopodobienstwo[startx+1, starty+1]!=najmniej)||(UnityEngine.Random.value<=0.5)){
+												najmniej=prawdopodobienstwo[startx+1, starty+1];
+												hor=startx+1; vert=starty+1;
+											}
 										}
 									}
 								}
 							}
 							if (starty-1>=0){
-								if (prawdopodobienstwo[startx, starty-1]<najmniej){
-									najmniej=prawdopodobienstwo[startx, starty-1];
-									hor=startx; vert=starty-1;
+								if (prawdopodobienstwo[startx, starty-1]<=najmniej){
+									if ((prawdopodobienstwo[startx, starty-1]!=najmniej)||(UnityEngine.Random.value<=0.5)){
+										najmniej=prawdopodobienstwo[startx, starty-1];
+										hor=startx; vert=starty-1;
+									}
 								}
 							}
 							if (starty+1<=2){
-								if (prawdopodobienstwo[startx, starty+1]<najmniej){
-									najmniej=prawdopodobienstwo[startx, starty+1];
-									hor=startx; vert=starty+1;
+								if (prawdopodobienstwo[startx, starty+1]<=najmniej){
+									if ((prawdopodobienstwo[startx, starty+1]!=najmniej)||(UnityEngine.Random.value<=0.5)){
+										najmniej=prawdopodobienstwo[startx, starty+1];
+										hor=startx; vert=starty+1;
+									}
 								}
 							}
-							print("Najmniej: "+najmniej+" Indeksy: "+hor+" "+vert);
+							print("Najmniej2: "+najmniej+" Indeksy: "+hor+" "+vert);
 						}
 						else{
 							do {
@@ -1114,9 +1162,11 @@ public class GameLogicDataScript : MonoBehaviour {
 								if ((indx!=startx)||(vert!=starty)){
 									indy=vert;
 									if (czyZaznaczyc(startx,starty,hor,vert,indx,indy)){
-										if (prawdopodobienstwo[indx, indy]<najmniej){
-											najmniej=prawdopodobienstwo[indx, indy];
-											hor2=indx; vert2=indy;
+										if (prawdopodobienstwo[indx, indy]<=najmniej){
+											if ((prawdopodobienstwo[indx, indy]!=najmniej)||(UnityEngine.Random.value<=0.5)){
+												najmniej=prawdopodobienstwo[indx, indy];
+												hor2=indx; vert2=indy;
+											}
 										}
 									}
 								}
@@ -1124,9 +1174,11 @@ public class GameLogicDataScript : MonoBehaviour {
 									if (vert-1>=0){
 										indy=vert-1;
 										if (czyZaznaczyc(startx,starty,hor,vert,indx,indy)){
-											if (prawdopodobienstwo[indx, indy]<najmniej){
-												najmniej=prawdopodobienstwo[indx, indy];
-												hor2=indx; vert2=indy;
+											if (prawdopodobienstwo[indx, indy]<=najmniej){
+												if ((prawdopodobienstwo[indx, indy]!=najmniej)||(UnityEngine.Random.value<=0.5)){
+													najmniej=prawdopodobienstwo[indx, indy];
+													hor2=indx; vert2=indy;
+												}
 											}
 										}
 									}
@@ -1135,9 +1187,11 @@ public class GameLogicDataScript : MonoBehaviour {
 									if (vert+1<=2){
 										indy=vert+1;
 										if (czyZaznaczyc(startx,starty,hor,vert,indx,indy)){
-											if (prawdopodobienstwo[indx, indy]<najmniej){
-												najmniej=prawdopodobienstwo[indx, indy];
-												hor2=indx; vert2=indy;
+											if (prawdopodobienstwo[indx, indy]<=najmniej){
+												if ((prawdopodobienstwo[indx, indy]!=najmniej)||(UnityEngine.Random.value<=0.5)){
+													najmniej=prawdopodobienstwo[indx, indy];
+													hor2=indx; vert2=indy;
+												}
 											}
 										}
 									}
@@ -1148,9 +1202,11 @@ public class GameLogicDataScript : MonoBehaviour {
 								if ((indx!=startx)||(vert!=starty)){
 									indy=vert;
 									if (czyZaznaczyc(startx,starty,hor,vert,indx,indy)){
-										if (prawdopodobienstwo[indx, indy]<najmniej){
-											najmniej=prawdopodobienstwo[indx, indy];
-											hor2=indx; vert2=indy;
+										if (prawdopodobienstwo[indx, indy]<=najmniej){
+											if ((prawdopodobienstwo[indx, indy]!=najmniej)||(UnityEngine.Random.value<=0.5)){
+												najmniej=prawdopodobienstwo[indx, indy];
+												hor2=indx; vert2=indy;
+											}
 										}
 									}
 								}
@@ -1158,9 +1214,11 @@ public class GameLogicDataScript : MonoBehaviour {
 									if (vert-1>=0){
 										indy=vert-1;
 										if (czyZaznaczyc(startx,starty,hor,vert,indx,indy)){
-											if (prawdopodobienstwo[indx, indy]<najmniej){
-												najmniej=prawdopodobienstwo[indx, indy];
-												hor2=indx; vert2=indy;
+											if (prawdopodobienstwo[indx, indy]<=najmniej){
+												if ((prawdopodobienstwo[indx, indy]!=najmniej)||(UnityEngine.Random.value<=0.5)){
+													najmniej=prawdopodobienstwo[indx, indy];
+													hor2=indx; vert2=indy;
+												}
 											}
 										}
 									}
@@ -1169,9 +1227,11 @@ public class GameLogicDataScript : MonoBehaviour {
 									if (vert+1<=2){
 										indy=vert+1;
 										if (czyZaznaczyc(startx,starty,hor,vert,indx,indy)){
-											if (prawdopodobienstwo[indx, indy]<najmniej){
-												najmniej=prawdopodobienstwo[indx, indy];
-												hor2=indx; vert2=indy;
+											if (prawdopodobienstwo[indx, indy]<=najmniej){
+												if ((prawdopodobienstwo[indx, indy]!=najmniej)||(UnityEngine.Random.value<=0.5)){
+													najmniej=prawdopodobienstwo[indx, indy];
+													hor2=indx; vert2=indy;
+												}
 											}
 										}
 									}
@@ -1182,9 +1242,11 @@ public class GameLogicDataScript : MonoBehaviour {
 								if (vert-1>=0){
 									indy=vert-1;
 									if (czyZaznaczyc(startx,starty,hor,vert,indx,indy)){
-										if (prawdopodobienstwo[indx, indy]<najmniej){
-											najmniej=prawdopodobienstwo[indx, indy];
-											hor2=indx; vert2=indy;
+										if (prawdopodobienstwo[indx, indy]<=najmniej){
+											if ((prawdopodobienstwo[indx, indy]!=najmniej)||(UnityEngine.Random.value<=0.5)){
+												najmniej=prawdopodobienstwo[indx, indy];
+												hor2=indx; vert2=indy;
+											}
 										}
 									}
 								}
@@ -1193,14 +1255,16 @@ public class GameLogicDataScript : MonoBehaviour {
 								if (vert+1<=2){
 									indy=vert+1;
 									if (czyZaznaczyc(startx,starty,hor,vert,indx,indy)){
-										if (prawdopodobienstwo[indx, indy]<najmniej){
-											najmniej=prawdopodobienstwo[indx, indy];
-											hor2=indx; vert2=indy;
+										if (prawdopodobienstwo[indx, indy]<=najmniej){
+											if ((prawdopodobienstwo[indx, indy]!=najmniej)||(UnityEngine.Random.value<=0.5)){
+												najmniej=prawdopodobienstwo[indx, indy];
+												hor2=indx; vert2=indy;
+											}
 										}
 									}
 								}
 							}
-							print("Najmniej2: "+najmniej+" Indeksy: "+hor2+" "+vert2);
+							print("Najmniej3: "+najmniej+" Indeksy: "+hor2+" "+vert2);
 						}
 						else{
 							do {
@@ -1228,58 +1292,74 @@ public class GameLogicDataScript : MonoBehaviour {
 						if (zwrocIloscAkcji(false)>0){
 							najmniej=999;
 							if (startx-1>=0){
-								if (prawdopodobienstwo[startx-1, starty]<najmniej){
-									najmniej=prawdopodobienstwo[startx-1, starty];
-									hor=startx-1; vert=starty;
+								if (prawdopodobienstwo[startx-1, starty]<=najmniej){
+									if ((prawdopodobienstwo[startx-1, starty]!=najmniej)||(UnityEngine.Random.value<=0.5)){
+										najmniej=prawdopodobienstwo[startx-1, starty];
+										hor=startx-1; vert=starty;
+									}
 								}
 								if (((startx!=1)&&(starty!=1))||((startx==1)&&(starty==1))){
 									if (starty-1>=0){
-										if (prawdopodobienstwo[startx-1, starty-1]<najmniej){
-											najmniej=prawdopodobienstwo[startx-1, starty-1];
-											hor=startx-1; vert=starty-1;
+										if (prawdopodobienstwo[startx-1, starty-1]<=najmniej){
+											if ((prawdopodobienstwo[startx-1, starty-1]!=najmniej)||(UnityEngine.Random.value<=0.5)){
+												najmniej=prawdopodobienstwo[startx-1, starty-1];
+												hor=startx-1; vert=starty-1;
+											}
 										}
 									}
 									if (starty+1<=2){
-										if (prawdopodobienstwo[startx-1, starty+1]<najmniej){
-											najmniej=prawdopodobienstwo[startx-1, starty+1];
-											hor=startx-1; vert=starty+1;
+										if (prawdopodobienstwo[startx-1, starty+1]<=najmniej){
+											if ((prawdopodobienstwo[startx-1, starty+1]!=najmniej)||(UnityEngine.Random.value<=0.5)){
+												najmniej=prawdopodobienstwo[startx-1, starty+1];
+												hor=startx-1; vert=starty+1;
+											}
 										}
 									}
 								}
 							}
 							if (startx+1<=2){
-								if (prawdopodobienstwo[startx+1, starty]<najmniej){
-									najmniej=prawdopodobienstwo[startx+1, starty];
-									hor=startx+1; vert=starty;
+								if (prawdopodobienstwo[startx+1, starty]<=najmniej){
+									if ((prawdopodobienstwo[startx+1, starty]!=najmniej)||(UnityEngine.Random.value<=0.5)){
+										najmniej=prawdopodobienstwo[startx+1, starty];
+										hor=startx+1; vert=starty;
+									}
 								}
 								if (((startx!=1)&&(starty!=1))||((startx==1)&&(starty==1))){
 									if (starty-1>=0){
-										if (prawdopodobienstwo[startx+1, starty-1]<najmniej){
-											najmniej=prawdopodobienstwo[startx+1, starty-1];
-											hor=startx+1; vert=starty-1;
+										if (prawdopodobienstwo[startx+1, starty-1]<=najmniej){
+											if ((prawdopodobienstwo[startx+1, starty-1]!=najmniej)||(UnityEngine.Random.value<=0.5)){
+												najmniej=prawdopodobienstwo[startx+1, starty-1];
+												hor=startx+1; vert=starty-1;
+											}
 										}
 									}
 									if (starty+1<=2){
-										if (prawdopodobienstwo[startx+1, starty+1]<najmniej){
-											najmniej=prawdopodobienstwo[startx+1, starty+1];
-											hor=startx+1; vert=starty+1;
+										if (prawdopodobienstwo[startx+1, starty+1]<=najmniej){
+											if ((prawdopodobienstwo[startx+1, starty+1]!=najmniej)||(UnityEngine.Random.value<=0.5)){
+												najmniej=prawdopodobienstwo[startx+1, starty+1];
+												hor=startx+1; vert=starty+1;
+											}
 										}
 									}
 								}
 							}
 							if (starty-1>=0){
-								if (prawdopodobienstwo[startx, starty-1]<najmniej){
-									najmniej=prawdopodobienstwo[startx, starty-1];
-									hor=startx; vert=starty-1;
+								if (prawdopodobienstwo[startx, starty-1]<=najmniej){
+									if ((prawdopodobienstwo[startx, starty-1]!=najmniej)||(UnityEngine.Random.value<=0.5)){
+										najmniej=prawdopodobienstwo[startx, starty-1];
+										hor=startx; vert=starty-1;
+									}
 								}
 							}
 							if (starty+1<=2){
-								if (prawdopodobienstwo[startx, starty+1]<najmniej){
-									najmniej=prawdopodobienstwo[startx, starty+1];
-									hor=startx; vert=starty+1;
+								if (prawdopodobienstwo[startx, starty+1]<=najmniej){
+									if ((prawdopodobienstwo[startx, starty+1]!=najmniej)||(UnityEngine.Random.value<=0.5)){
+										najmniej=prawdopodobienstwo[startx, starty+1];
+										hor=startx; vert=starty+1;
+									}
 								}
 							}
-							print("Najmniej: "+najmniej+" Indeksy: "+hor+" "+vert);
+							print("Najmniej2: "+najmniej+" Indeksy: "+hor+" "+vert);
 						}
 						else{
 							do {
@@ -1342,23 +1422,51 @@ public class GameLogicDataScript : MonoBehaviour {
 		print(str);
 	}
 		
-	int zwrocIndeks(bool xory, bool najczesciej){
+	int zwrocIndeks(bool xory, bool najczesciej, bool losowo){
 		int indx=-1, indy=-1;
 		int ile;
-		if (najczesciej) ile=0;
+		if (najczesciej) ile=-1;
 		else ile=9999;
 		for(int i=0;i<3;i++){
 			for(int j=0;j<3;j++){
 				if(najczesciej){
 					if(ile<=prawdopodobienstwo[i,j]) {
-						indx=i; indy=j;
-						ile=prawdopodobienstwo[i,j];
+						if (!losowo){
+							indx=i; indy=j;
+							ile=prawdopodobienstwo[i,j];
+						}
+						else {
+							if (ile==prawdopodobienstwo[i,j]){
+								if (UnityEngine.Random.value>=0.5){
+									indx=i; indy=j;
+									ile=prawdopodobienstwo[i,j];
+								}
+							}
+							else{
+								indx=i; indy=j;
+								ile=prawdopodobienstwo[i,j];
+							}
+						}
 					}
 				}
 				else{
 					if(ile>=prawdopodobienstwo[i,j]) {
-						indx=i; indy=j;
-						ile=prawdopodobienstwo[i,j];
+						if (!losowo){
+							indx=i; indy=j;
+							ile=prawdopodobienstwo[i,j];
+						}
+						else {
+							if (ile==prawdopodobienstwo[i,j]){
+								if (UnityEngine.Random.value>=0.5){
+									indx=i; indy=j;
+									ile=prawdopodobienstwo[i,j];
+								}
+							}
+							else{
+								indx=i; indy=j;
+								ile=prawdopodobienstwo[i,j];
+							}
+						}
 					}
 				}
 			}
