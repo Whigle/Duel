@@ -149,7 +149,7 @@ public class GameLogicDataScript : MonoBehaviour {
 	static string [] poziomyTrudnosci = { "Easy", "Normal", "Hard" };
 	static string [] strategie = { "Agressive", "Balanced", "Deffensive" };
 	string poziomTrudnosci = poziomyTrudnosci[1];
-	string strategia = strategie[1];
+	string strategia = strategie[0];
 	int [,] prawdopodobienstwo = new int[3,3];
 
 	static public double mnoznikCzasu=0.5; //mnożnik czasu akcji czas akcji=PA*mnoznik
@@ -676,12 +676,12 @@ public class GameLogicDataScript : MonoBehaviour {
 				}
 
 				if(/*(Time.time-czas>interwalWalka)||*/(wykonane&&akcjaGraczaSkonczona&&akcjaNPCSkonczona&&animacjaGraczaSkonczona&&animacjaGraczaSkonczona)){
-					if(Input.GetKey(KeyCode.Space)) {
+					if(Input.GetMouseButton(2)/*Input.GetKey(KeyCode.Space)*/) {
 						nastepnaTura=true;
 						wykonane=false;
 					}
 					if (!koniecRozgrywki) {
-						GameObject.Find("NastepnaTuraHUDText").GetComponent<Text>().text="Wciśnij [spację], aby przejść do kolejnej tury.";
+						GameObject.Find("NastepnaTuraHUDText").GetComponent<Text>().text="Wciśnij [ŚPM], aby przejść do kolejnej tury.";
 						rysujHistore ();
 						pokazTabelke();
 						//wykonane=true;

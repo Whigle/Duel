@@ -104,12 +104,12 @@ public class MousePointFields : MonoBehaviour {
 			//jeśli może zaznaczać
 			if(check){
 				//jeśli gracz przytrzymuje LPM - atak
-				if (Input.GetMouseButton(0)){
+				if (Input.GetMouseButton(0)&&!Input.GetMouseButton(1)){
 					areacolor=new Color(1,0,0,0.5f);	//zmień kolor tła na czerwony
 					mode=true;	//ustaw tryb na atak
 				}
 				//jeśli gracz przytrzymuje PPM - obrona
-				else if (Input.GetMouseButton(1)){
+				else if (Input.GetMouseButton(1)&&!Input.GetMouseButton(0)){
 					areacolor=new Color(0,0,1,0.5f);	//zmień kolor tła na niebieski
 					mode=false;	//ustaw tryb na obronę
 				}
