@@ -32,4 +32,5 @@ public class ListaAtakowScript : MonoBehaviour {
 			gamePaused = true;
 		}
 	}
+
 }
