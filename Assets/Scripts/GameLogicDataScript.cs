@@ -198,7 +198,19 @@ public class GameLogicDataScript : MonoBehaviour {
 		aktualizujZycie();
 		czas=Time.time;	//inicjalizacja czasu	
 		aktualizujCzas();
+
+		ComboGracza = 1;
+		ComboNPC = 1;
 	}
+
+	int ComboGracza;
+	public int ComboNPC;
+
+	GameObject Pierwsze;
+	GameObject Drugie;
+	GameObject Trzecie;
+
+
 
 	/// <summary>
 	/// Metoda wykonywana w każdej klatce.
@@ -221,7 +233,27 @@ public class GameLogicDataScript : MonoBehaviour {
 				modeGracza=MousePointFields.getMode();	//pobieram tryb walki
 				iloscPolGracza=countMarkedFields();	//wyliczam ilość zaznaczonych w hitboxie punktów
 				GameObject pierwsze=MousePointFields.pierwszezaznaczone;
+				if (Trzecie != null) {
+					if (pierwsze == Trzecie) {
+						ComboGracza++;
+					} else
+						ComboGracza = 1;
+				} else if (Drugie != null) {
+					if (pierwsze == Drugie) {
+						ComboGracza++;
+					}	else
+						ComboGracza = 1;
+				} else {
+					if (pierwsze == Pierwsze) {
+						ComboGracza++;
+					}	else
+						ComboGracza = 1;
+				}
 				GameObject ostatnie=MousePointFields.ostatniezaznaczone;
+
+				Pierwsze = pierwsze;
+				Drugie=MousePointFields.drugiezaznaczone;
+				Trzecie = ostatnie;
 				//wyliczanie kosztu akcji
 				if(modeGracza){
 					if(iloscPolGracza==1) { kosztAkcjiGracza=4; }
@@ -234,7 +266,7 @@ public class GameLogicDataScript : MonoBehaviour {
 				if (kosztAkcjiGracza<=punktyAkcjiGracza){
 					punktyAkcjiGracza-=kosztAkcjiGracza;	//odejmuje punkty akcji
 					if (modeGracza) {
-						akcjeGracza.Add(new Atak(true, temp, kosztAkcjiGracza, iloscPolGracza, mocGracza));
+						akcjeGracza.Add(new Atak(true, temp, kosztAkcjiGracza, iloscPolGracza, mocGracza*ComboGracza));
 						//historiaAkcjiGracza.Add(new Atak(true, temp, kosztAkcjiGracza, iloscPolGracza, mocGracza));
 						if (kosztAkcjiGracza == 4) {
 							rodzajAtaku += "\nPchnięcie!";
@@ -756,6 +788,14 @@ public class GameLogicDataScript : MonoBehaviour {
 
 		return czy;
 	}
+	public int pierwszyNPCx = -1;
+	public int pierwszyNPCy = -1;
+
+	public int drugiNPCx = -1;
+	public int drugiNPCy = -1;
+
+	public int ostatniNPCx = -1;
+	public int ostatniNPCy = -1;
 
 	/// <summary>
 	/// Metoda planująca kolejkę akcji NPC w danej turze.
@@ -1041,7 +1081,17 @@ public class GameLogicDataScript : MonoBehaviour {
 					starty=zwrocIndeks(true,false,true);
 					print("Najmniej1: "+prawdopodobienstwo[startx,starty]+" Indeksy: "+startx+" "+starty);
 				}
-				hitboxNPC[startx,starty]=true;	//zaznacza punkt startowy w hitboxie
+				hitboxNPC[startx,starty]=true;	//zaznacza punkt startowy w hitboxie		*------------------------------------------PAMIETAJ ODKOMENTOWAC BO TO JEST POPRAWNE 
+
+
+				if (ostatniNPCx == startx && ostatniNPCy == starty) {
+					ComboNPC++;
+				} else
+					ComboNPC = 1;
+
+				ostatniNPCx = startx;
+				ostatniNPCy = starty;
+
 				iloscPolNPC=1; //ustawiam ilość zaznaczonych pól na 1
 				int rodzajAtaku=0;	//inicjalizuję zmienną rodzaj ataku
 				rodzajAtaku=System.Convert.ToInt32(UnityEngine.Random.value*2);	//losuję wartość z przedziału 0-2 i przypisuję do rodzajAtaku
@@ -1060,6 +1110,7 @@ public class GameLogicDataScript : MonoBehaviour {
 					print("Pchnięcie");
 					if(punktyAkcjiNPC>=4) kosztAkcjiNPC=4;	//ustawiam koszt akcji pchnięcia jeśli NPC ma potrzebną ilość punktów akcji
 					else rodzajAtaku=1;	//jeśli nie ma potrzebnych punktów akcji, to zmieniam rodzaj na ciężki atak
+
 				}
 				//jesli rodzaj ataku = 1, to zakładam, że wybrano ciężki atak
 				if(rodzajAtaku==1){
@@ -1153,6 +1204,8 @@ public class GameLogicDataScript : MonoBehaviour {
 							} while(((startx==hor)&&(starty==vert))||!(((startx!=1&&starty!=1)||(startx==1&&starty==1))||((!(startx!=1&&starty!=1)||!(startx==1&&starty==1))&&((startx==hor)||(starty==vert))))); //jeśli nowe indeksy pokryły się z poprzednim polem, to wylosuj od nowa
 						}
 						hitboxNPC[hor,vert]=true; //zaznacza drugie pole w hitboxie
+						ostatniNPCx = hor;
+						ostatniNPCy = vert;
 
 						if (zwrocIloscAkcji(false)>0){
 							najmniej=999; indx=hor; indy=vert;
@@ -1280,6 +1333,8 @@ public class GameLogicDataScript : MonoBehaviour {
 							} while((((hor==hor2)&&(vert==vert2))||((startx==hor2)&&(starty==vert2)))||!(czyZaznaczyc(startx,starty,hor,vert,hor2,vert2)));	//jeśli nowe indeksy pokryły się z poprzednimi polami, to wylosuj od nowa
 						}
 						hitboxNPC[hor2,vert2]=true;	//zaznacza trzecie pole w hitboxie
+						ostatniNPCx = hor;
+						ostatniNPCy = vert;
 						kosztAkcjiNPC=3; iloscPolNPC=3;	//ustawiam kosztu akcji i ilości zaznaczonych pól
 					}
 					else rodzajAtaku=2;
@@ -1375,6 +1430,8 @@ public class GameLogicDataScript : MonoBehaviour {
 							} while(((startx==hor)&&(starty==vert))||!(((startx!=1&&starty!=1)||(startx==1&&starty==1))||((!(startx!=1&&starty!=1)||!(startx==1&&starty==1))&&((startx==hor)||(starty==vert))))); //jeśli nowe indeksy pokryły się z poprzednim polem, to wylosuj od nowa
 						}
 						hitboxNPC[hor,vert]=true; //zaznacza drugie pole w hitboxie
+						ostatniNPCx = hor;
+						ostatniNPCy = vert;
 						kosztAkcjiNPC=2; iloscPolNPC=2;	//ustawiam kosztu akcji i ilości zaznaczonych pól
 					}
 				}
@@ -1382,7 +1439,7 @@ public class GameLogicDataScript : MonoBehaviour {
 			//jeśli to był atak, to dodaj nowy atak do kolejki
 			//printHitboxNPC();
 			if (modeNPC) {
-				akcjeNPC.Add(new Atak(false,hitboxNPC,kosztAkcjiNPC,iloscPolNPC,mocNPC));
+				akcjeNPC.Add(new Atak(false,hitboxNPC,kosztAkcjiNPC,iloscPolNPC,mocNPC*ComboNPC));
 			}
 			//jeśli to była obrona, to dodaj nową obbronę do kolejki
 			else {

@@ -92,8 +92,8 @@ public class MousePointFields : MonoBehaviour {
 			//jeśli gracz puścił któryś z przycisków myszy, to wyłącz możliwość zaznaczania pól
 			if((Input.GetMouseButtonUp(0)||Input.GetMouseButtonUp(1))&&(countMarkedFields()>0)) {
 				check=false;	
-				pierwszezaznaczone = null;
-				drugiezaznaczone = null;
+				//pierwszezaznaczone = null;
+				//drugiezaznaczone = null;
 				visibility=false;	//zrób niewidocznym
 				target=Color.white;
 			}
