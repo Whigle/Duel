@@ -775,6 +775,7 @@ public class GameLogicDataScript : MonoBehaviour {
 							skonczonopotej=true;
 							if(multiplayer){
 								NetworkView nv=gameObject.GetComponent<NetworkView>();
+								nv.stateSynchronization=NetworkStateSynchronization.ReliableDeltaCompressed;
 								nv.RPC("Skonczylem",RPCMode.Others);
 							}
 							else skonczonopoprzeciwnej=true;
@@ -838,6 +839,7 @@ public class GameLogicDataScript : MonoBehaviour {
 
 	void pobierzAkcjePrzeciwnika(){
 		NetworkView nv=gameObject.GetComponent<NetworkView>();
+		nv.stateSynchronization=NetworkStateSynchronization.ReliableDeltaCompressed;
 		string doprzeslania = punktyAkcjiGracza.ToString()+";";
 		foreach(Czynnosc c in akcjeGracza){
 			doprzeslania+=c.serializuj();

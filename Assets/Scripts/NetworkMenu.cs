@@ -38,7 +38,7 @@ public class NetworkMenu : MonoBehaviour {
 
 			if(GUILayout.Button("Dołącz")) Network.Connect(connectionIP,portNumber);
 
-			if(GUILayout.Button("Załóż grę")) Network.InitializeServer(4,portNumber,true);
+			if(GUILayout.Button("Załóż grę")) Network.InitializeServer(4,portNumber,false);
 		}
 		else GUILayout.Label("Połączeń: " + Network.connections.Length.ToString());
 	}
