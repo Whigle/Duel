@@ -143,7 +143,7 @@ public class MousePointFields : MonoBehaviour {
 		if (enable){
 			//jeśli można zaznaczać
 			if(check){
-				print("czek!! e:"+enable+" c:"+check);
+				//print("czek!! e:"+enable+" c:"+check);
 				//jeśli jest wciśnięty LPM
 				if (Input.GetMouseButton(0)) czyMoznaZaznaczyc ();
 				//jeśli jest wciśnięty PPM
@@ -258,6 +258,7 @@ public class MousePointFields : MonoBehaviour {
 	/// </summary>
 	/// <param name="e"><c>true</c>, aktywny, <c>false</c> nieaktywny.</param>
 	public static void setEnable(bool e){
+		strzalki.enabled=e;
 		enable=e;
 	}
 
@@ -317,7 +318,7 @@ public class MousePointFields : MonoBehaviour {
 				int p1y = pierwszezaznaczone.GetComponent<MousePointFields> ().idy;
 				int p2x = drugiezaznaczone.GetComponent<MousePointFields> ().idx;
 				int p2y = drugiezaznaczone.GetComponent<MousePointFields> ().idy;
-				print (p1x + " " + p1y + " " + p2x + " " + p2y);
+				//print (p1x + " " + p1y + " " + p2x + " " + p2y);
 				if (p1x != p2x && p1y != p2y) {
 					if (Mathf.Abs (p2x - idx) <= 1 && Mathf.Abs (p2y - idy) <= 1 && p1x != idx && p1y != idy) {
 						hitbox [idx, idy] = true;
@@ -370,7 +371,7 @@ public class MousePointFields : MonoBehaviour {
 			int p1y = pierwszezaznaczone.GetComponent<MousePointFields> ().idy;
 			int p2x = drugiezaznaczone.GetComponent<MousePointFields> ().idx;
 			int p2y = drugiezaznaczone.GetComponent<MousePointFields> ().idy;
-			print (p1x + " " + p1y + " " + p2x + " " + p2y);
+			//print (p1x + " " + p1y + " " + p2x + " " + p2y);
 			if (p1x != p2x && p1y != p2y) {
 				if (Mathf.Abs (p2x - idx) <= 1 && Mathf.Abs (p2y - idy) <= 1 && p1x != idx && p1y != idy) {
 					visibility = true;
