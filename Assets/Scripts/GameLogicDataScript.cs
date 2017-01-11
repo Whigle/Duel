@@ -1707,7 +1707,7 @@ public class GameLogicDataScript : MonoBehaviour {
 	}
 
 	float drawpositionx=Screen.width*0.01f;
-	float drawpositiony=Screen.height*0.0f;
+	float drawpositiony=Screen.height*0.06f;
 
 	bool GUI1 = false;
 	public Texture2D miecz;
@@ -1847,11 +1847,32 @@ public class GameLogicDataScript : MonoBehaviour {
 
 
 		}
-		drawpositiony = Screen.height * 0.0f;
+		drawpositiony = Screen.height * 0.06f;
 	}
 
 	void OnGUI() {
 		if (GUI1 == true) {
+			if (tura >= 1) {
+				GUI.Box (new Rect (drawpositionx, Screen.height * 0.0f, Screen.width * 0.115f * 2.0f, Screen.height * 0.03f), "Runda " + ((tura>4) ? tura-3 : 1).ToString());
+				GUI.Box (new Rect (drawpositionx, Screen.height * 0.03f, Screen.width * 0.115f, Screen.height * 0.03f), "Gracz 1");
+				GUI.Box (new Rect (drawpositionx + Screen.width * 0.115f, Screen.height * 0.03f, Screen.width * 0.115f, Screen.height * 0.03f), "Gracz 2");
+			}if (tura >= 2) {
+				drawpositionx = Screen.width * 0.26f;
+				GUI.Box (new Rect (drawpositionx, Screen.height * 0.0f, Screen.width * 0.115f * 2.0f, Screen.height * 0.03f), "Runda " + ((tura>4) ? tura-2 : 2).ToString());
+				GUI.Box (new Rect (drawpositionx, Screen.height * 0.03f, Screen.width * 0.115f, Screen.height * 0.03f), "Gracz 1");
+				GUI.Box (new Rect (drawpositionx + Screen.width * 0.115f, Screen.height * 0.03f, Screen.width * 0.115f, Screen.height * 0.03f), "Gracz 2");
+			} if (tura >= 3) {
+				drawpositionx = Screen.width * 0.51f;
+				GUI.Box (new Rect (drawpositionx, Screen.height * 0.0f, Screen.width * 0.115f * 2.0f, Screen.height * 0.03f), "Runda " + ((tura>4) ? tura-1 : 3).ToString());
+				GUI.Box (new Rect (drawpositionx, Screen.height * 0.03f, Screen.width * 0.115f, Screen.height * 0.03f), "Gracz 1");
+				GUI.Box (new Rect (drawpositionx + Screen.width * 0.115f, Screen.height * 0.03f, Screen.width * 0.115f, Screen.height * 0.03f), "Gracz 2");
+			} if (tura >= 4) {
+				drawpositionx = Screen.width * 0.76f;
+				GUI.Box (new Rect (drawpositionx, Screen.height * 0.0f, Screen.width * 0.115f * 2.0f, Screen.height * 0.03f), "Runda " + ((tura>4) ? tura : 4).ToString());
+				GUI.Box (new Rect (drawpositionx, Screen.height * 0.03f, Screen.width * 0.115f, Screen.height * 0.03f), "Gracz 1");
+				GUI.Box (new Rect (drawpositionx + Screen.width * 0.115f, Screen.height * 0.03f, Screen.width * 0.115f, Screen.height * 0.03f), "Gracz 2");
+			}
+			drawpositionx = Screen.width * 0.01f;
 			jakRysowac (runda1P);
 			drawpositionx = drawpositionx + Screen.width * 0.115f;
 			jakRysowac (runda1N);
