@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 using System;
+using System.Text;
 
 /// <summary>
 /// Klasa odpowiada za logikę i przetrzymywanie danych o rozgrywce.
@@ -15,6 +16,28 @@ public class GameLogicDataScript : MonoBehaviour {
 	bool skonczonopotej=false;
 	bool skonczonopoprzeciwnej=false;
 	bool skonczylemprzesyl=false;
+
+
+	GameObject tlg;
+	GameObject tld;
+	GameObject tpd;
+	GameObject tpg;
+
+	//POLA STATYSTYK
+	/// <summary>
+	/// Przechowuje informację o liczbie aktualnej tury.
+	/// </summary>
+	public int tura=1;
+	static public int zablokowaneAtaki=0;
+	static public int wykonaneAtaki=0;
+	static public int wykonaneObrony=0;
+	static public double pozostaleZycie=0;
+	static public int wynik=0;
+	static string statystyki;
+
+	static string plikStatystyk="stats.sts";
+
+
 	//POLA DOTYCZĄCE LOGIKI ROZGRYWKI
 	/// <summary>
 	/// Długość jednej rundy.
@@ -51,10 +74,7 @@ public class GameLogicDataScript : MonoBehaviour {
 	public static double interwalAkcjaGracza=0.0;
 
 
-	/// <summary>
-	/// Przechowuje informację o liczbie aktualnej tury.
-	/// </summary>
-	public int tura=1;
+
 	/// <summary>
 	/// Flaga, która przyjmuje fałsz po upływie czasu tury.
 	/// </summary>
@@ -190,6 +210,10 @@ public class GameLogicDataScript : MonoBehaviour {
 	/// Inicjalizuje pola graczy, czas i teksty wyświetlane na HUD'zie
 	/// </summary>
 	void Start () {
+		tlg=GameObject.Find("tabliczkalewagorna");
+		tld=GameObject.Find("tabliczkalewadolna");
+		tpd=GameObject.Find("tabliczkaprawadolna");
+		tpg=GameObject.Find("tabliczkaprawagorna");
 		player=GameObject.Find("Player");
 		opponent=GameObject.Find("Opponent");
 		punktyAkcjiGracza=10;
@@ -352,8 +376,8 @@ public class GameLogicDataScript : MonoBehaviour {
 
 								if (!animacjaNPCSkonczona) {
 									akcjeNPC [jAnim].animuj ();
-								GameObject.Find ("strataNPCText").GetComponent<Text> ().text = "-" + GameLogicDataScript.stratyNPC.ToString () + " p";
-							}
+									GameObject.Find ("strataNPCText").GetComponent<Text> ().text = "-" + GameLogicDataScript.stratyNPC.ToString () + " p";
+								}
 								if ((pozostalePAGracza > 0) && (pozostalePANPC > 0)) {
 									aktKosztPAGracza = akcjeGracza [i].getKoszt ();
 									aktKosztPANPC = akcjeNPC [j].getKoszt ();
@@ -414,6 +438,7 @@ public class GameLogicDataScript : MonoBehaviour {
 											interwalAkcjaGracza = System.Convert.ToDouble (aktKosztPAGracza) * mnoznikCzasu;
 											interwalAkcjaNPC = System.Convert.ToDouble (aktKosztPANPC) * mnoznikCzasu;
 
+											if (pokryte>0) zablokowaneAtaki+=1;
 											pozostalePANPC -= aktKosztPANPC;
 											akcjeNPC [j].setIloscPol (akcjeNPC [j].getIloscPol () - pokryte);
 											((Atak)akcjeNPC [j]).aktualizujObrazenia ();
@@ -532,7 +557,8 @@ public class GameLogicDataScript : MonoBehaviour {
 												pozostalePAGracza -= aktKosztPAGracza;
 												ii = 1;
 											}
-										} else if ((pozostalePAGracza - aktKosztPAGracza) < (pozostalePANPC - aktKosztPANPC)) {
+										} 
+										else if ((pozostalePAGracza - aktKosztPAGracza) < (pozostalePANPC - aktKosztPANPC)) {
 											if (akcjaNPCSkonczona) {
 												jAnim = j;
 												/*print("------------------------------------------------------------AKCJA! ng:D n szybszy");
@@ -546,7 +572,8 @@ public class GameLogicDataScript : MonoBehaviour {
 												pozostalePANPC -= aktKosztPANPC;
 												jj = 1;
 											}
-										} else {
+										} 
+										else {
 											if ((akcjaGraczaSkonczona) && (akcjaNPCSkonczona)) {
 												jAnim = j;
 												iAnim = i;
@@ -571,8 +598,8 @@ public class GameLogicDataScript : MonoBehaviour {
 											}
 										}
 									}
-
-								} else if ((pozostalePAGracza > 0) && (pozostalePANPC <= 0)) {
+								} 
+								else if ((pozostalePAGracza > 0) && (pozostalePANPC <= 0)) {
 									aktKosztPAGracza = akcjeGracza [i].getKoszt ();
 									if (akcjaGraczaSkonczona) {
 										iAnim = i;
@@ -593,7 +620,8 @@ public class GameLogicDataScript : MonoBehaviour {
 										}
 										ii = 1;
 									}
-								} else if ((pozostalePANPC > 0) && (pozostalePAGracza <= 0)) {
+								} 
+								else if ((pozostalePANPC > 0) && (pozostalePAGracza <= 0)) {
 									aktKosztPANPC = akcjeNPC [j].getKoszt ();
 									if (akcjaNPCSkonczona) {
 										jAnim = j;
@@ -614,7 +642,8 @@ public class GameLogicDataScript : MonoBehaviour {
 										}
 										jj = 1;
 									}
-								} else {
+								} 
+								else {
 									//print("Koniec kolejki");
 									//j--; i--; animacjaGraczaSkonczona=false; animacjaNPCSkonczona=false;
 									j = akcjeNPC.Count - 1;
@@ -628,8 +657,27 @@ public class GameLogicDataScript : MonoBehaviour {
 								}
 
 								//jeśli, któryś z graczy umarł, zakończ rozgrywkę
-								if ((zycieNPC <= 0) || (zycieGracza <= 0))
-									koniecRozgrywki = true;
+								if ((zycieNPC<=0) || (zycieGracza<=0)){
+									if ((zycieNPC<=0)&&(zycieGracza>0)) {
+										wynik=1;
+										zycieNPC=0;
+										zapiszStatystyke();
+										koniecRozgrywki = true;
+									}
+									else if ((zycieNPC>0)&&(zycieGracza<=0)) {
+										wynik=0;
+										zycieGracza=0;
+										zapiszStatystyke();
+										koniecRozgrywki = true;
+									}
+									else if ((zycieNPC<=0)&&(zycieGracza<=0)) {
+										wynik=2;
+										zycieNPC=0;
+										zycieGracza=0;
+										zapiszStatystyke();
+										koniecRozgrywki = true;
+									}
+								}
 								aktualizujZycie ();
 							}
 
@@ -649,17 +697,27 @@ public class GameLogicDataScript : MonoBehaviour {
 						if (!animacjaGraczaSkonczona) akcjeGracza [iAnim].animuj ();
 						if (!animacjaNPCSkonczona) akcjeNPC [jAnim].animuj ();
 						if (animacjaNPCSkonczona&&animacjaGraczaSkonczona&&akcjaNPCSkonczona&&akcjaGraczaSkonczona){
+							tpd.active=false;
+							tld.active=false;
+							tpg.active=false;
+							tlg.active=false;
 							GameObject.Find("RundaHUDText").GetComponent<Text>().text="";	//ukrywam (czyszczę tekst) rundy wyświetlane na HUD'zie
 							GameObject.Find("CzasHUDText").GetComponent<Text>().text="";	//ukrywam (czyszczę tekst) czas wyświetlany na HUD'zie
 							GameObject.Find("ZycieGraczaHUDText").GetComponent<Text>().text="";	//ukrywam (czyszczę tekst) życie gracza wyświetlane na HUD'zie
 							GameObject.Find("ZycieNPCHUDText").GetComponent<Text>().text="";	//ukrywam (czyszczę tekst) życie NPC wyświetlane na HUD'zie
 							GameObject.Find("PAGraczaHUDText").GetComponent<Text>().text="";	//ukrywam (czyszczę tekst) punkty akcji wyświetlane na HUD'zie
-							//jeśli to gracz stracił życie pokaż tekst przegranej na HUD'zie
-							if((zycieGracza<=0)&&(zycieNPC>0)) GameObject.Find("WynikHUDText").GetComponent<Text>().text="Przegrana\n"+tura.ToString()+" rund";
+							statystyki=wczytajStatystyke();
+							GameObject.Find("WynikHUDText").GetComponent<Text>().text=statystyki;
+							/*//jeśli to gracz stracił życie pokaż tekst przegranej na HUD'zie
+							if((zycieGracza<=0)&&(zycieNPC>0)) {
+								GameObject.Find("WynikHUDText").GetComponent<Text>().text="Przegrana\n"+tura.ToString()+" rund";
+							}
 							//jeśli to NPC stracił życie pokaż tekst wygranej na HUD'zie
-							else if((zycieGracza>0)&&(zycieNPC<=0)) GameObject.Find("WynikHUDText").GetComponent<Text>().text="Zwycięstwo\n"+tura.ToString()+" rund";
+							else if((zycieGracza>0)&&(zycieNPC<=0)) {
+								GameObject.Find("WynikHUDText").GetComponent<Text>().text="Zwycięstwo\n"+tura.ToString()+" rund";
+							}
 							//jeśli to obaj stracili życie pokaż tekst remisu na HUD'zie
-							else GameObject.Find("WynikHUDText").GetComponent<Text>().text="Remis\n"+tura.ToString()+" rund";
+							else GameObject.Find("WynikHUDText").GetComponent<Text>().text="Remis\n"+tura.ToString()+" rund";*/
 							GameObject.Find ("CanvasButton").GetComponent<Canvas> ().enabled=false;
 
 						}
@@ -694,6 +752,8 @@ public class GameLogicDataScript : MonoBehaviour {
 					turaTrwa=false;	//przestawiam flagę trwania tury na fałsz
 
 					GameObject.Find("HUDCombatArea").GetComponent<Renderer>().enabled=false;
+					tlg.active=false;
+					tpg.active=false;
 					GameObject.Find("RundaHUDText").GetComponent<Text>().text="";	//ukrywam (czyszczę tekst) rundy wyświetlane na HUD'zie
 					GameObject.Find("CzasHUDText").GetComponent<Text>().text="";	//ukrywam (czyszczę tekst) czas wyświetlany na HUD'zie
 					GameObject.Find("PAGraczaHUDText").GetComponent<Text>().text="";	//ukrywam (czyszczę tekst) punkty akcji wyświetlane na HUD'zie
@@ -785,6 +845,10 @@ public class GameLogicDataScript : MonoBehaviour {
 							wykonane=false;
 						}
 						if (!koniecRozgrywki) {
+							tpd.active=false;
+							tld.active=false;
+							GameObject.Find("ZycieGraczaHUDText").GetComponent<Text>().text="";	//ukrywam (czyszczę tekst) życie gracza wyświetlane na HUD'zie
+							GameObject.Find("ZycieNPCHUDText").GetComponent<Text>().text="";	//ukrywam (czyszczę tekst) życie NPC wyświetlane na HUD'zie
 							if (skonczonopotej&&multiplayer) GameObject.Find("NastepnaTuraHUDText").GetComponent<Text>().text="Poczekaj na drugiego gracza...";
 							else GameObject.Find("NastepnaTuraHUDText").GetComponent<Text>().text="Wciśnij [ŚPM], aby przejść do kolejnej tury.";
 							rysujHistore ();
@@ -827,6 +891,11 @@ public class GameLogicDataScript : MonoBehaviour {
 								aktualizujPA();
 
 								GameObject.Find("HUDCombatArea").GetComponent<Renderer>().enabled=true;
+								tlg.active=true;
+								tpg.active=true;
+								tpd.active=true;
+								tld.active=true;
+								aktualizujZycie();
 								wykonane=false;
 								przejscieSkonczone=false;
 							}
@@ -846,6 +915,41 @@ public class GameLogicDataScript : MonoBehaviour {
 		}
 		print("Wysyłam: "+doprzeslania);
 		nv.RPC("OdbierzDane",RPCMode.Others,doprzeslania);
+	}
+
+	void zapiszStatystyke(){
+		string str;
+		pozostaleZycie=zycieGracza;
+		switch(wynik){
+			case 0: str="Przegrana"; break;
+			case 1: str="Zwycięstwo"; break;
+			case 2: str="Remis"; break;
+			default: str="-"; break;
+		}
+		str+=" "+tura+" rund: "+wykonaneAtaki+" ataków  "+zablokowaneAtaki+" zablokowanych ataków  "+wykonaneObrony+" obron  "+pozostaleZycie+" pkt życia";
+		string old=wczytajStatystyke();
+		System.IO.StreamWriter sr = new System.IO.StreamWriter(plikStatystyk); //otworzenie pliku do zapisu
+		sr.WriteLine(str);
+		sr.WriteLine(old);
+		sr.Close();
+	}
+
+	string wczytajStatystyke(){
+		string str="";
+		tura=0;
+		zablokowaneAtaki=0;
+		wykonaneAtaki=0;
+		wykonaneObrony=0;
+		pozostaleZycie=0;
+		wynik=0;
+		System.IO.StreamReader sr = new System.IO.StreamReader(plikStatystyk, Encoding.UTF8);   //otworzenie pliku, ustawienie kodowania
+		while (!sr.EndOfStream) //do konca strumienia
+		{
+			string line = sr.ReadLine();
+			if (line.Length>0)str+=line+"\n";
+		}
+		sr.Close();
+		return str;
 	}
 
 	[RPC]
@@ -2198,6 +2302,7 @@ public class Atak : Czynnosc {
 	/// <param name="iloscPol">Ilosc zaznaczonych pól w tej akcji.</param>
 	/// <param name="moc">Moc ataku.</param>
 	public Atak(bool gracz, bool [,] hitbox, int koszt, int iloscPol, int moc) : base(gracz, hitbox, koszt, iloscPol) {
+		if (gracz) GameLogicDataScript.wykonaneAtaki+=1;
 		this.typAkcji=true;
 		this.moc=moc;
 		//w zależności od ilości pól stwierdzamy jaki to atak i przypisujemy mu obrażenia
@@ -2352,6 +2457,7 @@ public class Obrona : Czynnosc {
 	/// <param name="koszt">Koszt tej akcji.</param>
 	/// <param name="iloscPol">Ilosc zaznaczonych pól w tej akcji.</param>
 	public Obrona(bool gracz, bool [,] hitbox, int koszt, int iloscPol) : base(gracz, hitbox, koszt, iloscPol) {
+		if (gracz) GameLogicDataScript.wykonaneObrony+=1;
 		this.typAkcji=false;
 		this.animacja="Defense";
 		this.dzwiek="ShieldHit";
