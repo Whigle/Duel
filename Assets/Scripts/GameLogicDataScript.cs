@@ -9,6 +9,8 @@ using System.Text;
 /// Klasa odpowiada za logikę i przetrzymywanie danych o rozgrywce.
 /// </summary>
 public class GameLogicDataScript : MonoBehaviour {
+
+	static public String nazwaGracza;
 	
 	static public bool multiplayer=false;
 	static public bool polaczono=false;
@@ -926,7 +928,7 @@ public class GameLogicDataScript : MonoBehaviour {
 			case 2: str="Remis"; break;
 			default: str="-"; break;
 		}
-		str+=" "+tura+" rund: "+wykonaneAtaki+" ataków  "+zablokowaneAtaki+" zablokowanych ataków  "+wykonaneObrony+" obron  "+pozostaleZycie+" pkt życia";
+		str+=" Nick: "+ nazwaGracza + " "+tura+" rund: "+wykonaneAtaki+" ataków  "+zablokowaneAtaki+" zablokowanych ataków  "+wykonaneObrony+" obron  "+pozostaleZycie+" pkt życia";
 		string old=wczytajStatystyke();
 		System.IO.StreamWriter sr = new System.IO.StreamWriter(plikStatystyk); //otworzenie pliku do zapisu
 		sr.WriteLine(str);
@@ -1982,7 +1984,7 @@ public class GameLogicDataScript : MonoBehaviour {
 		GUI.DrawTexture (new Rect (drawpositionx, Screen.height * 0.05f, Screen.width * 0.115f, Screen.height * 0.05f), border, ScaleMode.ScaleAndCrop);
 		GUI.DrawTexture (new Rect (drawpositionx + Screen.width * 0.115f, Screen.height * 0.05f, Screen.width * 0.115f, Screen.height * 0.05f), border, ScaleMode.ScaleAndCrop);
 		GUI.Box (new Rect (drawpositionx, Screen.height * 0.0f, Screen.width * 0.115f * 2.0f, Screen.height * 0.05f), "Runda " + odTury.ToString(), dlaHistorii);
-		GUI.Box (new Rect (drawpositionx, Screen.height * 0.05f, Screen.width * 0.115f, Screen.height * 0.05f), "Gracz 1", dlaHistorii);
+		GUI.Box (new Rect (drawpositionx, Screen.height * 0.05f, Screen.width * 0.115f, Screen.height * 0.05f), (nazwaGracza!="") ? nazwaGracza : "Gracz 1", dlaHistorii);
 		GUI.Box (new Rect (drawpositionx + Screen.width * 0.115f, Screen.height * 0.05f, Screen.width * 0.115f, Screen.height * 0.05f), "Gracz 2", dlaHistorii);
 		
 	}
