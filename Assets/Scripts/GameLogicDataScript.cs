@@ -11,6 +11,7 @@ using System.Text;
 public class GameLogicDataScript : MonoBehaviour {
 
 	static public String nazwaGracza;
+	static public String nazwaPrzeciwnika;
 	
 	static public bool multiplayer=false;
 	static public bool polaczono=false;
@@ -267,6 +268,11 @@ public class GameLogicDataScript : MonoBehaviour {
 				if(!wlaczono && multiplayer) {
 					MousePointFields.setEnable(true); 
 					wlaczono=true;
+					if (multiplayer&&polaczono) {
+						NetworkView nv=gameObject.GetComponent<NetworkView>();
+						nv.stateSynchronization=NetworkStateSynchronization.ReliableDeltaCompressed;
+						nv.RPC("nadajMojaNazwe",RPCMode.Others,nazwaGracza);
+					}
 				}
 				GameObject.Find ("CanvasButton").GetComponent<Canvas> ().enabled=true;
 				GameObject.Find ("RodzajAtakuHUDText").GetComponent<Text> ().text = rodzajAtaku; //wyświetl informacje o rodzaju ataku			
@@ -957,6 +963,11 @@ public class GameLogicDataScript : MonoBehaviour {
 	[RPC]
 	public void Skonczylem (){
 		skonczonopoprzeciwnej=true;
+	}
+
+	[RPC]
+	public void nadajMojaNazwe (String nazwaG){
+		nazwaPrzeciwnika = nazwaG;
 	}
 
 	[RPC]
@@ -1985,7 +1996,7 @@ public class GameLogicDataScript : MonoBehaviour {
 		GUI.DrawTexture (new Rect (drawpositionx + Screen.width * 0.115f, Screen.height * 0.05f, Screen.width * 0.115f, Screen.height * 0.05f), border, ScaleMode.ScaleAndCrop);
 		GUI.Box (new Rect (drawpositionx, Screen.height * 0.0f, Screen.width * 0.115f * 2.0f, Screen.height * 0.05f), "Runda " + odTury.ToString(), dlaHistorii);
 		GUI.Box (new Rect (drawpositionx, Screen.height * 0.05f, Screen.width * 0.115f, Screen.height * 0.05f), (nazwaGracza!="") ? nazwaGracza : "Gracz 1", dlaHistorii);
-		GUI.Box (new Rect (drawpositionx + Screen.width * 0.115f, Screen.height * 0.05f, Screen.width * 0.115f, Screen.height * 0.05f), "Gracz 2", dlaHistorii);
+		GUI.Box (new Rect (drawpositionx + Screen.width * 0.115f, Screen.height * 0.05f, Screen.width * 0.115f, Screen.height * 0.05f), (nazwaPrzeciwnika!="") ? nazwaPrzeciwnika : "Gracz 2", dlaHistorii);
 		
 	}
 

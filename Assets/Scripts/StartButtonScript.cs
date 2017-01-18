@@ -32,6 +32,8 @@ public class StartButtonScript : MonoBehaviour {
 		GameLogicDataScript.multiplayer=true;
 		if (IF.text != "") {
 			GameLogicDataScript.nazwaGracza = IF.text;
+		} else {
+			GameLogicDataScript.nazwaGracza = "Gracz 2";
 		}
 		UnityEngine.SceneManagement.SceneManager.LoadScene("Duel");
 	}
