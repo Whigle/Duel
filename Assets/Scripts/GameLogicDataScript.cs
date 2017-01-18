@@ -1811,45 +1811,72 @@ public class GameLogicDataScript : MonoBehaviour {
 	}
 
 	float drawpositionx=Screen.width*0.01f;
-	float drawpositiony=Screen.height*0.06f;
+	float drawpositiony=Screen.height*0.1f;
 
 	bool GUI1 = false;
 	public Texture2D miecz;
 	public Texture2D tarcza;
+
+	List<List<Czynnosc>> listaListGracza = new List<List<Czynnosc>>();
+	List<List<Czynnosc>> listaListNPC = new List<List<Czynnosc>>();
 
 	void rysujHistore() {
 		if (zrobione == false) {
 			if (tura == 1) {
 				foreach (Czynnosc c in akcjeGracza) {
 					runda1P.Add (c);
+					listaListGracza.Add(new List<Czynnosc>());
+					listaListGracza [0].Add (c);
 				}
+				//listaListGracza.Add (runda1P);
 				foreach (Czynnosc c in akcjeNPC) {
 					runda1N.Add (c);
+					listaListNPC.Add(new List<Czynnosc>());
+					listaListNPC [0].Add (c);
 				}
+				//listaListNPC.Add (runda1N);
 			}
 			if (tura == 2) {
 				foreach (Czynnosc c in akcjeGracza) {
 					runda2P.Add (c);
+					listaListGracza.Add(new List<Czynnosc>());
+					listaListGracza [1].Add (c);
 				}
+				//listaListGracza.Add (runda2P);
 				foreach (Czynnosc c in akcjeNPC) {
 					runda2N.Add (c);
+					listaListNPC.Add(new List<Czynnosc>());
+					listaListNPC [1].Add (c);
 				}
+				//listaListNPC.Add (runda2N);
 			}
 			if (tura == 3) {
 				foreach (Czynnosc c in akcjeGracza) {
 					runda3P.Add (c);
+					listaListGracza.Add(new List<Czynnosc>());
+					listaListGracza [2].Add (c);
 				}
+				//listaListGracza.Add (runda3P);
 				foreach (Czynnosc c in akcjeNPC) {
 					runda3N.Add (c);
+					listaListNPC.Add(new List<Czynnosc>());
+					listaListNPC [2].Add (c);
 				}
+				//listaListNPC.Add (runda3N);
 			}
 			if (tura == 4) {
 				foreach (Czynnosc c in akcjeGracza) {
 					runda4P.Add (c);
+					listaListGracza.Add(new List<Czynnosc>());
+					listaListGracza [3].Add (c);
 				}
+				//listaListGracza.Add (runda4P);
 				foreach (Czynnosc c in akcjeNPC) {
 					runda4N.Add (c);
+					listaListNPC.Add(new List<Czynnosc>());
+					listaListNPC [3].Add (c);
 				}
+				//listaListNPC.Add (runda4N);
 			} else if (tura > 4) {
 				runda1P.Clear ();
 				runda1N.Clear ();
@@ -1886,10 +1913,16 @@ public class GameLogicDataScript : MonoBehaviour {
 
 				foreach (Czynnosc c in akcjeGracza) {
 					runda4P.Add (c);
+					listaListGracza.Add(new List<Czynnosc>());
+					listaListGracza [tura-1].Add (c);
 				}
+				//listaListGracza.Add (runda4P);
 				foreach (Czynnosc c in akcjeNPC) {
 					runda4N.Add (c);
+					listaListNPC.Add(new List<Czynnosc>());
+					listaListNPC [tura-1].Add (c);
 				}
+				//listaListNPC.Add (runda4N);
 			}
 			zrobione = true;
 		}
@@ -1898,115 +1931,158 @@ public class GameLogicDataScript : MonoBehaviour {
 	public Texture2D[] draws;
 	GUIStyle style = new GUIStyle();
 
+	float wys1AP = 0.09f;
+
 	void jakRysowac(List<Czynnosc> akcje) {
 		foreach (Czynnosc i in akcje) {
 			int temp = i.getKoszt ();
 			Texture2D tempM;
-			if (i.getTypAkcji())
+			if (i.getTypAkcji ())
 				tempM = miecz;
 			else
 				tempM = tarcza;
 
-			/*GUI.Box (new Rect (0, 0, Screen.width, Screen.height), draws[0],style);
+			style.imagePosition = ImagePosition.ImageOnly;
+
+			//Screen.width * 0.115f;
+
+			GUI.DrawTexture (new Rect (drawpositionx + Screen.width * 0.115f * 0.02f, drawpositiony+ Screen.height * 0.005f, Screen.width * 0.115f - 2.0f * Screen.width * 0.115f * 0.02f, (Screen.height * wys1AP * temp)-(Screen.height*0.005f*2.0f)), border, ScaleMode.ScaleAndCrop);
+			//GUI.Box (new Rect (drawpositionx + Screen.width * 0.115f * 0.02f, drawpositiony+ Screen.height * 0.005f, Screen.width * 0.115f/2f - Screen.width * 0.115f * 0.02f, Screen.height * wys1AP * temp - (Screen.height*0.005f*2.0f)), tempM,style);
+			GUI.DrawTexture (new Rect (drawpositionx + Screen.width * 0.115f * 0.02f, drawpositiony+ Screen.height * 0.005f, Screen.width * 0.115f/2f - Screen.width * 0.115f * 0.02f, Screen.height * wys1AP * temp - (Screen.height*0.005f*2.0f)), tempM,ScaleMode.ScaleToFit);
+			//GUI.Box (new Rect (drawpositionx, drawpositiony, Screen.width * 0.115f/2f, Screen.height * wys1AP * temp), tempM,style);
+
+			GUI.DrawTexture (new Rect (drawpositionx+Screen.width * 0.115f/2f, drawpositiony, Screen.width * 0.115f/2f, Screen.height * wys1AP * temp), draws[0],ScaleMode.ScaleToFit);
+			//GUI.Box (new Rect (drawpositionx+Screen.width * 0.115f/2f, drawpositiony, Screen.width * 0.115f/2f, Screen.height * wys1AP * temp), draws[0],style);
 			for (int i2 = 0; i2 < 3; i2++) {
 				for (int j2 = 0; j2 < 3; j2++) {
 					if (i.getHitbox() [i2,j2] == true) {
-						GUI.Box (new Rect (drawpositionx, drawpositiony, Screen.width * 0.115f, Screen.height * 0.08f * temp), draws[i2*3+j2+1],style);
+						GUI.DrawTexture (new Rect (drawpositionx+Screen.width * 0.115f/2f, drawpositiony, Screen.width * 0.115f/2f, Screen.height * wys1AP * temp), draws[i2*3+j2+1],ScaleMode.ScaleToFit);
+						//GUI.Box (new Rect (drawpositionx+Screen.width * 0.115f/2f, drawpositiony, Screen.width * 0.115f/2f, Screen.height * wys1AP * temp), draws[i2*3+j2+1],style);
 					}
 				}
 			}
 
-			/*string str="HITBOX:\n";
-			for(int i1=0;i1<3;i1++){
-				for(int j=0;j<3;j++){
-					if(i.getHitbox()[i1,j]==true) str+="1";
-					else str+="0";
-					str+=" ";
-				}
-				str+="\n";
-			}*/
-
-			//str = i.getIloscPol ().ToString();
-			//print(str);
-
-			//GUIContent GUI11= new GUIContent (str, tempM, "You Know Nothing");
-			//GUI.Box (new Rect (drawpositionx, drawpositiony, Screen.width * 0.3f, Screen.height * 0.06f * temp), tempM);
-			//GUI.Box (new Rect (drawpositionx, drawpositiony, Screen.width * 0.3f, Screen.height * 0.06f * temp), temp.ToString ());
-
-			GUI.Box (new Rect (drawpositionx, drawpositiony, Screen.width * 0.115f, Screen.height * 0.08f * temp), "");
-
-			GUI.Box (new Rect (drawpositionx, drawpositiony, Screen.width * 0.115f/2f, Screen.height * 0.08f * temp), tempM,style);
-
-			GUI.Box (new Rect (drawpositionx+Screen.width * 0.115f/2f, drawpositiony, Screen.width * 0.115f/2f, Screen.height * 0.08f * temp), draws[0],style);
-			for (int i2 = 0; i2 < 3; i2++) {
-				for (int j2 = 0; j2 < 3; j2++) {
-					if (i.getHitbox() [i2,j2] == true) {
-						GUI.Box (new Rect (drawpositionx+Screen.width * 0.115f/2f, drawpositiony, Screen.width * 0.115f/2f, Screen.height * 0.08f * temp), draws[i2*3+j2+1],style);
-					}
-				}
-			}
-
-			drawpositiony += Screen.height * 0.08f * temp;
+			drawpositiony += Screen.height * wys1AP * temp;
 
 
 
 		}
-		drawpositiony = Screen.height * 0.06f;
+		drawpositiony = Screen.height * 0.1f;
 	}
+
+	public Texture2D border;
+	public Texture2D black;
+
+	void drawBoxAndTextures (float drawposition, int odTury) {
+
+		GUIStyle dlaHistorii = new GUIStyle ();
+		dlaHistorii.alignment = TextAnchor.MiddleCenter;
+
+		GUI.DrawTexture (new Rect (drawpositionx, Screen.height * 0.0f, Screen.width * 0.115f * 2.0f, Screen.height * 0.05f), border, ScaleMode.ScaleAndCrop);
+		GUI.DrawTexture (new Rect (drawpositionx, Screen.height * 0.05f, Screen.width * 0.115f, Screen.height * 0.05f), border, ScaleMode.ScaleAndCrop);
+		GUI.DrawTexture (new Rect (drawpositionx + Screen.width * 0.115f, Screen.height * 0.05f, Screen.width * 0.115f, Screen.height * 0.05f), border, ScaleMode.ScaleAndCrop);
+		GUI.Box (new Rect (drawpositionx, Screen.height * 0.0f, Screen.width * 0.115f * 2.0f, Screen.height * 0.05f), "Runda " + odTury.ToString(), dlaHistorii);
+		GUI.Box (new Rect (drawpositionx, Screen.height * 0.05f, Screen.width * 0.115f, Screen.height * 0.05f), "Gracz 1", dlaHistorii);
+		GUI.Box (new Rect (drawpositionx + Screen.width * 0.115f, Screen.height * 0.05f, Screen.width * 0.115f, Screen.height * 0.05f), "Gracz 2", dlaHistorii);
+		
+	}
+
+	int wyswietlanaRunda;
+	bool czyResetowac = true;
+	bool lewytak = true;
+	bool lewynie = true;
 
 	void OnGUI() {
 		if (GUI1 == true) {
+
+			if(Input.GetKeyDown(KeyCode.LeftArrow)&&wyswietlanaRunda>3&&lewytak) {
+				wyswietlanaRunda--;
+				lewytak = false;
+			}
+			if(Input.GetKeyDown(KeyCode.RightArrow)&&wyswietlanaRunda<tura-1&&lewynie) {
+				wyswietlanaRunda++;
+				lewynie = false;
+			}
+			if (Input.GetKeyUp (KeyCode.LeftArrow)) {
+				lewytak = true;
+			}
+			if (Input.GetKeyUp (KeyCode.RightArrow)) {
+				lewynie = true;
+			}
+
 			if (tura >= 1) {
-				GUI.Box (new Rect (drawpositionx, Screen.height * 0.0f, Screen.width * 0.115f * 2.0f, Screen.height * 0.03f), "Runda " + ((tura>4) ? tura-3 : 1).ToString());
-				GUI.Box (new Rect (drawpositionx, Screen.height * 0.03f, Screen.width * 0.115f, Screen.height * 0.03f), "Gracz 1");
-				GUI.Box (new Rect (drawpositionx + Screen.width * 0.115f, Screen.height * 0.03f, Screen.width * 0.115f, Screen.height * 0.03f), "Gracz 2");
+				GUI.DrawTexture (new Rect (Screen.width*0.0f, Screen.height*0.0f, Screen.width*0.25f, Screen.height), black, ScaleMode.ScaleAndCrop);
+				drawBoxAndTextures (drawpositionx, (wyswietlanaRunda > 3) ? wyswietlanaRunda-2 : 1);
 			}if (tura >= 2) {
+				GUI.DrawTexture (new Rect (Screen.width*0.25f, Screen.height*0.0f, Screen.width*0.25f, Screen.height), black, ScaleMode.ScaleAndCrop);
 				drawpositionx = Screen.width * 0.26f;
-				GUI.Box (new Rect (drawpositionx, Screen.height * 0.0f, Screen.width * 0.115f * 2.0f, Screen.height * 0.03f), "Runda " + ((tura>4) ? tura-2 : 2).ToString());
-				GUI.Box (new Rect (drawpositionx, Screen.height * 0.03f, Screen.width * 0.115f, Screen.height * 0.03f), "Gracz 1");
-				GUI.Box (new Rect (drawpositionx + Screen.width * 0.115f, Screen.height * 0.03f, Screen.width * 0.115f, Screen.height * 0.03f), "Gracz 2");
+				drawBoxAndTextures (drawpositionx, (wyswietlanaRunda > 3) ? wyswietlanaRunda-1 : 2);
 			} if (tura >= 3) {
+				GUI.DrawTexture (new Rect (Screen.width*0.50f, Screen.height*0.0f, Screen.width*0.25f, Screen.height), black, ScaleMode.ScaleAndCrop);
 				drawpositionx = Screen.width * 0.51f;
-				GUI.Box (new Rect (drawpositionx, Screen.height * 0.0f, Screen.width * 0.115f * 2.0f, Screen.height * 0.03f), "Runda " + ((tura>4) ? tura-1 : 3).ToString());
-				GUI.Box (new Rect (drawpositionx, Screen.height * 0.03f, Screen.width * 0.115f, Screen.height * 0.03f), "Gracz 1");
-				GUI.Box (new Rect (drawpositionx + Screen.width * 0.115f, Screen.height * 0.03f, Screen.width * 0.115f, Screen.height * 0.03f), "Gracz 2");
+				drawBoxAndTextures (drawpositionx, (wyswietlanaRunda > 3) ? wyswietlanaRunda : 3);
 			} if (tura >= 4) {
+				GUI.DrawTexture (new Rect (Screen.width*0.75f, Screen.height*0.0f, Screen.width*0.25f, Screen.height), black, ScaleMode.ScaleAndCrop);
 				drawpositionx = Screen.width * 0.76f;
-				GUI.Box (new Rect (drawpositionx, Screen.height * 0.0f, Screen.width * 0.115f * 2.0f, Screen.height * 0.03f), "Runda " + ((tura>4) ? tura : 4).ToString());
-				GUI.Box (new Rect (drawpositionx, Screen.height * 0.03f, Screen.width * 0.115f, Screen.height * 0.03f), "Gracz 1");
-				GUI.Box (new Rect (drawpositionx + Screen.width * 0.115f, Screen.height * 0.03f, Screen.width * 0.115f, Screen.height * 0.03f), "Gracz 2");
+				drawBoxAndTextures (drawpositionx, (wyswietlanaRunda > 3) ? wyswietlanaRunda+1 : 4);
 			}
 			drawpositionx = Screen.width * 0.01f;
-			jakRysowac (runda1P);
-			drawpositionx = drawpositionx + Screen.width * 0.115f;
-			jakRysowac (runda1N);
-			drawpositionx = drawpositionx + Screen.width * 0.135f;
-			jakRysowac (runda2P);
-			drawpositionx = drawpositionx + Screen.width * 0.115f;
-			jakRysowac (runda2N);
-			drawpositionx = drawpositionx + Screen.width * 0.135f;
-			jakRysowac (runda3P);
-			drawpositionx = drawpositionx + Screen.width * 0.115f;
-			jakRysowac (runda3N);
-			drawpositionx = drawpositionx + Screen.width * 0.135f;
-			jakRysowac (runda4P);
-			drawpositionx = drawpositionx + Screen.width * 0.115f;
-			jakRysowac (runda4N);
+			if (tura >= 1) {
+				//jakRysowac (runda1P);
+				jakRysowac (listaListGracza [(wyswietlanaRunda > 3) ? wyswietlanaRunda - 3 : 0]);
+				drawpositionx = drawpositionx + Screen.width * 0.115f;
+				//jakRysowac (runda1N);
+				jakRysowac (listaListNPC [(wyswietlanaRunda > 3) ? wyswietlanaRunda - 3 : 0]);
+				drawpositionx = drawpositionx + Screen.width * 0.135f;
+			}
+			if (tura >= 2) {
+				//jakRysowac (runda2P);
+				jakRysowac (listaListGracza [(wyswietlanaRunda > 3) ? wyswietlanaRunda - 2 : 1]);
+				drawpositionx = drawpositionx + Screen.width * 0.115f;
+				//jakRysowac (runda2N);
+				jakRysowac (listaListNPC [(wyswietlanaRunda > 3) ? wyswietlanaRunda - 2 : 1]);
+				drawpositionx = drawpositionx + Screen.width * 0.135f;
+			}
+			if (tura >= 3) {
+				//jakRysowac (runda3P);
+				jakRysowac (listaListGracza [(wyswietlanaRunda > 3) ? wyswietlanaRunda - 1 : 2]);
+				drawpositionx = drawpositionx + Screen.width * 0.115f;
+				//jakRysowac (runda3N);
+				jakRysowac (listaListNPC [(wyswietlanaRunda > 3) ? wyswietlanaRunda - 1 : 2]);
+				drawpositionx = drawpositionx + Screen.width * 0.135f;
+			}
+			if (tura >= 4) {
+				//jakRysowac (runda4P);
+				jakRysowac (listaListGracza [(wyswietlanaRunda > 3) ? wyswietlanaRunda : 3]);
+				drawpositionx = drawpositionx + Screen.width * 0.115f;
+				//jakRysowac (runda4N);
+				jakRysowac (listaListNPC [(wyswietlanaRunda > 3) ? wyswietlanaRunda : 3]);
+			}
 			drawpositionx = Screen.width * 0.01f;
-			GUI.Box (new Rect (Screen.width * 0f, Screen.height * 0f, Screen.width * 0.01f, Screen.height * 0.8f),"");
+			GUI.DrawTexture (new Rect (Screen.width * -0.01f, Screen.height * 0f, Screen.width * 0.02f, Screen.height), border, ScaleMode.ScaleAndCrop);
+			GUI.DrawTexture (new Rect (Screen.width * 0.24f, Screen.height * 0f, Screen.width * 0.02f, Screen.height), border, ScaleMode.ScaleAndCrop);
+			GUI.DrawTexture (new Rect (Screen.width * 0.49f, Screen.height * 0f, Screen.width * 0.02f, Screen.height), border, ScaleMode.ScaleAndCrop);
+			GUI.DrawTexture (new Rect (Screen.width * 0.74f, Screen.height * 0f, Screen.width * 0.02f, Screen.height), border, ScaleMode.ScaleAndCrop);
+			GUI.DrawTexture (new Rect (Screen.width * 0.99f, Screen.height * 0f, Screen.width * 0.02f, Screen.height), border, ScaleMode.ScaleAndCrop);
+			/*GUI.Box (new Rect (Screen.width * 0f, Screen.height * 0f, Screen.width * 0.01f, Screen.height * 0.8f),"");
 			GUI.Box (new Rect (Screen.width * 0.24f, Screen.height * 0f, Screen.width * 0.02f, Screen.height * 0.8f),"");
 			GUI.Box (new Rect (Screen.width * 0.49f, Screen.height * 0f, Screen.width * 0.02f, Screen.height * 0.8f),"");
 			GUI.Box (new Rect (Screen.width * 0.74f, Screen.height * 0f, Screen.width * 0.02f, Screen.height * 0.8f),"");
-			GUI.Box (new Rect (Screen.width * 0.99f, Screen.height * 0f, Screen.width * 0.01f, Screen.height * 0.8f),"");
+			GUI.Box (new Rect (Screen.width * 0.99f, Screen.height * 0f, Screen.width * 0.01f, Screen.height * 0.8f),"");*/
 		}
 	}
 
 	void pokazTabelke() {
+		if (czyResetowac) {
+			wyswietlanaRunda=tura-1;
+			czyResetowac=false;
+		}
 		GUI1 = true;
 	}
 
 	void ukryjTabelke() {
 		GUI1 = false;
+		czyResetowac = true;
 	}
 
 
