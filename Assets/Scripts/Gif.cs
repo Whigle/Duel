@@ -16,7 +16,7 @@ public class Gif : MonoBehaviour {
 		int index=System.Convert.ToInt32(Time.time*framesPerSecond);
 		if (frames.Length>0){
 			index=index%frames.Length;
-			print(index);
+			//print(index);
 			this.gameObject.GetComponentInChildren<Image>().sprite=frames[index];
 		}
 	}

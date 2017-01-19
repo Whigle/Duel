@@ -380,12 +380,12 @@ public class GameLogicDataScript : MonoBehaviour {
 
 								if (!animacjaGraczaSkonczona) {
 									akcjeGracza [iAnim].animuj ();
-									GameObject.Find ("strataGraczaText").GetComponent<Text> ().text = "-" + GameLogicDataScript.stratyGracza.ToString () + " p";
+									GameObject.Find ("strataNPCText").GetComponent<Text> ().text = "-" + GameLogicDataScript.stratyNPC.ToString () + " p";
 								}
 
 								if (!animacjaNPCSkonczona) {
 									akcjeNPC [jAnim].animuj ();
-									GameObject.Find ("strataNPCText").GetComponent<Text> ().text = "-" + GameLogicDataScript.stratyNPC.ToString () + " p";
+									GameObject.Find ("strataGraczaText").GetComponent<Text> ().text = "-" + GameLogicDataScript.stratyGracza.ToString () + " p";
 								}
 								if ((pozostalePAGracza > 0) && (pozostalePANPC > 0)) {
 									aktKosztPAGracza = akcjeGracza [i].getKoszt ();
@@ -806,7 +806,7 @@ public class GameLogicDataScript : MonoBehaviour {
 							animacjaGraczaSkonczona=true;
 							//print("Animacja Gracza Skonczona");
 							player.GetComponent<Animation>().Stop();
-							GameObject.Find ("strataGraczaText").GetComponent<Text> ().text = "";
+							GameObject.Find ("strataNPCText").GetComponent<Text> ().text = "";
 							stratyGracza = 0;
 						}
 					}
@@ -815,7 +815,7 @@ public class GameLogicDataScript : MonoBehaviour {
 							animacjaNPCSkonczona=true;
 							//print("Animacja Gracza Skonczona");
 							opponent.GetComponent<Animation>().Stop();
-							GameObject.Find ("strataNPCText").GetComponent<Text> ().text = "";
+							GameObject.Find ("strataGraczaText").GetComponent<Text> ().text = "";
 							stratyNPC = 0;
 						}
 					}
@@ -1838,9 +1838,10 @@ public class GameLogicDataScript : MonoBehaviour {
 	void rysujHistore() {
 		if (zrobione == false) {
 			if (tura == 1) {
+				listaListGracza.Add(new List<Czynnosc>());
 				foreach (Czynnosc c in akcjeGracza) {
 					runda1P.Add (c);
-					listaListGracza.Add(new List<Czynnosc>());
+
 					listaListGracza [0].Add (c);
 				}
 				//listaListGracza.Add (runda1P);
