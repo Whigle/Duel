@@ -38,4 +38,8 @@ public class StartButtonScript : MonoBehaviour {
 		UnityEngine.SceneManagement.SceneManager.LoadScene("Duel");
 	}
 
+	public void backToMenu(){
+		UnityEngine.SceneManagement.SceneManager.LoadScene("MainMenu");
+	}
+
 }

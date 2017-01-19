@@ -232,6 +232,7 @@ public class GameLogicDataScript : MonoBehaviour {
 		zycieNPC=100;
 
 		GameObject.Find ("CanvasLista").GetComponent<Canvas> ().enabled = false;
+		GameObject.Find ("CanvasNewGame").GetComponent<Canvas> ().enabled = false;
 		GameObject.Find("RodzajAtakuHUDText").GetComponent<Text>().text=rodzajAtaku;
 		GameObject.Find("RodzajAtakuHUDText").GetComponent<Text> ().fontSize = 15;
 		GameObject.Find("RundaHUDText").GetComponent<Text>().text="Runda 1";
@@ -727,6 +728,7 @@ public class GameLogicDataScript : MonoBehaviour {
 							//jeśli to obaj stracili życie pokaż tekst remisu na HUD'zie
 							else GameObject.Find("WynikHUDText").GetComponent<Text>().text="Remis\n"+tura.ToString()+" rund";*/
 							GameObject.Find ("CanvasButton").GetComponent<Canvas> ().enabled=false;
+							GameObject.Find ("CanvasNewGame").GetComponent<Canvas> ().enabled = true;
 
 						}
 					}
