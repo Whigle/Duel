@@ -10,8 +10,8 @@ using System.Text;
 /// </summary>
 public class GameLogicDataScript : MonoBehaviour {
 
-	static public String nazwaGracza;
-	static public String nazwaPrzeciwnika;
+	static public String nazwaGracza="Gracz";
+	static public String nazwaPrzeciwnika="NPC";
 	
 	static public bool multiplayer=false;
 	static public bool polaczono=false;
