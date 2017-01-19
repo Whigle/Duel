@@ -1,13 +1,19 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.Networking;
 
 public class NetworkMenu : MonoBehaviour {
 
 	public string connectionIP = "127.0.0.1";
 	public int portNumber = 8632;
 
+	
+	static bool server=false;
 	bool polaczenie;
+
+
 
 	void Start(){
 		if (GameLogicDataScript.multiplayer==false) gameObject.GetComponent<NetworkMenu>().enabled=false;
@@ -15,8 +21,11 @@ public class NetworkMenu : MonoBehaviour {
 	}
 
 	void Update(){
-		if (polaczenie&&(Network.connections.Length>0)) GameLogicDataScript.polaczono=true;
+		if (polaczenie&&(Network.connections.Length>0)) {
+			GameLogicDataScript.polaczono=true;
+		}
 	}
+
 
 	// Use this for initialization
 	private void OnConnectedToServer(){
@@ -25,6 +34,7 @@ public class NetworkMenu : MonoBehaviour {
 
 	private void OnServerInitialized(){
 		polaczenie=true;
+		server=true;
 	}
 
 	private void OnDisconnectedFromServer(){

@@ -36,7 +36,15 @@ public class GameLogicDataScript : MonoBehaviour {
 	static public int wykonaneObrony=0;
 	static public double pozostaleZycie=0;
 	static public int wynik=0;
-	static string statystyki;
+	//static string statystyki;
+
+	static List<string> wyniki=new List<string>();
+	static List<string> tury=new List<string>();
+	static List<string> zablAtaki=new List<string>();
+	static List<string> wykAtaki=new List<string>();
+	static List<string> wykObrony=new List<string>();
+	static List<string> pozZycie=new List<string>();
+	static List<string> nicki=new List<string>();
 
 	static string plikStatystyk="stats.sts";
 
@@ -185,8 +193,8 @@ public class GameLogicDataScript : MonoBehaviour {
 
 	static string [] poziomyTrudnosci = { "Easy", "Normal", "Hard" };
 	static string [] strategie = { "Agressive", "Balanced", "Deffensive" };
-	string poziomTrudnosci = poziomyTrudnosci[1];
-	string strategia = strategie[0];
+	static string poziomTrudnosci = poziomyTrudnosci[1];
+	static string strategia = strategie[0];
 	int [,] prawdopodobienstwo = new int[3,3];
 
 	static public double mnoznikCzasu=0.5; //mnożnik czasu akcji czas akcji=PA*mnoznik
@@ -715,8 +723,8 @@ public class GameLogicDataScript : MonoBehaviour {
 							GameObject.Find("ZycieGraczaHUDText").GetComponent<Text>().text="";	//ukrywam (czyszczę tekst) życie gracza wyświetlane na HUD'zie
 							GameObject.Find("ZycieNPCHUDText").GetComponent<Text>().text="";	//ukrywam (czyszczę tekst) życie NPC wyświetlane na HUD'zie
 							GameObject.Find("PAGraczaHUDText").GetComponent<Text>().text="";	//ukrywam (czyszczę tekst) punkty akcji wyświetlane na HUD'zie
-							statystyki=wczytajStatystyke();
-							GameObject.Find("WynikHUDText").GetComponent<Text>().text=statystyki;
+							/*statystyki=*/wczytajStatystyke();
+							//GameObject.Find("WynikHUDText").GetComponent<Text>().text=statystyki;
 							/*//jeśli to gracz stracił życie pokaż tekst przegranej na HUD'zie
 							if((zycieGracza<=0)&&(zycieNPC>0)) {
 								GameObject.Find("WynikHUDText").GetComponent<Text>().text="Przegrana\n"+tura.ToString()+" rund";
@@ -928,38 +936,103 @@ public class GameLogicDataScript : MonoBehaviour {
 	}
 
 	void zapiszStatystyke(){
+		if(System.IO.File.Exists(plikStatystyk)) wczytajStatystyke();
 		string str;
 		pozostaleZycie=zycieGracza;
-		switch(wynik){
+		/*switch(wynik){
 			case 0: str="Przegrana"; break;
 			case 1: str="Zwycięstwo"; break;
 			case 2: str="Remis"; break;
 			default: str="-"; break;
+		}*/
+		//str+=" Nick: "+ nazwaGracza + " "+tura+" rund: "+wykonaneAtaki+" ataków  "+zablokowaneAtaki+" zablokowanych ataków  "+wykonaneObrony+" obron  "+pozostaleZycie+" pkt życia";
+		str=wynik+";"+nazwaGracza+";"+tura+";"+wykonaneAtaki+";"+zablokowaneAtaki+";"+wykonaneObrony+";"+pozostaleZycie;
+		//string old=wczytajStatystyke();
+		try{
+			System.IO.StreamWriter sr = new System.IO.StreamWriter(plikStatystyk); //otworzenie pliku do zapisu
+			sr.WriteLine(str);
+			for(int i=0;i<wyniki.Count;i++){
+				sr.WriteLine(wyniki[i]+";"+nicki[i]+";"+tury[i]+";"+wykAtaki[i]+";"+zablAtaki[i]+";"+wykObrony[i]+";"+pozZycie[i]);
+			}
+			//sr.WriteLine(old);
+			sr.Close();
 		}
-		str+=" Nick: "+ nazwaGracza + " "+tura+" rund: "+wykonaneAtaki+" ataków  "+zablokowaneAtaki+" zablokowanych ataków  "+wykonaneObrony+" obron  "+pozostaleZycie+" pkt życia";
-		string old=wczytajStatystyke();
-		System.IO.StreamWriter sr = new System.IO.StreamWriter(plikStatystyk); //otworzenie pliku do zapisu
-		sr.WriteLine(str);
-		sr.WriteLine(old);
-		sr.Close();
+		catch(Exception e){
+		}
 	}
 
-	string wczytajStatystyke(){
-		string str="";
+	void wczytajStatystyke(){
+		wyniki.Clear();
+		nicki.Clear();
+		tury.Clear();
+		wykAtaki.Clear();
+		zablAtaki.Clear();
+		wykObrony.Clear();
+		pozZycie.Clear();
+		//string str="";
 		tura=0;
 		zablokowaneAtaki=0;
 		wykonaneAtaki=0;
 		wykonaneObrony=0;
 		pozostaleZycie=0;
 		wynik=0;
-		System.IO.StreamReader sr = new System.IO.StreamReader(plikStatystyk, Encoding.UTF8);   //otworzenie pliku, ustawienie kodowania
-		while (!sr.EndOfStream) //do konca strumienia
-		{
-			string line = sr.ReadLine();
-			if (line.Length>0)str+=line+"\n";
+		try{
+			System.IO.StreamReader sr = new System.IO.StreamReader(plikStatystyk, Encoding.UTF8);   //otworzenie pliku, ustawienie kodowania
+			while (!sr.EndOfStream) //do konca strumienia
+			{
+				string line = sr.ReadLine();
+				if(line.Contains(";")){
+					string [] pola = line.Split(';');
+					//if (line.Length>0)str+=line+"\n";
+					wyniki.Add(pola[0]);
+					nicki.Add(pola[1]);
+					tury.Add(pola[2]);
+					wykAtaki.Add(pola[3]);
+					zablAtaki.Add(pola[4]);
+					wykObrony.Add(pola[5]);
+					pozZycie.Add(pola[6]);
+				}
+			}
+			sr.Close();
 		}
-		sr.Close();
-		return str;
+		catch (Exception e){
+		}
+		GameObject.Find("WynikiHUDText").GetComponent<Text>().text="\tWynik\n";
+		GameObject.Find("NickiHUDText").GetComponent<Text>().text="Gracz\n";
+		GameObject.Find("RundyHUDText").GetComponent<Text>().text="Rund\n";
+		GameObject.Find("AtakiHUDText").GetComponent<Text>().text="Ataków\n";
+		GameObject.Find("ZAtakiHUDText").GetComponent<Text>().text="Zablokowane\n";
+		GameObject.Find("ObronyHUDText").GetComponent<Text>().text="Obron\n";
+		GameObject.Find("PZycieHUDText").GetComponent<Text>().text="Życie\n";
+		for(int i=0;i<wyniki.Count;i++){
+			GameObject.Find("WynikiHUDText").GetComponent<Text>().text+=(i+1)+". ";
+			switch(wyniki[i]){
+				case "0": GameObject.Find("WynikiHUDText").GetComponent<Text>().text+="Porażka"; break;
+				case "1": GameObject.Find("WynikiHUDText").GetComponent<Text>().text+="Zwycięstwo"; break;
+				case "2": GameObject.Find("WynikiHUDText").GetComponent<Text>().text+="Remis"; break;
+				default: GameObject.Find("WynikiHUDText").GetComponent<Text>().text+="-"; break;
+			}
+			GameObject.Find("WynikiHUDText").GetComponent<Text>().text+="\n";
+		}
+		for(int i=0;i<nicki.Count;i++){
+			GameObject.Find("NickiHUDText").GetComponent<Text>().text+=nicki[i]+"\n";
+		}
+		for(int i=0;i<tury.Count;i++){
+			GameObject.Find("RundyHUDText").GetComponent<Text>().text+=tury[i]+"\n";
+		}
+		for(int i=0;i<wykAtaki.Count;i++){
+			GameObject.Find("AtakiHUDText").GetComponent<Text>().text+=wykAtaki[i]+"\n";
+		}
+		for(int i=0;i<zablAtaki.Count;i++){
+			GameObject.Find("ZAtakiHUDText").GetComponent<Text>().text+=zablAtaki[i]+"\n";
+		}
+		for(int i=0;i<wykObrony.Count;i++){
+			GameObject.Find("ObronyHUDText").GetComponent<Text>().text+=wykObrony[i]+"\n";
+		}
+		for(int i=0;i<pozZycie.Count;i++){
+			GameObject.Find("PZycieHUDText").GetComponent<Text>().text+=pozZycie[i]+"\n";
+		}
+
 	}
 
 	[RPC]
@@ -1056,7 +1129,7 @@ public class GameLogicDataScript : MonoBehaviour {
 			else if(((hor==startx)&&(hor==indx)&&(vert!=indy))||((vert==starty)&&(vert==indy)&&(hor!=indx))) czy=true;
 			else if (((vert==indy)||(hor==indx))&&(indx!=1&&indy!=1)) czy=true;
 		}
-		print (startx+" "+starty+" "+hor+" "+vert+" "+indx+" "+indy+" "+czy);
+//		print (startx+" "+starty+" "+hor+" "+vert+" "+indx+" "+indy+" "+czy);
 
 		return czy;
 	}
@@ -1347,11 +1420,11 @@ public class GameLogicDataScript : MonoBehaviour {
 				zwrocWybieranePola(false);
 				//zaznaczam pierwsze pole w najmniej bronionym przez gracza miejscu
 				if (zwrocIloscAkcji(false)>0){
-					print("Będę atakował logicznie!");
+					//print("Będę atakował logicznie!");
 					zwrocWybieranePola(false);
 					startx=zwrocIndeks(false,false,true);
 					starty=zwrocIndeks(true,false,true);
-					print("Najmniej1: "+prawdopodobienstwo[startx,starty]+" Indeksy: "+startx+" "+starty);
+					//print("Najmniej1: "+prawdopodobienstwo[startx,starty]+" Indeksy: "+startx+" "+starty);
 				}
 				hitboxNPC[startx,starty]=true;	//zaznacza punkt startowy w hitboxie		*------------------------------------------PAMIETAJ ODKOMENTOWAC BO TO JEST POPRAWNE 
 
@@ -1379,14 +1452,14 @@ public class GameLogicDataScript : MonoBehaviour {
 				}
 				//jeśli rodzaj ataku = 0, to zakładam, że wybrano pchnięcie
 				if(rodzajAtaku<=0){
-					print("Pchnięcie");
+					//print("Pchnięcie");
 					if(punktyAkcjiNPC>=4) kosztAkcjiNPC=4;	//ustawiam koszt akcji pchnięcia jeśli NPC ma potrzebną ilość punktów akcji
 					else rodzajAtaku=1;	//jeśli nie ma potrzebnych punktów akcji, to zmieniam rodzaj na ciężki atak
 
 				}
 				//jesli rodzaj ataku = 1, to zakładam, że wybrano ciężki atak
 				if(rodzajAtaku==1){
-					print("Ciężki");
+					//print("Ciężki");
 					//jeśli NPC ma potrzebne punkty akcji
 					if(punktyAkcjiNPC>=3&&(startx!=1&&starty!=1)){
 						int najmniej=999, indx=0, indy=0;
@@ -1613,7 +1686,7 @@ public class GameLogicDataScript : MonoBehaviour {
 				}
 				//jesli rodzaj ataku = 2, to zakładam, że wybrano szybki atak
 				if(rodzajAtaku==2){
-					print("Szybki");
+					//print("Szybki");
 					if(punktyAkcjiNPC>=2){
 						int najmniej=999;
 						if (zwrocIloscAkcji(false)>0){
@@ -1686,7 +1759,7 @@ public class GameLogicDataScript : MonoBehaviour {
 									}
 								}
 							}
-							print("Najmniej2: "+najmniej+" Indeksy: "+hor+" "+vert);
+							//print("Najmniej2: "+najmniej+" Indeksy: "+hor+" "+vert);
 						}
 						else{
 							do {
@@ -1748,7 +1821,7 @@ public class GameLogicDataScript : MonoBehaviour {
 			}
 			str+="\n";
 		}
-		print(str);
+		//print(str);
 	}
 		
 	int zwrocIndeks(bool xory, bool najczesciej, bool losowo){
@@ -1800,7 +1873,7 @@ public class GameLogicDataScript : MonoBehaviour {
 				}
 			}
 		}
-		print(indx+" "+indy+" ile: "+ile);
+		//print(indx+" "+indy+" ile: "+ile);
 		if(indx<0||indy<0){
 			return -1;
 		}
@@ -2160,6 +2233,46 @@ public class GameLogicDataScript : MonoBehaviour {
 	}
 
 
+	public static void resetVariables(){
+		MousePointFields.setEnable(true);
+		MousePointFields.setCheck(true);
+		nazwaGracza="Gracz";
+		nazwaPrzeciwnika="NPC";
+
+		multiplayer=false;
+		polaczono=false;
+
+		zablokowaneAtaki=0;
+		wykonaneAtaki=0;
+		wykonaneObrony=0;
+		pozostaleZycie=0;
+		wynik=0;
+
+		wyniki.Clear();
+		tury.Clear();
+		zablAtaki.Clear();
+		wykAtaki.Clear();
+		wykObrony.Clear();
+		pozZycie.Clear();
+		nicki.Clear();
+
+		interwalAkcjaNPC=0.0;
+		interwalAkcjaGracza=0.0;
+
+		nastepnaTura=false;
+
+
+
+		poziomTrudnosci = poziomyTrudnosci[1];
+		strategia = strategie[0];
+
+		pozostalePAGracza=10;
+		pozostalePANPC=10;
+		i=0; j=0; ii=0; jj=0; iAnim=0; jAnim=0;
+
+	}
+
+
 	// METODY SLUZACE DO AKTUALIZACJI INFORMACJI NA HUD'ZIE
 
 	/// <summary>
@@ -2184,8 +2297,8 @@ public class GameLogicDataScript : MonoBehaviour {
 		double g=zycieGracza, n=zycieNPC;
 		if (g<0) g=0; 
 		if (n<0) n=0;
-		GameObject.Find("ZycieGraczaHUDText").GetComponent<Text>().text="HP Gracza: "+g.ToString();
-		GameObject.Find("ZycieNPCHUDText").GetComponent<Text>().text="HP Przeciwnika: "+n.ToString();
+		GameObject.Find("ZycieGraczaHUDText").GetComponent<Text>().text="PŻ Gracza: "+g.ToString();
+		GameObject.Find("ZycieNPCHUDText").GetComponent<Text>().text="PŻ Przeciwnika: "+n.ToString();
 	}
 
 

@@ -39,7 +39,12 @@ public class StartButtonScript : MonoBehaviour {
 	}
 
 	public void backToMenu(){
+		GameLogicDataScript.resetVariables();
 		UnityEngine.SceneManagement.SceneManager.LoadScene("MainMenu");
+	}
+
+	public void quitGame(){
+		Application.Quit();
 	}
 
 }
