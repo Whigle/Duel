@@ -6,7 +6,7 @@ using System;
 
 public class ListaAtakowScript : MonoBehaviour {
 
-	private static bool gamePaused = false;
+	static bool gamePaused = false;
 
 	// Use this for initialization
 	void Start () {
@@ -22,6 +22,7 @@ public class ListaAtakowScript : MonoBehaviour {
 	public void wylacz() {
 		if (gamePaused) {
 			GameObject.Find ("CanvasLista").GetComponent<Canvas> ().enabled=false;
+			GameObject.Find ("CanvasListaPod").GetComponent<Canvas> ().enabled=false;
 			//Time.timeScale = 1;
 			MousePointFields.setEnable(true);
 			gamePaused = false;
@@ -31,6 +32,14 @@ public class ListaAtakowScript : MonoBehaviour {
 			MousePointFields.setEnable(false);
 			gamePaused = true;
 		}
+	}	
+	public void Dalej() {
+		//GameObject.Find ("CanvasLista").GetComponent<Canvas> ().enabled=false;
+		GameObject.Find ("CanvasListaPod").GetComponent<Canvas> ().enabled=true;
+	}
+	public void Wstecz() {
+		GameObject.Find ("CanvasListaPod").GetComponent<Canvas> ().enabled=false;
+		GameObject.Find ("CanvasLista").GetComponent<Canvas> ().enabled=true;
 	}
 
 }

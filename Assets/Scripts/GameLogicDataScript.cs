@@ -924,19 +924,7 @@ public class GameLogicDataScript : MonoBehaviour {
 		}
 	}
 
-	void pobierzAkcjePrzeciwnika(){
-		NetworkView nv=gameObject.GetComponent<NetworkView>();
-		nv.stateSynchronization=NetworkStateSynchronization.ReliableDeltaCompressed;
-		string doprzeslania = punktyAkcjiGracza.ToString()+";";
-		foreach(Czynnosc c in akcjeGracza){
-			doprzeslania+=c.serializuj();
-		}
-		print("Wysyłam: "+doprzeslania);
-		nv.RPC("OdbierzDane",RPCMode.Others,doprzeslania);
-	}
-
 	void zapiszStatystyke(){
-		if(System.IO.File.Exists(plikStatystyk)) wczytajStatystyke();
 		string str;
 		pozostaleZycie=zycieGracza;
 		/*switch(wynik){
@@ -948,17 +936,15 @@ public class GameLogicDataScript : MonoBehaviour {
 		//str+=" Nick: "+ nazwaGracza + " "+tura+" rund: "+wykonaneAtaki+" ataków  "+zablokowaneAtaki+" zablokowanych ataków  "+wykonaneObrony+" obron  "+pozostaleZycie+" pkt życia";
 		str=wynik+";"+nazwaGracza+";"+tura+";"+wykonaneAtaki+";"+zablokowaneAtaki+";"+wykonaneObrony+";"+pozostaleZycie;
 		//string old=wczytajStatystyke();
-		try{
-			System.IO.StreamWriter sr = new System.IO.StreamWriter(plikStatystyk); //otworzenie pliku do zapisu
-			sr.WriteLine(str);
-			for(int i=0;i<wyniki.Count;i++){
-				sr.WriteLine(wyniki[i]+";"+nicki[i]+";"+tury[i]+";"+wykAtaki[i]+";"+zablAtaki[i]+";"+wykObrony[i]+";"+pozZycie[i]);
-			}
-			//sr.WriteLine(old);
-			sr.Close();
+		if(System.IO.File.Exists(plikStatystyk)) wczytajStatystyke();
+
+		System.IO.StreamWriter sr = new System.IO.StreamWriter(plikStatystyk); //otworzenie pliku do zapisu
+		sr.WriteLine(str);
+		for(int i=0;i<wyniki.Count;i++){
+			sr.WriteLine(wyniki[i]+";"+nicki[i]+";"+tury[i]+";"+wykAtaki[i]+";"+zablAtaki[i]+";"+wykObrony[i]+";"+pozZycie[i]);
 		}
-		catch(Exception e){
-		}
+		//sr.WriteLine(old);
+		sr.Close();
 	}
 
 	void wczytajStatystyke(){
@@ -976,7 +962,7 @@ public class GameLogicDataScript : MonoBehaviour {
 		wykonaneObrony=0;
 		pozostaleZycie=0;
 		wynik=0;
-		try{
+		if(System.IO.File.Exists(plikStatystyk)){
 			System.IO.StreamReader sr = new System.IO.StreamReader(plikStatystyk, Encoding.UTF8);   //otworzenie pliku, ustawienie kodowania
 			while (!sr.EndOfStream) //do konca strumienia
 			{
@@ -994,8 +980,6 @@ public class GameLogicDataScript : MonoBehaviour {
 				}
 			}
 			sr.Close();
-		}
-		catch (Exception e){
 		}
 		GameObject.Find("WynikiHUDText").GetComponent<Text>().text="\tWynik\n";
 		GameObject.Find("NickiHUDText").GetComponent<Text>().text="Gracz\n";
@@ -1033,6 +1017,17 @@ public class GameLogicDataScript : MonoBehaviour {
 			GameObject.Find("PZycieHUDText").GetComponent<Text>().text+=pozZycie[i]+"\n";
 		}
 
+	}
+	
+	void pobierzAkcjePrzeciwnika(){
+		NetworkView nv=gameObject.GetComponent<NetworkView>();
+		nv.stateSynchronization=NetworkStateSynchronization.ReliableDeltaCompressed;
+		string doprzeslania = punktyAkcjiGracza.ToString()+";";
+		foreach(Czynnosc c in akcjeGracza){
+			doprzeslania+=c.serializuj();
+		}
+		print("Wysyłam: "+doprzeslania);
+		nv.RPC("OdbierzDane",RPCMode.Others,doprzeslania);
 	}
 
 	[RPC]
