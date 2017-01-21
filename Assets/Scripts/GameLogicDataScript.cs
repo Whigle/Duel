@@ -45,6 +45,7 @@ public class GameLogicDataScript : MonoBehaviour {
 	static List<string> wykObrony=new List<string>();
 	static List<string> pozZycie=new List<string>();
 	static List<string> nicki=new List<string>();
+	static List<string> nickip=new List<string>();
 
 	static string plikStatystyk="stats.sts";
 
@@ -927,29 +928,24 @@ public class GameLogicDataScript : MonoBehaviour {
 	void zapiszStatystyke(){
 		string str;
 		pozostaleZycie=zycieGracza;
-		/*switch(wynik){
-			case 0: str="Przegrana"; break;
-			case 1: str="Zwycięstwo"; break;
-			case 2: str="Remis"; break;
-			default: str="-"; break;
-		}*/
-		//str+=" Nick: "+ nazwaGracza + " "+tura+" rund: "+wykonaneAtaki+" ataków  "+zablokowaneAtaki+" zablokowanych ataków  "+wykonaneObrony+" obron  "+pozostaleZycie+" pkt życia";
-		str=wynik+";"+nazwaGracza+";"+tura+";"+wykonaneAtaki+";"+zablokowaneAtaki+";"+wykonaneObrony+";"+pozostaleZycie;
+		str=wynik+";"+nazwaGracza+";"+nazwaPrzeciwnika+";"+tura+";"+wykonaneAtaki+";"+zablokowaneAtaki+";"+wykonaneObrony+";"+pozostaleZycie;
 		//string old=wczytajStatystyke();
 		if(System.IO.File.Exists(plikStatystyk)) wczytajStatystyke();
 
 		System.IO.StreamWriter sr = new System.IO.StreamWriter(plikStatystyk); //otworzenie pliku do zapisu
 		sr.WriteLine(str);
 		for(int i=0;i<wyniki.Count;i++){
-			sr.WriteLine(wyniki[i]+";"+nicki[i]+";"+tury[i]+";"+wykAtaki[i]+";"+zablAtaki[i]+";"+wykObrony[i]+";"+pozZycie[i]);
+			sr.WriteLine(wyniki[i]+";"+nicki[i]+";"+nickip[i]+";"+tury[i]+";"+wykAtaki[i]+";"+zablAtaki[i]+";"+wykObrony[i]+";"+pozZycie[i]);
 		}
 		//sr.WriteLine(old);
 		sr.Close();
 	}
 
 	void wczytajStatystyke(){
+		int max=15;
 		wyniki.Clear();
 		nicki.Clear();
+		nickip.Clear();
 		tury.Clear();
 		wykAtaki.Clear();
 		zablAtaki.Clear();
@@ -972,23 +968,27 @@ public class GameLogicDataScript : MonoBehaviour {
 					//if (line.Length>0)str+=line+"\n";
 					wyniki.Add(pola[0]);
 					nicki.Add(pola[1]);
-					tury.Add(pola[2]);
-					wykAtaki.Add(pola[3]);
-					zablAtaki.Add(pola[4]);
-					wykObrony.Add(pola[5]);
-					pozZycie.Add(pola[6]);
+					nickip.Add(pola[2]);
+					tury.Add(pola[3]);
+					wykAtaki.Add(pola[4]);
+					zablAtaki.Add(pola[5]);
+					wykObrony.Add(pola[6]);
+					pozZycie.Add(pola[7]);
 				}
 			}
 			sr.Close();
 		}
 		GameObject.Find("WynikiHUDText").GetComponent<Text>().text="\tWynik\n";
 		GameObject.Find("NickiHUDText").GetComponent<Text>().text="Gracz\n";
+		GameObject.Find("NickipHUDText").GetComponent<Text>().text="Przeciwnik\n";
 		GameObject.Find("RundyHUDText").GetComponent<Text>().text="Rund\n";
 		GameObject.Find("AtakiHUDText").GetComponent<Text>().text="Ataków\n";
 		GameObject.Find("ZAtakiHUDText").GetComponent<Text>().text="Zablokowane\n";
 		GameObject.Find("ObronyHUDText").GetComponent<Text>().text="Obron\n";
 		GameObject.Find("PZycieHUDText").GetComponent<Text>().text="Życie\n";
-		for(int i=0;i<wyniki.Count;i++){
+		int w=wyniki.Count;
+		if(w>max)w=max;
+		for(int i=0;i<w;i++){
 			GameObject.Find("WynikiHUDText").GetComponent<Text>().text+=(i+1)+". ";
 			switch(wyniki[i]){
 				case "0": GameObject.Find("WynikiHUDText").GetComponent<Text>().text+="Porażka"; break;
@@ -998,22 +998,39 @@ public class GameLogicDataScript : MonoBehaviour {
 			}
 			GameObject.Find("WynikiHUDText").GetComponent<Text>().text+="\n";
 		}
-		for(int i=0;i<nicki.Count;i++){
+		w=nicki.Count;
+		if(w>max)w=max;
+		for(int i=0;i<w;i++){
 			GameObject.Find("NickiHUDText").GetComponent<Text>().text+=nicki[i]+"\n";
 		}
-		for(int i=0;i<tury.Count;i++){
+		w=nickip.Count;
+		if(w>max)w=max;
+		for(int i=0;i<w;i++){
+			GameObject.Find("NickipHUDText").GetComponent<Text>().text+=nickip[i]+"\n";
+		}
+		w=tury.Count;
+		if(w>max)w=max;
+		for(int i=0;i<w;i++){
 			GameObject.Find("RundyHUDText").GetComponent<Text>().text+=tury[i]+"\n";
 		}
-		for(int i=0;i<wykAtaki.Count;i++){
+		w=wykAtaki.Count;
+		if(w>max)w=max;
+		for(int i=0;i<w;i++){
 			GameObject.Find("AtakiHUDText").GetComponent<Text>().text+=wykAtaki[i]+"\n";
 		}
-		for(int i=0;i<zablAtaki.Count;i++){
+		w=zablAtaki.Count;
+		if(w>max)w=max;
+		for(int i=0;i<w;i++){
 			GameObject.Find("ZAtakiHUDText").GetComponent<Text>().text+=zablAtaki[i]+"\n";
 		}
-		for(int i=0;i<wykObrony.Count;i++){
+		w=wykObrony.Count;
+		if(w>max)w=max;
+		for(int i=0;i<w;i++){
 			GameObject.Find("ObronyHUDText").GetComponent<Text>().text+=wykObrony[i]+"\n";
 		}
-		for(int i=0;i<pozZycie.Count;i++){
+		w=pozZycie.Count;
+		if(w>max)w=max;
+		for(int i=0;i<w;i++){
 			GameObject.Find("PZycieHUDText").GetComponent<Text>().text+=pozZycie[i]+"\n";
 		}
 
