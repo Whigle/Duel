@@ -252,6 +252,8 @@ public class GameLogicDataScript : MonoBehaviour {
 
 		ComboGracza = 1;
 		ComboNPC = 1;
+
+		czasowy = Time.time;
 	}
 
 	int ComboGracza;
@@ -1917,6 +1919,13 @@ public class GameLogicDataScript : MonoBehaviour {
 	public Texture2D miecz;
 	public Texture2D tarcza;
 
+	public Texture2D mysz;
+	public Texture2D myszl;
+	public Texture2D myszr;
+	public Texture2D myszs;
+
+
+
 	List<List<Czynnosc>> listaListGracza = new List<List<Czynnosc>>();
 	List<List<Czynnosc>> listaListNPC = new List<List<Czynnosc>>();
 
@@ -2093,21 +2102,37 @@ public class GameLogicDataScript : MonoBehaviour {
 	bool lewytak = true;
 	bool lewynie = true;
 
+	float czasowy;
+	bool myszsz = true;
+
+	bool lewo;
+	bool prawo;
+
 	void OnGUI() {
 		if (GUI1 == true) {
 
-			if(Input.GetKeyDown(KeyCode.LeftArrow)&&wyswietlanaRunda>3&&lewytak) {
+			if (wyswietlanaRunda > 3 && lewytak)
+				lewo = true;
+			else
+				lewo = false;
+
+			if (wyswietlanaRunda < tura - 1 && lewynie)
+				prawo = true;
+			else
+				prawo = false;
+
+			if(Input.GetMouseButtonDown(0)&&wyswietlanaRunda>3&&lewytak) {
 				wyswietlanaRunda--;
 				lewytak = false;
 			}
-			if(Input.GetKeyDown(KeyCode.RightArrow)&&wyswietlanaRunda<tura-1&&lewynie) {
+			if(Input.GetMouseButtonDown(1)&&wyswietlanaRunda<tura-1&&lewynie) {
 				wyswietlanaRunda++;
 				lewynie = false;
 			}
-			if (Input.GetKeyUp (KeyCode.LeftArrow)) {
+			if (Input.GetMouseButtonUp(0)) {
 				lewytak = true;
 			}
-			if (Input.GetKeyUp (KeyCode.RightArrow)) {
+			if (Input.GetMouseButtonUp(1)) {
 				lewynie = true;
 			}
 
@@ -2165,11 +2190,24 @@ public class GameLogicDataScript : MonoBehaviour {
 			GUI.DrawTexture (new Rect (Screen.width * 0.49f, Screen.height * 0f, Screen.width * 0.02f, Screen.height), border, ScaleMode.ScaleAndCrop);
 			GUI.DrawTexture (new Rect (Screen.width * 0.74f, Screen.height * 0f, Screen.width * 0.02f, Screen.height), border, ScaleMode.ScaleAndCrop);
 			GUI.DrawTexture (new Rect (Screen.width * 0.99f, Screen.height * 0f, Screen.width * 0.02f, Screen.height), border, ScaleMode.ScaleAndCrop);
-			/*GUI.Box (new Rect (Screen.width * 0f, Screen.height * 0f, Screen.width * 0.01f, Screen.height * 0.8f),"");
-			GUI.Box (new Rect (Screen.width * 0.24f, Screen.height * 0f, Screen.width * 0.02f, Screen.height * 0.8f),"");
-			GUI.Box (new Rect (Screen.width * 0.49f, Screen.height * 0f, Screen.width * 0.02f, Screen.height * 0.8f),"");
-			GUI.Box (new Rect (Screen.width * 0.74f, Screen.height * 0f, Screen.width * 0.02f, Screen.height * 0.8f),"");
-			GUI.Box (new Rect (Screen.width * 0.99f, Screen.height * 0f, Screen.width * 0.01f, Screen.height * 0.8f),"");*/
+
+			if (0.25f < Time.time-czasowy) {
+				myszsz = !myszsz;
+				czasowy = Time.time;
+			}
+
+			if (lewo) {
+				GUI.Box (new Rect (Screen.width * 0f, Screen.height * 0.00f, Screen.width * 0.075f, Screen.height * 0.025f), "Poprzednie Rundy");
+				GUI.DrawTexture (new Rect (Screen.width * 0f, Screen.height * 0.025f, Screen.width * 0.05f, Screen.height * 0.075f), (myszsz) ? mysz : myszl, ScaleMode.ScaleToFit);
+			}
+
+			GUI.Box (new Rect (Screen.width * 0.4625f, Screen.height * 0.00f, Screen.width * 0.075f, Screen.height * 0.025f),"Wroc do gry");
+			GUI.DrawTexture (new Rect (Screen.width * 0.475f, Screen.height * 0.025f, Screen.width * 0.05f, Screen.height * 0.075f), (myszsz) ? mysz: myszs, ScaleMode.ScaleToFit);
+
+			if (prawo) {
+				GUI.Box (new Rect (Screen.width * 0.925f, Screen.height * 0.00f, Screen.width * 0.075f, Screen.height * 0.025f), "Nastepne Rundy");
+				GUI.DrawTexture (new Rect (Screen.width * 0.95f, Screen.height * 0.025f, Screen.width * 0.05f, Screen.height * 0.075f), (myszsz) ? mysz : myszr, ScaleMode.ScaleToFit);
+			}
 		}
 	}
 
