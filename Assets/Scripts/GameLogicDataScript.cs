@@ -942,7 +942,7 @@ public class GameLogicDataScript : MonoBehaviour {
 	}
 
 	void wczytajStatystyke(){
-		int max=15;
+		int max=20;
 		wyniki.Clear();
 		nicki.Clear();
 		nickip.Clear();
@@ -983,7 +983,7 @@ public class GameLogicDataScript : MonoBehaviour {
 		GameObject.Find("NickipHUDText").GetComponent<Text>().text="Przeciwnik\n";
 		GameObject.Find("RundyHUDText").GetComponent<Text>().text="Rund\n";
 		GameObject.Find("AtakiHUDText").GetComponent<Text>().text="Ataków\n";
-		GameObject.Find("ZAtakiHUDText").GetComponent<Text>().text="Zablokowane\n";
+		GameObject.Find("ZAtakiHUDText").GetComponent<Text>().text="Zabl.\n";
 		GameObject.Find("ObronyHUDText").GetComponent<Text>().text="Obron\n";
 		GameObject.Find("PZycieHUDText").GetComponent<Text>().text="Życie\n";
 		int w=wyniki.Count;
