@@ -18,7 +18,9 @@ public class StartButtonScript : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (!credits&&!Input.GetMouseButton(0)&&!Input.GetMouseButton(1)&&!Input.GetMouseButton(2)) enable(true);
+		if(UnityEngine.SceneManagement.SceneManager.GetActiveScene()==UnityEngine.SceneManagement.SceneManager.GetSceneByName("MainMenu")){
+			if (!GameObject.Find("InputField").GetComponent<InputField>().interactable&&!credits&&!Input.GetMouseButton(0)&&!Input.GetMouseButton(1)&&!Input.GetMouseButton(2)) enable(true);
+		}
 	}
 
 	public void startGame(){
@@ -72,7 +74,7 @@ public class StartButtonScript : MonoBehaviour {
 			}
 			GUILayout.EndArea();
 		}
-		}
+	}
 
 	private void enable(bool onoff){
 		GameObject.Find("InputField").GetComponent<InputField>().interactable=onoff;
