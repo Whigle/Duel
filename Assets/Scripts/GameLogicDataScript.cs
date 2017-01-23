@@ -355,6 +355,8 @@ public class GameLogicDataScript : MonoBehaviour {
 							}
 						}
 						else {
+							rodzajAtaku += "\nObrona!";
+							GameObject.Find ("RodzajAtakuHUDText").GetComponent<Text> ().text = rodzajAtaku; //wyświetl informacje o rodzaju ataku			
 							akcjeGracza.Add(new Obrona(true, temp, kosztAkcjiGracza, iloscPolGracza));
 							//historiaAkcjiGracza.Add(new Obrona(true, temp, kosztAkcjiGracza, iloscPolGracza));
 						}
@@ -2433,6 +2435,7 @@ public abstract class Czynnosc {
 	protected int iloscPol;
 
 	protected GameObject character;
+	protected Animator canimator;
 
 	protected string animacja;
 	protected string dzwiek;
@@ -2449,6 +2452,7 @@ public abstract class Czynnosc {
 		this.gracz=gracz;
 		if (gracz) character=GameObject.Find("Player");
 		else character=GameObject.Find("Opponent");
+		canimator=this.character.GetComponent<Animator>();
 		//this.hitbox=hitbox;
 		this.hitbox=new bool[3,3];
 		for (int i = 0; i < 3; i++) {
@@ -2471,8 +2475,11 @@ public abstract class Czynnosc {
 	}
 
 	public void animuj(){
-		this.character.GetComponent<Animation>()[this.animacja].speed=System.Convert.ToSingle(szybkosc);
-		this.character.GetComponent<Animation>().Play(this.animacja);
+		canimator.SetFloat("szybkosc",System.Convert.ToSingle(this.szybkosc));
+		canimator.Play(this.animacja);//,canimator.GetLayerIndex("Base Layer"), System.Convert.ToSingle(this.koszt*GameLogicDataScript.mnoznikCzasu));
+
+		/*this.character.GetComponent<Animation>()[this.animacja].speed=System.Convert.ToSingle(szybkosc);
+		this.character.GetComponent<Animation>().Play(this.animacja);*/
 
 	}
 	
@@ -2567,7 +2574,16 @@ public class Atak : Czynnosc {
 			case 3: this.obrazenia=3; this.animacja="Attack"; this.dzwiek="SlashAttack"; break;
 		default: this.animacja="Defense"; break;
 		}
-		szybkosc=System.Convert.ToDouble(this.character.GetComponent<Animation>().GetClip(this.animacja).length)/(this.koszt*GameLogicDataScript.mnoznikCzasu);
+		float len=1;
+		RuntimeAnimatorController ac = this.canimator.runtimeAnimatorController;
+		foreach(AnimationClip animat in ac.animationClips){
+			if(animat.name==this.animacja) {
+				len=animat.length;
+				szybkosc=System.Convert.ToDouble(len)/(this.koszt*GameLogicDataScript.mnoznikCzasu);
+				//animat.frameRate=animat.frameRate*System.Convert.ToSingle(szybkosc);
+			}
+		}
+		//szybkosc=System.Convert.ToDouble(this.character.GetComponent<Animation>().GetClip(this.animacja).length)/(this.koszt*GameLogicDataScript.mnoznikCzasu);
 	}
 
 	public int getMoc(){
@@ -2716,7 +2732,15 @@ public class Obrona : Czynnosc {
 		this.typAkcji=false;
 		this.animacja="Defense";
 		this.dzwiek="ShieldHit";
-		szybkosc=System.Convert.ToDouble(this.character.GetComponent<Animation>().GetClip(this.animacja).length)/(this.koszt*GameLogicDataScript.mnoznikCzasu);
+		float len=1;
+		RuntimeAnimatorController ac = this.canimator.runtimeAnimatorController;
+		foreach(AnimationClip animat in ac.animationClips){
+			if(animat.name==this.animacja) {
+				len=animat.length;
+				szybkosc=System.Convert.ToDouble(len)/(this.koszt*GameLogicDataScript.mnoznikCzasu);
+			}
+		}
+		//szybkosc=System.Convert.ToDouble(this.character.GetComponent<Animation>().GetClip(this.animacja).length)/(this.koszt*GameLogicDataScript.mnoznikCzasu);
 	}
 	
 	//O;ileparwspolrzednych;x;y;x2;y2;x3;y3;koszt;iloscpol;
