@@ -10,6 +10,8 @@ using System.Text;
 /// </summary>
 public class GameLogicDataScript : MonoBehaviour {
 
+	string Textt="Wroc do gry";
+
 	static public String nazwaGracza="Gracz";
 	static public String nazwaPrzeciwnika="NPC";
 	
@@ -876,8 +878,10 @@ public class GameLogicDataScript : MonoBehaviour {
 							tld.active=false;
 							GameObject.Find("ZycieGraczaHUDText").GetComponent<Text>().text="";	//ukrywam (czyszczę tekst) życie gracza wyświetlane na HUD'zie
 							GameObject.Find("ZycieNPCHUDText").GetComponent<Text>().text="";	//ukrywam (czyszczę tekst) życie NPC wyświetlane na HUD'zie
-							if (skonczonopotej&&multiplayer) GameObject.Find("NastepnaTuraHUDText").GetComponent<Text>().text="Poczekaj na drugiego gracza...";
-							else GameObject.Find("NastepnaTuraHUDText").GetComponent<Text>().text="Wciśnij [ŚPM], aby przejść do kolejnej tury.";
+							/*if (skonczonopotej&&multiplayer) GameObject.Find("NastepnaTuraHUDText").GetComponent<Text>().text="Poczekaj na drugiego gracza...";
+							else GameObject.Find("NastepnaTuraHUDText").GetComponent<Text>().text="Wciśnij [ŚPM], aby przejść do kolejnej tury.";*/
+							if (skonczonopotej&&multiplayer) Textt="Poczekaj...";
+							else Textt="Wroc do gry";
 							rysujHistore ();
 							pokazTabelke();
 							//wykonane=true;
@@ -2209,7 +2213,7 @@ public class GameLogicDataScript : MonoBehaviour {
 				GUI.DrawTexture (new Rect (Screen.width * 0f, Screen.height * 0.025f, Screen.width * 0.05f, Screen.height * 0.075f), (myszsz) ? mysz : myszl, ScaleMode.ScaleToFit);
 			}
 
-			GUI.Box (new Rect (Screen.width * 0.4625f, Screen.height * 0.00f, Screen.width * 0.075f, Screen.height * 0.025f),"Wroc do gry");
+			GUI.Box (new Rect (Screen.width * 0.4625f, Screen.height * 0.00f, Screen.width * 0.075f, Screen.height * 0.025f),Textt);
 			GUI.DrawTexture (new Rect (Screen.width * 0.475f, Screen.height * 0.025f, Screen.width * 0.05f, Screen.height * 0.075f), (myszsz) ? mysz: myszs, ScaleMode.ScaleToFit);
 
 			if (prawo) {
