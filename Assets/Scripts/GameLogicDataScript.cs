@@ -56,7 +56,7 @@ public class GameLogicDataScript : MonoBehaviour {
 	/// <summary>
 	/// Długość jednej rundy.
 	/// </summary>
-	static double interwal=12.0;//6.0;
+	static double interwal=6.0;//12.0;
 	/// <summary>
 	/// Zmienna przechowująca czas jaki upłynął od początku rundy.
 	/// </summary>
@@ -765,11 +765,13 @@ public class GameLogicDataScript : MonoBehaviour {
 		if (polaczono || !multiplayer){
 			//jeśli nie skończył się czas tury
 			if(turaTrwa){
-				if(Input.GetKeyDown(KeyCode.Plus)||Input.GetKeyDown(KeyCode.KeypadPlus)) {
-					interwal+=2;
-				}
-				if(Input.GetKeyDown(KeyCode.Minus)||Input.GetKeyDown(KeyCode.KeypadMinus)) {
-					interwal-=1;
+				if(nazwaGracza.CompareTo("-DEBUG-")==0){
+					if(Input.GetKeyDown(KeyCode.Plus)||Input.GetKeyDown(KeyCode.KeypadPlus)) {
+						interwal+=2;
+					}
+					if(Input.GetKeyDown(KeyCode.Minus)||Input.GetKeyDown(KeyCode.KeypadMinus)) {
+						interwal-=1;
+					}
 				}
 				aktualizujCzas();
 				aktualizujPA();
