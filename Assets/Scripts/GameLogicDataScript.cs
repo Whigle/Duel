@@ -374,7 +374,11 @@ public class GameLogicDataScript : MonoBehaviour {
 			}
 			//jeśli czas tury się skończył przechodzimy do wykonywania czynności z kolejki
 			else {
-				if(!przejscieSkonczone) GameObject.Find("Main Camera").GetComponent<Animation>().Play("Kamera");
+				if(!przejscieSkonczone) {
+					player.transform.position=new Vector3(0.0f,0.0f,-0.7f);
+					opponent.transform.position=new Vector3(0.0f,0.0f,0.7f);
+					GameObject.Find("Main Camera").GetComponent<Animation>().Play("Kamera");
+				}
 				else{
 					if (!koniecRozgrywki) {
 						if (!wykonane) {
@@ -902,6 +906,8 @@ public class GameLogicDataScript : MonoBehaviour {
 								nastepnaTura=false;
 								GameObject.Find("Main Camera").GetComponent<Animation>().Stop();
 								GameObject.Find("Main Camera").GetComponent<Animation>().PlayQueued("KameraReturn");
+								player.transform.position=new Vector3(0.0f,0.0f,-2.5f);
+								opponent.transform.position=new Vector3(0.0f,0.0f,2.5f);
 								punktyAkcjiGracza=10;	//przywracam punkty akcji graczowi
 								punktyAkcjiNPC=10;	//przywracam punkty akcji NPC
 								MousePointFields.reset();	//resetuje HUD
