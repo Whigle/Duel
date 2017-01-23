@@ -2209,16 +2209,16 @@ public class GameLogicDataScript : MonoBehaviour {
 			}
 
 			if (lewo) {
-				GUI.Box (new Rect (Screen.width * 0f, Screen.height * 0.00f, Screen.width * 0.075f, Screen.height * 0.025f), "Poprzednie Rundy");
-				GUI.DrawTexture (new Rect (Screen.width * 0f, Screen.height * 0.025f, Screen.width * 0.05f, Screen.height * 0.075f), (myszsz) ? mysz : myszl, ScaleMode.ScaleToFit);
+				GUI.Box (new Rect (Screen.width * 0f, Screen.height * 0.00f, (Screen.width * 0.075f<120) ? 120 : Screen.width * 0.075f, (Screen.height * 0.025f<24f) ? 24f : Screen.height * 0.025f), "Poprzednie Rundy");
+				GUI.DrawTexture (new Rect (Screen.width * 0f, (Screen.height * 0.025f<24f) ? 24f : Screen.height * 0.025f, Screen.width * 0.05f, Screen.height * 0.075f), (myszsz) ? mysz : myszl, ScaleMode.ScaleToFit);
 			}
 
-			GUI.Box (new Rect (Screen.width * 0.4625f, Screen.height * 0.00f, Screen.width * 0.075f, Screen.height * 0.025f),Textt);
-			GUI.DrawTexture (new Rect (Screen.width * 0.475f, Screen.height * 0.025f, Screen.width * 0.05f, Screen.height * 0.075f), (myszsz) ? mysz: myszs, ScaleMode.ScaleToFit);
+			GUI.Box (new Rect ((Screen.width * 0.075f<120) ? Screen.width/2.0f-60 : Screen.width * 0.4625f, Screen.height * 0.0f, (Screen.width * 0.075f<120) ? 120 : Screen.width * 0.075f, (Screen.height * 0.025f<24f) ? 24f : Screen.height * 0.025f),Textt);
+			GUI.DrawTexture (new Rect (Screen.width * 0.475f, (Screen.height * 0.025f<24f) ? 24f : Screen.height * 0.025f, Screen.width * 0.05f, Screen.height * 0.075f), (myszsz) ? mysz: myszs, ScaleMode.ScaleToFit);
 
 			if (prawo) {
-				GUI.Box (new Rect (Screen.width * 0.925f, Screen.height * 0.00f, Screen.width * 0.075f, Screen.height * 0.025f), "Nastepne Rundy");
-				GUI.DrawTexture (new Rect (Screen.width * 0.95f, Screen.height * 0.025f, Screen.width * 0.05f, Screen.height * 0.075f), (myszsz) ? mysz : myszr, ScaleMode.ScaleToFit);
+				GUI.Box (new Rect ((Screen.width * 0.075f<120) ? Screen.width-120f : Screen.width * 0.925f, Screen.height * 0.00f, (Screen.width * 0.075f<120) ? 120 : Screen.width * 0.075f, (Screen.height * 0.025f<24f) ? 24f : Screen.height * 0.025f), "Nastepne Rundy");
+				GUI.DrawTexture (new Rect (Screen.width * 0.95f, (Screen.height * 0.025f<24f) ? 24f : Screen.height * 0.025f, Screen.width * 0.05f, Screen.height * 0.075f), (myszsz) ? mysz : myszr, ScaleMode.ScaleToFit);
 			}
 		}
 	}
